@@ -363,6 +363,29 @@ figure figcaption {
     color: var(--color-text-secondary);
 }
 
+.peach {
+     text-align: var(--justify-important);
+}
+.peach figcaption {
+     padding-bottom:10px;
+     text-align: var(--justify-important);
+}
+.bwoser {
+     text-align: var(--justify-important);
+}
+.bwoser figcaption {
+     padding-bottom:10px;
+     text-align: var(--justify-important);
+}
+.Luigi {
+    text-align: var(--justify-important);
+}
+.Luigi figcaption {
+     padding-bottom:10px;
+     text-align: var(--justify-important);
+}
+
+
 /* Forms */
 button:disabled,
 input:disabled {
@@ -538,4 +561,9 @@ blockquote footer {
 *::-webkit-scrollbar-thumb {
     background-color: rgb(202, 202, 232);
     border-radius: 10px;
+}
+/* footer */
+footer p {
+    text-align: var(--justify-important);
+
 }
