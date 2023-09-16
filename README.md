@@ -1,1 +1,0 @@
-A VIDA É BELA
