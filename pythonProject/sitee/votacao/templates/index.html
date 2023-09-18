@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Festa!!</title>
+    <link rel="stylesheet" href="./htmls/mvp.css" />
+  </head>
+  <body>
+    <header id="header">
+      <nav>
+        <a href="">
+          <img src="https://pngimg.com/uploads/mario/mario_PNG125.png" alt="festa logo" height="70">
+        </a>
+        <ul>
+          <li><a href="#inscricao">Inscrever</a></li>
+          <li><a href="#Atrações">Atrações</a></li>
+          <li><a href="#programa">Programa</a></li>
+
+        </ul>
+      </nav>
+      <h1>Festa de Finalistas!!</h1>
+      <p>Tema: <b>Super Mario Bros</b></p>
+      <img
+        src="./htmls/imags/marioooo.gif"
+        alt="Pista arcoires"
+        style="width: 512px; height: 512px"
+      />
+    </header>
+    <main>
+      <hr>
+      <section id="Atrações">
+        <header><h1>Atrações</h1></header>
+        <aside class="peach">
+          <figure>
+            <img src="./htmls/imags/peach.jpg" alt="princess peach" style="width: 256px; height: 256px">
+            <figcaption>Princess Peach</figcaption>
+          </figure>
+          <span>Seus concertos são eventos épicos, onde fãs de todos os cantos do reino se reúnem para testemunhar a magia que emana de sua voz.</span>
+        </aside>
+        <aside class="bwoser">
+          <figure>
+            <img src="./htmls/imags/bawser.jpg" alt="bwoser" style="width: 256px; height: 256px">
+            <figcaption>Rei das Batidas</figcaption>
+          </figure>
+          <div>Bowser, conhecido como o Rei das Batidas, assume o papel de um renomado DJ. Com sua presença imponente e carisma magnético, ele comanda os palcos de grandes festivais e clubes noturnos, hipnotizando multidões com suas mixagens envolventes e músicas eletrônicas inovadoras.</div>
+        </aside>
+        <aside class="Luigi">
+          <figure>
+            <img src="./htmls/imags/luigi.jpg" alt="Luigi" style="width: 256px; height: 256px">
+            <figcaption>Príncipe dos Passos</figcaption>
+          </figure>
+          <div>Conhecido como o "Príncipe dos Passos", ele é um dançarino renomado, celebrado por sua graça, técnica impecável e paixão contagiante pela dança.</div>
+        </aside>
+      </section>
+      <hr>
+      <section id="programa">
+        <header>
+          <h1>Programa</h1>
+        </header>
+        <table>
+          <tr>
+            <th>Evento</th>
+            <th colspan="2">Horario</th>
+          </tr>
+          <tr>
+            <td>Entrada</td>
+            <td>20:00</td>
+            <td>23:10</td>
+          </tr>
+          <tr>
+            <td>Princess Peach</td>
+            <td>21:00</td>
+            <td>23:00</td>
+          </tr>
+          <tr>
+            <td>Rei das Batidas</td>
+            <td>23:00</td>
+            <td>01:00</td>
+          </tr>
+          <tr>
+            <td>Príncepe dos Passos</td>
+            <td>01:00</td>
+            <td>03:00</td>
+          </tr>
+          <tr>
+            <td>Encerramento</td>
+            <td>04:00</td>
+          </tr>
+        </table>
+      </section>
+      <hr>
+      <section id="inscricao">
+        <form action="./htmls/Congrats.html" target="_self">
+          <header><h2>Formulário de inscrição</h2></header>
+          <label>Email</label>
+          <input id="user" type="email" />
+
+          <label>Horas</label>
+          <input type="number" id="quantity" min="0" max="500" />
+
+          <label>Cor</label>
+          <input type="color" id="color" />
+
+          <label>Data Nascimento</label>
+          <input id="nasci" type="date" />
+
+          <label>Reunião</label>
+          <input id="reuni" type="datetime-local" />
+
+          <label>Mês de doação</label>
+          <input id="mes" type="month" />
+
+          <label>Telefone</label>
+          <input id="tel" type="tel" />
+
+          <label>tempo</label>
+          <input id="tempo" type="time" />
+
+          <label>Link do Perfil</label>
+          <input id="urls" type="url" />
+
+          <label>week</label>
+          <input id="semana" type="week" />
+
+          <label>Senha</label>
+          <input id="pass" type="password" />
+          <button type="submit" >Inscrever-se</button>
+        </form>
+      </section>
+    </main>
+    <footer>
+      <nav>
+        <a class="no-blue" href="#header"><small>⏫</small></a>
+        <p>Copyright 2023 - Grupo 4 </p>
+        <a href="https://www.iscte-iul.pt/">
+          <img src="https://eduportugal.eu/wp-content/uploads/2017/12/ISCTE-Logo-1024x249.png" alt="iscte logo" height="70">
+        </a>
+      </nav>
+    </footer>
+  </body>
+</html>
