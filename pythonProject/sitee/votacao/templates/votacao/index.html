@@ -1,10 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+{% if latest_question_list %}
+<ul>
+ {% for questao in latest_question_list %}
+ <li>
+ <a href="/votacao/{{ questao.id }}">
+ {{ questao.questao_texto }}
+ </a>
+ </li>
+ {% endfor %}
+</ul>
+{% else %}
+<p>Nao ha questoes disponiveis.</p>
+{% endif %}
