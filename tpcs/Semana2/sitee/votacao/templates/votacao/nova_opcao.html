@@ -1,0 +1,7 @@
+<form method="post" action="{% url 'votacao:criar_opcao' questao_id=questao.id %}">
+    {% csrf_token %}
+    <label for="nova_opcao">Criar nova opcão</label>
+    <input type="text" id="nova_opcao" name="nova_opcao" />
+    <input value="submeter" type="submit">
+    <br> <a href="/votacao">Voltar para a página de votações</a><br>
+</form>
