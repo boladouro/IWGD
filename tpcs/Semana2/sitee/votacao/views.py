@@ -68,11 +68,18 @@ def resultados(request, questao_id):
 
 
 def nova_questao(request):
+    if request.method == 'POST':
+        t = request.POST['nova_questao']
+        nova_questao = Questao(questao_texto=t, pub_data=timezone.now())
+        nova_questao.save()
+
     return render(request, 'votacao/nova_questao.html')
 
 
-def guardar_questao(request):
-    t = request.Post['nova_questao']
-    q = Questao(questao_texto=t, pub_data=timezone.now())
-    q.save()
-    return HttpResponseRedirect(reverse('votacao:index'))
+def criar_opcao(request,questao_id):
+    questao = get_object_or_404(Questao, pk=questao_id)
+    if request.method == 'POST':
+        t = request.POST['nova_opcao']
+        nova_opcao = Opcao(questao=questao, opcao_texto=t, votos=0)
+        nova_opcao.save()
+    return render(request, 'votacao/nova_opcao.html', {'questao': questao})

@@ -1,6 +1,7 @@
-<form action="{%url 'votacao:guardar_questao'%}" method="post">
+<form method="post" action="{%url 'votacao:nova_questao'%}">
     {% csrf_token %}
-    <label>Criarnova questão</label>
-    <input id="questao" type="text" />
+    <label for="nova_questao">Criar nova questão</label>
+    <input type="text" id="nova_questao" name="nova_questao" />
     <input value="submeter" type="submit">
+    <br> <a href="/votacao" >Voltar para a página de votações</a><br>
 </form>
