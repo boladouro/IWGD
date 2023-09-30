@@ -1,0 +1,15 @@
+<h1>{{ questao.questao_texto }}</h1>
+{% if error_message %}
+<p><strong>{{ error_message }}</strong></p>
+{% endif %}
+<form action="{% url 'votacao:voto' questao.id %}" method="post">
+{% csrf_token %}
+{% for opcao in questao.opcao_set.all %}
+<input type="radio" name="opcao" id="opcao{{ forloop.counter }}" value="{{ opcao.id }}" />
+<label for="opcao{{ forloop.counter }}">
+{{ opcao.opcao_texto }}
+</label>
+<br />
+{% endfor %}
+<input type="submit" value="Voto" />
+</form>
