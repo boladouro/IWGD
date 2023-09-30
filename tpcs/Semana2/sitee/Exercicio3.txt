@@ -1,0 +1,27 @@
+#1
+In [3]: from votacao.models import Questao, Opcao
+In [4]: Questao.objects.all()
+Out[4]: <QuerySet [<Questao: Entao sempre nos decidimos a fazer uma festa no fim do ano?>, <Questao: Gostas de programar para a internet>, <Questao: Que dia da semana é hoje?>]>
+
+#2
+In [6]: q = Questao.objects.get(questao_texto__startswith="Gostas de Programar")
+
+In [7]: Opcao.objects.filter(questao=q)
+Out[7]: <QuerySet [<Opcao: Adoro>, <Opcao: Gosto>, <Opcao: Mais ou Menos>, <Opcao: Nem por isso>, <Opcao: Detesto>]>
+
+#3
+In[8]:Opcao.objects.filter(questao=q, votos__gt=2)
+Out[8]:<QuerySet [<Opcao: Gosto>, <Opcao: Mais ou menos>]>
+
+#4
+In[9]:allq = Questao.objects.all()
+In[10]: from django.utils import timezone
+In[11]: current_year= timezone.now().year
+In[12]: for i in allq:
+	if (current_year - i.pub_data.year)<=3:
+		print(i)
+Out[12]:Entao sempre nos decidimos a fazer uma festa no fim do ano?
+Gostas de programar na internet?
+Que dia da semana é hoje?
+	
+
