@@ -1,0 +1,42 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'usuarios/mvp.css' %}" />
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro</title>
+</head>
+<body>
+    <section id="Cadastro">
+        <form action="{% url 'votacao:cadastro' %}" method="POST" >
+            {% csrf_token %}
+            <header><h2>Formulário de Cadastro</h2></header>
+
+            <label>Username</label>
+            <input id="Username" placeholder="nome..." type="text" name="user" />
+
+            <label>Email</label>
+            <input id="email" placeholder="emailll..." type="email" name="email" />
+
+            <label for="country">Curso</label>
+            <select id="country" name="curses">
+                <option value="lus">LUS</option>
+                <option value="lau">LAU</option>
+                <option value="kar">KAR</option>
+                <option value="dec">DEC</option>
+                <option value="rui">RUI</option>
+                <option value="plan">PLAN</option>
+                <option value="cha">CHA</option>
+                <option value="lcd">LCD</option>
+            </select>
+
+            <label>Senha</label>
+            <input id="pass" placeholder="senha..." type="password" name="passw" />
+
+            <button type="submit" >Inscrever-se</button>
+        </form>
+    </section>
+
+</body>
+</html>

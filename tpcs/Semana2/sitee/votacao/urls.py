@@ -4,9 +4,13 @@ from . import views
 app_name = 'votacao'
 urlpatterns = [
     path("", views.index, name="index"),
+    path('questoes/', views.questoes, name='questoes'),
     path('<int:questao_id>', views.detalhe, name='detalhe'),
     path('<int:questao_id>/resultados', views.resultados, name='resultados'),
     path('<int:questao_id>/voto', views.voto, name='voto'),
     path('nova_questao/', views.nova_questao, name='nova_questao'),
     path('<int:questao_id>/criar_opcao/',views.criar_opcao,name='criar_opcao'),
+    path('cadastro/', views.cadastro, name="cadastro"),
+    path('login/', views.login, name="login")
+
 ]
