@@ -9,7 +9,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as login_kar
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import logout
+from django.contrib.auth import logout as bye
+from django.shortcuts import redirect
 # def index(request):
 #  latest_question_list = Questao.objects.order_by('-pub_data')[:5]
 #  template = loader.get_template('votacao/index.html')
@@ -126,9 +127,9 @@ def questoes(request):
     context = {'latest_question_list': latest_question_list}
     return render(request, "votacao/questoes.html",context)
 
-def logoutview(request):
- logout(request)
- return index(request)
+def logout(request):
+ bye(request)
+ return redirect('/votacao')
 
 
 def showname(request):

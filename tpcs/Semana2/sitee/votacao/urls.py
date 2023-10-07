@@ -1,5 +1,6 @@
 from django.urls import include, path
 from . import views
+from django.contrib.auth.views import LogoutView
 # (. significa que importa views da mesma directoria)
 app_name = 'votacao'
 urlpatterns = [
@@ -11,6 +12,7 @@ urlpatterns = [
     path('nova_questao/', views.nova_questao, name='nova_questao'),
     path('<int:questao_id>/criar_opcao/',views.criar_opcao,name='criar_opcao'),
     path('cadastro/', views.cadastro, name="cadastro"),
-    path('login/', views.login, name="login")
+    path('login/', views.login, name="login"),
+    path("logout/", views.logout, name="logout")
 
 ]

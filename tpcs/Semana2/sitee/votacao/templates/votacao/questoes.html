@@ -15,5 +15,10 @@
 <p>Nao ha questoes disponiveis.</p>
 {% endif %}
 
+{% if user.is_staff %}
+    <a href="{% url 'votacao:nova_questao' %}"> Criar nova questão </a>
+{% else %}
 
-<a href="{% url 'votacao:nova_questao' %}"> Criar nova questão </a>
+{% endif %}
+
+<a href="{% url 'votacao:logout' %}">Logout</a>
