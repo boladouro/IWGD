@@ -1,5 +1,6 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'votacao/style.css' %}" />
+<h1>{{ user.username }}</h1>
 {% if latest_question_list %}
 <ul>
     {% for questao in latest_question_list %}

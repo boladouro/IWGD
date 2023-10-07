@@ -116,10 +116,9 @@ def login(request):
 
         if verifi:
             login_kar(request, verifi)
-            return render(request, "votacao/questoes.html")
+            return questoes(request)
         else:
             return HttpResponse("senha ou usarname invalidos")
-        #return render(request, "usuarios/login.html")
 
 @login_required(login_url="/votacao/login/")
 def questoes(request):
@@ -130,6 +129,12 @@ def questoes(request):
 def logoutview(request):
  logout(request)
  return index(request)
+
+
+def showname(request):
+    if request.user.is_authenticated():
+        username = request.user.username
+        return username
 
 
 
