@@ -1,5 +1,6 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'votacao/style.css' %}" />
+
 <h1>{{ user.username }}</h1>
 {% if latest_question_list %}
 <ul>
@@ -17,8 +18,9 @@
 
 {% if user.is_staff %}
     <a href="{% url 'votacao:nova_questao' %}"> Criar nova questão </a>
-{% else %}
-
+    <br>
 {% endif %}
 
 <a href="{% url 'votacao:logout' %}">Logout</a>
+<br>
+<a href="{% url 'votacao:perfil' %}">Perfil</a>

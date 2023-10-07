@@ -1,3 +1,6 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'votacao/mvp.css' %}" />
+
 <h1>{{ user.username }}</h1>
 <form method="post" action="{%url 'votacao:nova_questao'%}">
     {% csrf_token %}

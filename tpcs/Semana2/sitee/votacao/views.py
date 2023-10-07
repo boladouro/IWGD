@@ -3,7 +3,7 @@ from django.http import HttpResponse, FileResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
 from django.utils import timezone
-from .models import Questao, Opcao, Aluno
+from .models import Questao, Opcao, Aluno, Voto
 from django.http import Http404
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
@@ -44,7 +44,11 @@ def voto(request, questao_id):
 @login_required(login_url="/votacao/login/")
 def detalhe(request, questao_id):
     questao = get_object_or_404(Questao, pk=questao_id)
-    return render(request, 'votacao/detalhe.html', {'questao': questao})
+    return render(request, 'votacao/detalhe.html', {
+        'questao': questao,
+        'opcoes': questao.opcao_set.all(),
+        'tem_opcoes': questao.opcao_set.count() > 0
+    })
 
 @login_required(login_url="/votacao/login/")
 def voto(request, questao_id):
@@ -55,8 +59,7 @@ def voto(request, questao_id):
         # Apresenta de novo o form para votar
         return render(request, 'votacao/detalhe.html', {'questao': questao, 'error_message': "Não escolheu uma opção", })
     else:
-        opcao_seleccionada.votos += 1
-        opcao_seleccionada.save()
+        opcao_seleccionada.add_voto(request.user)
         # Retorne sempre HttpResponseRedirect depois de
         # tratar os dados POST de um form
         # pois isso impede os dados de serem tratados
@@ -67,7 +70,10 @@ def voto(request, questao_id):
 @login_required(login_url="/votacao/login/")
 def resultados(request, questao_id):
     questao = get_object_or_404(Questao, pk=questao_id)
-    return render(request, 'votacao/resultados.html', {'questao': questao})
+    return render(request, 'votacao/resultados.html', {
+        'questao': questao,
+        'opcoes_resultados': questao.get_resultados(),
+    })
 
 @login_required(login_url="/votacao/login/")
 def nova_questao(request):
@@ -75,6 +81,8 @@ def nova_questao(request):
         t = request.POST['nova_questao']
         nova_questao = Questao(questao_texto=t, pub_data=timezone.now())
         nova_questao.save()
+        return HttpResponseRedirect(reverse('votacao:detalhe', args=(nova_questao.id,)))
+
 
     return render(request, 'votacao/nova_questao.html')
 
@@ -83,7 +91,7 @@ def criar_opcao(request,questao_id):
     questao = get_object_or_404(Questao, pk=questao_id)
     if request.method == 'POST':
         t = request.POST['nova_opcao']
-        nova_opcao = Opcao(questao=questao, opcao_texto=t, votos=0)
+        nova_opcao = Opcao(questao=questao, opcao_texto=t)
         nova_opcao.save()
     return render(request, 'votacao/nova_opcao.html', {'questao': questao})
 
@@ -95,15 +103,15 @@ def cadastro(request):
         email1 = request.POST.get('email')
         curso1 = request.POST.get('curses')
         password1 = request.POST.get('passw')
-        u = User.objects.filter(username=username1).first()
+        temAluno = Aluno.objects.filter(username=username1).first()
 
-        if u:
+        if temAluno:
             return HttpResponse('JA existe esse nome de usuario')
 
-        u = User.objects.create_user(username=username1,email=email1,password=password1)
-        ut = Aluno(user=u, curso=curso1)
-        u.save()
-        return HttpResponse(f'foi cadastradooo {u.aluno.curso}')
+        aluno = Aluno(username=username1, email=email1, curso=curso1, password=password1)
+        ## aluno.save will not hash password which is bad
+        Aluno.objects.create_user(username=username1, email=email1, curso=curso1, password=password1)
+        return HttpResponse(fr'foi cadastradooo em:{aluno.curso} <br> <a href="..\login">Voltar login</a>')
 
 
 def login(request):
@@ -113,8 +121,7 @@ def login(request):
         username1 = request.POST.get('user')
         senha = request.POST.get('passw')
 
-        verifi = authenticate(username=username1,password=senha)
-
+        verifi = authenticate(request, username=username1, password=senha)
         if verifi:
             login_kar(request, verifi)
             return questoes(request)
@@ -133,9 +140,26 @@ def logout(request):
 
 
 def showname(request):
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         username = request.user.username
         return username
 
+@login_required(login_url="/votacao/login/")
+def perfil(request):
+    return render(request, "usuarios/perfil.html", {
+        # 'username': showname(request),
+        # 'email': request.user.email,
+        # 'curso': Aluno.get_aluno(request.user).curso,
+        'votos': Voto.get_votos_from_aluno(request.user)
+    })
 
-
+@login_required(login_url="/votacao/login/")
+def eliminar_opcao(request, questao_id):
+    if request.method == 'POST':
+        # elimina a opcao
+        opcao = get_object_or_404(Opcao, pk=request.POST['opcao'])
+        opcao.delete()
+        return HttpResponseRedirect(redirect_to=reverse('votacao:detalhe', args=(questao_id,)))
+    elif request.method == 'GET':
+        # vai para a pagina
+        return render(request, 'votacao/eliminar_opcao.html', {'questao': get_object_or_404(Questao, pk=questao_id)})
