@@ -47,7 +47,8 @@ def detalhe(request, questao_id):
     return render(request, 'votacao/detalhe.html', {
         'questao': questao,
         'opcoes': questao.opcao_set.all(),
-        'tem_opcoes': questao.opcao_set.count() > 0
+        'tem_opcoes': questao.opcao_set.count() > 0,
+        'votos': Voto.get_votos_from_aluno(request.user)
     })
 
 @login_required(login_url="/votacao/login/")
@@ -73,6 +74,7 @@ def resultados(request, questao_id):
     return render(request, 'votacao/resultados.html', {
         'questao': questao,
         'opcoes_resultados': questao.get_resultados(),
+        'votos': Voto.get_votos_from_aluno(request.user)
     })
 
 @login_required(login_url="/votacao/login/")
@@ -163,3 +165,15 @@ def eliminar_opcao(request, questao_id):
     elif request.method == 'GET':
         # vai para a pagina
         return render(request, 'votacao/eliminar_opcao.html', {'questao': get_object_or_404(Questao, pk=questao_id)})
+@login_required(login_url="/votacao/login/")
+def eliminar_questao(request):
+    latest_question_list = Questao.objects.order_by('-pub_data')[:5]
+    context = {'latest_question_list': latest_question_list}
+    if request.method == 'POST':
+        # elimina a questão
+        questao = get_object_or_404(Questao, pk=request.POST['questao'])
+        questao.delete()
+        return HttpResponseRedirect(redirect_to=reverse('votacao:questoes'))
+    elif request.method == 'GET':
+        #return render(request, 'votacao/eliminar_questao.html', {'questao': get_object_or_404(Questao, pk=request.GET['questao'])})
+        return render(request, 'votacao/eliminar_questao.html', context)

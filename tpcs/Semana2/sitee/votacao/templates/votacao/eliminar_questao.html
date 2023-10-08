@@ -1,0 +1,17 @@
+
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'votacao/mvp.css' %}" />
+<h1> Selecione a Questão que deseja remover</h1>
+<small>Usando: {{ user.username }}</small>
+<br>
+<form method="post" action="{%url 'votacao:eliminar_questao'%}">
+    {% csrf_token %}
+    {% for questao in latest_question_list %}
+        <input type="radio" name="questao" id="questao_{{ questao.id }}" value="{{ questao.id }}">
+        <label for="questao_{{ questao.id }}">Remover: {{ questao.questao_texto }}</label>
+        <br>
+    {% endfor %}
+    <br>
+    <input type="submit" value="Remover">
+</form>
+<br> <a href="{% url 'votacao:questoes' %}">Voltar para menu</a><br>

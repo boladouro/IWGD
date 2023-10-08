@@ -19,6 +19,8 @@
 {% if user.is_staff %}
     <a href="{% url 'votacao:nova_questao' %}"> Criar nova questão </a>
     <br>
+    <a href="{% url 'votacao:eliminar_questao' %}"> Remover Questão</a>
+    <br>
 {% endif %}
 
 <a href="{% url 'votacao:logout' %}">Logout</a>

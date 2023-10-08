@@ -7,4 +7,9 @@
  <li>{{ opcao.opcao_texto }} -- {{ resultado }} voto{{ resultado|pluralize }}</li>
 {% endfor %}
 </ul>
-<a href="{% url 'votacao:detalhe' questao.id %}">Votar novamente?</a>
+{% if votos < 14 %}
+ <a href="{% url 'votacao:detalhe' questao.id %}">Votar novamente?</a> <br>
+{% else %}
+ <p> Você usou todos os seus votos disponiveis!!</p>
+{% endif %}
+<a href="../votacao/questoes/"> Voltar para menu</a>
