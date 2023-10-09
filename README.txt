@@ -1,4 +1,4 @@
-OS TPCS DE IWAGD DO GRUPO 4
+AS COISAS DE IWAGD DO GRUPO 4
 
 * Allan Kardec, 103380
 * André Plancha, 105289
