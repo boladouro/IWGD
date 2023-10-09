@@ -1,7 +1,11 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'votacao/mvp.css' %}" />
+
+<h1>{{ user.username }}</h1>
 <form method="post" action="{%url 'votacao:nova_questao'%}">
     {% csrf_token %}
     <label for="nova_questao">Criar nova questão</label>
     <input type="text" id="nova_questao" name="nova_questao" />
     <input value="submeter" type="submit">
-    <br> <a href="/votacao" >Voltar para a página de votações</a><br>
+    <br> <a href="/votacao/questoes/" >Voltar para menu</a><br>
 </form>

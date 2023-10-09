@@ -1,7 +1,13 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'votacao/mvp.css' %}" />
+
+<h1>Criar opções com opção de: "{{ questao.questao_texto }}"</h1>
+<small>Usando: {{ user.username }}</small>
+<br>
 <form method="post" action="{% url 'votacao:criar_opcao' questao_id=questao.id %}">
     {% csrf_token %}
     <label for="nova_opcao">Criar nova opcão</label>
     <input type="text" id="nova_opcao" name="nova_opcao" />
     <input value="submeter" type="submit">
-    <br> <a href="/votacao">Voltar para a página de votações</a><br>
 </form>
+<br> <a href="{% url 'votacao:detalhe' questao.id%}">Voltar para a página de votações</a><br>

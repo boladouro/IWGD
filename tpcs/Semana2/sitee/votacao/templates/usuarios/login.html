@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+<section id="login">
+        <form action="{% url 'votacao:login' %}" method="POST" >
+            {% csrf_token %}
+            <header><h2>Login</h2></header>
+
+            <label>Username</label>
+            <input id="Username" placeholder="nome..." type="text" name="user" />
+
+            <label>Senha</label>
+            <input id="pass" placeholder="senha..." type="password" name="passw" />
+
+            <button type="submit" >Logar</button>
+        </form>
+    </section>
+</body>
+</html>

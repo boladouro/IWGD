@@ -1,0 +1,19 @@
+
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'votacao/mvp.css' %}" />
+
+
+<h1>Remover opção de: "{{ questao.questao_texto }}"</h1>
+<small>Usando: {{ user.username }}</small>
+<br>
+<form method="post" action="{%url 'votacao:eliminar_opcao' questao.id %}">
+    {% csrf_token %}
+    {% for opcao in questao.opcao_set.all %}
+        <input type="radio" name="opcao" id="opcao_{{ opcao.id }}" value="{{ opcao.id }}">
+        <label for="opcao_{{ opcao.id }}">Remover: {{ opcao.opcao_texto }}</label>
+        <br>
+    {% endfor %}
+    <br>
+    <input type="submit" value="Remover">
+</form>
+<br> <a href="{% url 'votacao:detalhe' questao.id%}">Voltar para a página de votações</a><br>
