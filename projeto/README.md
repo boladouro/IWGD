@@ -14,7 +14,7 @@ Features
 * Profile (com os threads criaods  e participados)
 * Stalk (ou seja ver os posts das pessoas)
 * REport, remove users
-* users coments 
+* users coments
 * QUoets, data de quando publicado
 * Remover, editar 
 * Signiature-like
@@ -24,3 +24,5 @@ Features
 * sort thread (new, old, most quoted, user)
 * filter (users, palavras no thread)
 * followers????? (prob not)
+* Rss
+* pagination
