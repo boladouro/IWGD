@@ -1,4 +1,5 @@
 \documentclass{article}
+\usepackage{graphicx}
 
 \title{Resumo do Projeto do Foruns}
 \author{
@@ -14,78 +15,31 @@
 
 \begin{document}
   \thispagestyle{empty}
-  \pagebreak
-  \section{Introdução}
-  \textbf{Karcheve ou Charkarl} Estamos planejando desenvolver uma plataforma de fóruns altamente interativa e personalizável com o auxílio do Django. Esta aplicação proporcionará um ambiente robusto e amigável para a troca de ideias e informações entre os membros da comunidade. Com recursos avançados de moderação, categorização intuitiva e uma interface intuitiva, nosso objetivo é criar uma experiência envolvente para os usuários, promovendo discussões construtivas e interação significativa.
-  \pagebreak
   \section{Funcionalidades do Fórum}
   
-  \subsection{Threads}
-  Os usuários terão a capacidade de criar e participar de discussões em threads dedicadas.
-  
-  \subsection{Follow Ups}
-  Os usuários poderão seguir threads de interesse e receber notificações sobre atualizações.
-  
-  \subsection{Usuários}
-  O fórum contará com diferentes níveis de permissões para usuários, incluindo admins, mods, usuários verificados e normais.
-  
-  \subsection{Autenticação}
-  O fórum terá um sistema de autenticação que inclui login, registro e logout de contas de usuário. Também será possível acessar algumas áreas sem a necessidade de login.
-  
-  \subsection{Página Principal}
-  Uma página inicial será disponibilizada para navegação rápida e acesso facilitado às principais seções do fórum.
-  
-  \subsection{Pesquisa}
-  Uma funcionalidade avançada de pesquisa estará presente, permitindo a busca por texto completo e suporte a expressões regulares.
-  
-  \subsection{Perfil do Usuário}
-  Cada usuário terá uma página de perfil personalizada com informações sobre os threads que criou e participou.
-  
-  \subsection{Stalk}
-  Os usuários poderão visualizar as postagens de outros usuários em um formato de acompanhamento.
-  
-  \subsection{Relatórios e Remoção de Usuários}
-  Os usuários terão a capacidade de relatar comportamentos inadequados e os administradores poderão remover contas problemáticas.
-  
-  \subsection{Comentários dos Usuários}
-  Os usuários poderão comentar sobre as postagens de outros usuários, facilitando a interação direta.
-  
-  \subsection{Citações}
-  Será possível citar outras postagens, incluindo data de publicação e autor.
-  
-  \subsection{Remoção e Edição}
-  Os usuários terão a capacidade de remover ou editar postagens, seguindo regras e prazos predefinidos.
-  
-  \subsection{Assinatura Personalizada}
-  Os usuários poderão adicionar uma assinatura personalizada às suas postagens.
-  
-  \subsection{Foto de Perfil e Biografia}
-  Os usuários poderão fazer upload de fotos de perfil e compartilhar informações pessoais em suas biografias.
-  
-  \subsection{Título do Thread}
-  Cada thread poderá ter um título descritivo.
-  
-  \subsection{Formatação de Texto}
-  Haverá suporte a uma formatação de texto estilo Markdown para criar postagens mais ricas.
-  
-  \subsection{Classificação de Threads}
-  Os usuários poderão classificar threads por critérios como mais recentes, mais antigos, mais citados e por usuário.
-  
-  \subsection{Filtragem}
-  Haverá a opção de filtrar threads com base em critérios como usuários ou palavras-chave no título ou conteúdo.
-  
-  \subsection{Seguidores}
-  Os usuários poderão seguir threads para receber notificações sobre atualizações.
-  
-  \subsection{RSS}
-  O fórum contará com suporte a feeds RSS.
-  
-  \subsection{Paginação}
-  As listas de threads serão paginadas para facilitar a navegação.
-  
-  \section{Conclusão}
-  Essas funcionalidades foram cuidadosamente planejadas para oferecer uma experiência completa aos usuários do fórum.
-  
-  
+  Queremos fazer algo parecido com um foruns abrangendo a parte de comunidade, de postagens, like, deslike, perfil, comentar nos posts, reagir a esses post, neste primeiro momento algo mais simples, conforme for sentido necessidades iremos implementando novas coisas conforme nossa criatividade.
+
+  vamos utilizar como base o site \url{https://linustechtips.com/}.
+
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{image.png}
+    \caption{Imagem do site de referencia}
+    \label{fig:imagem}
+  \end{figure}
+
+  neste momento ja iniciamos algumas coisas desse projeto, por exemplo a parte de models, ja fizemos algumas classes. como demostrado na figura 2
+
+  \begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{image1.png}
+    \caption{Imagem do arquivo models.py}
+    \label{fig:imagem}
+  \end{figure}
+
+  Grupo 4 - \\
+  André Plancha, 105289 \\
+  Allan Kardec Rodrigues, 103380 \\
+  Rui Chaves, 104914
 
 \end{document}
