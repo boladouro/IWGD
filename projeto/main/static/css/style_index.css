@@ -1,0 +1,58 @@
+
+
+
+:root {
+    --active-brightness: 0.85;
+}
+
+body{
+    height: 100%;
+    margin:0;
+
+}
+
+header{
+    background-image: url(../img/nav.png);
+    background-size: 100% 80px;
+    background-repeat: no-repeat;
+    color: rgb(45, 55, 72);
+    padding: 20px 0px;
+
+}
+
+header div{
+      padding: 0px 100px;
+      color:white;
+      display: inline;
+
+}
+
+
+div{
+    display: block;
+}
+
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+nav li {
+  float: left;
+}
+
+nav li a {
+  display: block;
+  color: rgba(255, 255, 255, 0.6);;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+nav li a:hover {
+  background-color: #111;
+  color:#fff;
+}

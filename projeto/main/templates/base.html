@@ -1,15 +1,36 @@
-<!DOCTYPE html>
+
 {% load static %}
+
 <html lang="pt">
 <head>
   <title>Page Title</title>
 </head>
-<link rel="stylesheet" type="text/css" href='{% static "css/reset.css" %}' />
+<link rel="stylesheet" type="text/css" href='{% static "css/style_index.css" %}' />
 <title>Index</title>
 <body>
-<nav></nav>
+  <header>
+      <div>
+        logo
+      </div>
+      <div>
+        barra de pesquisa
+      </div>
+
+  </header>
+
+  <nav>
+    <img src="" alt="">
+    <ul>
+      <li><a href="adawd">Home</a></li>
+      <li><a href="awdawd">News</a></li>
+      <li><a href="awdawd">Contact</a></li>
+      <li><a href="aawdawdp">About</a></li>
+    </ul>
+
+  </nav>
 <main>
   {% block content %}
+
   {% endblock %}
 </main>
 
