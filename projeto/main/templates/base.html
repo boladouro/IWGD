@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+  <title>Page Title</title>
+</head>
+<link rel="stylesheet" type="text/css" href='{% static "css/reset.css" %}' />
+<title>Index</title>
+<body>
+<nav></nav>
+<main>
+  {% block content %}
+  {% endblock %}
+</main>
+
+<footer></footer>
+</body>

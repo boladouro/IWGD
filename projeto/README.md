@@ -26,3 +26,6 @@ Features
 * followers????? (prob not)
 * Rss
 * pagination
+* Video embed option
+* Preview post system
+* rascunho?

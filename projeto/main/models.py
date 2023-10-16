@@ -6,7 +6,7 @@ from django.contrib.auth.models import AbstractUser
 class User(AbstractUser):
   date_created = models.DateTimeField(auto_now_add=True)
   signature = models.TextField(null=True)
-  avatar = models.URLField(null=True)
+  avatar = models.ImageField(default='default.png', upload_to='avatars')
   is_banned = models.BooleanField(default=False)
   is_timed_out = models.BooleanField(default=False)
   timeout_expires = models.DateTimeField(null=True)
