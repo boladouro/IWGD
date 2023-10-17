@@ -1,11 +1,29 @@
 {% extends 'base.html' %}
 {% block content %}
+<style>
+  #lista-topicos {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+</style>
 <h1>Tópicos</h1>
-    <ul id="lista-topicos">
-        <li>batatinhaa</li>
-        <li>batatinhaa1</li>
-        <li>batatinhaa2</li>
-        <li>batatinhaa3</li>
-        <li>batatinhaa4</li>
-    </ul>
+<table>
+  {% for topico in topicos %}
+  <tr>
+    <td><span class="favourite-thread {{ topico.nome }} material-symbols-outlined">favorite</span></td>
+    <td>{{ topico.nome }}</td>
+    <td>{{ topico.descricao }}</td>
+    <td>{{ topico.ultimo_post }}</td>
+  </tr>
+  {% endfor %}
+</table>
+<ul id="lista-topicos">
+  <li>batatinhaa</li>
+  <li>batatinhaa1</li>
+  <li>batatinhaa2</li>
+  <li>batatinhaa3</li>
+  <li>batatinhaa4</li>
+</ul>
 {% endblock %}

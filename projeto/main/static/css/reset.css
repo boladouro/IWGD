@@ -1,3 +1,13 @@
+* {
+  font-family: "Noto Sans", sans-serif;
+  font-weight: lighter;
+}
+
+
+/* vars */
+:root {
+  --background-color: #DEDEDE;
+}
 
 /* https://andy-bell.co.uk/a-more-modern-css-reset/ */
 

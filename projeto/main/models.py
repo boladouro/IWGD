@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+
 from django.db import models
 from django.db.models import Model
 from django.contrib.auth.models import AbstractUser
@@ -51,6 +53,7 @@ class Thread(Model):
   follow_up_from = models.ForeignKey('Thread', on_delete=models.CASCADE, null=True, related_name="follow_ups")
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="poster")
   is_sticky = models.BooleanField(default=False)
+  topico = models.ForeignKey('Topico', on_delete=models.CASCADE, null=True, related_name="topico")
 
 class Post(Model):
   date_created = models.DateTimeField(auto_now_add=True)
@@ -66,3 +69,6 @@ class PostEmotes(Model):
   post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="post")
   emote = models.ForeignKey(Emotes, on_delete=models.CASCADE, related_name="emote")
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="emote_user")
+
+class Topico(Model):
+  name = models.CharField(max_length=50)
