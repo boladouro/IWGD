@@ -71,4 +71,6 @@ class PostEmotes(Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="emote_user")
 
 class Topico(Model):
+
+
   name = models.CharField(max_length=50)
