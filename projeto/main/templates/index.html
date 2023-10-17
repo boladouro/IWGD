@@ -16,7 +16,7 @@
     <td>{{ topico.name }}</td>
     <td>{{ topico.thread_count }}</td>
     {% if topico.latest_thread %}
-    <td>{{ topico.date_created }}</td>
+    <td>{{ topico.latest_thread.date_created }}</td>
     {% else %}
     <td></td>
     {% endif %}
