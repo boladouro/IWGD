@@ -2,30 +2,25 @@
 {% block content %}
 <style>
   #lista-topicos {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
+    border-collapse: collapse;
+    width: 100%;
   }
 </style>
 
 
 <h2>Tópicos</h2>
-<table>
+<table id="lista-topicos">
   {% for topico in topicos %}
   <tr>
     <td><span class="favourite-thread {{ topico.nome }} material-symbols-outlined">favorite</span></td>
-    <td>{{ topico.nome }}</td>
-    <td>{{ topico.descricao }}</td>
-    <td>{{ topico.ultimo_post }}</td>
+    <td>{{ topico.name }}</td>
+    <td>{{ topico.thread_count }}</td>
+    {% if topico.latest_thread %}
+    <td>{{ topico.date_created }}</td>
+    {% else %}
+    <td></td>
+    {% endif %}
   </tr>
   {% endfor %}
 </table>
-<ul id="lista-topicos">
-  <li>batatinhaa</li>
-  <li>batatinhaa1</li>
-  <li>batatinhaa2</li>
-  <li>batatinhaa3</li>
-  <li>batatinhaa4</li>
-</ul>
 {% endblock %}
