@@ -1,8 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
+from main.models import Topico
+
+
 def index(request):
-  return render(request, "index.html")
+  return render(request, "index.html", {
+      "topicos": Topico.get_topicos()
+  })
 
 def topico(request, topico):
   valid_topics = [
@@ -30,3 +35,4 @@ def handler404(request, exception):
 
 def search_authors(request):
   return render(request, "search_authors.html")
+
