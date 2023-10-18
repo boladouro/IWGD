@@ -9,6 +9,7 @@ urlpatterns = [
     path("", views.index, name="index"),
     path("t/<str:topico>/", views.topico, name="topico"),
     path("a/", views.search_authors, name="search_authors"),
+    path("perfil/", views.perfil, name="perfil"),
 ]
 
 handler404 = 'main.views.handler404'

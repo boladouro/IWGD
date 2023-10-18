@@ -8,6 +8,50 @@ body{
     height: 100%;
     margin:0;
 }
+
+.profile {
+    max-width: 300px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f8f8f8;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.perfil {
+    text-align: center;
+}
+
+.profile img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.profile h1 {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.profile p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.stats {
+    list-style: none;
+    padding: 0;
+}
+
+.stats li {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 5px;
+}
+
+
 body h1 {
     text-align:center;
 
@@ -308,3 +352,6 @@ section {
     font-size: 14px;
     font-style: italic;
 }
+
+
+
