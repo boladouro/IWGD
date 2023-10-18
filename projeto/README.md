@@ -29,3 +29,4 @@ Features
 * Video embed option
 * Preview post system
 * rascunho?
+* favourite foruns per user
