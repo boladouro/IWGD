@@ -9,22 +9,10 @@ def index(request):
       "topicos": Topico.get_topicos()
   })
 
-def topico(request, topico):
-  valid_topics = [
-    "music",
-    "movies",
-    "games",
-    "books",
-    "theater",
-    "dance",
-    "sculpture",
-    "painting",
-    "photography",
-    "meta"
-  ]
-  if topico in valid_topics:
+def topico(request, topico_name:str):
+  if topico_name in [t.name for t in Topico.objects.all()]:
     return render(request, "topico.html", {
-      "topico": topico
+      "topico": topico_name
     })
   else:
     return render(request, "404.html", status=404)

@@ -7,7 +7,7 @@ app_name = 'main'
 
 urlpatterns = [
     path("", views.index, name="index"),
-    path("t/<str:topico>/", views.topico, name="topico"),
+    path("t/<str:topico_name>/", views.topico, name="topico"),
     path("a/", views.search_authors, name="search_authors"),
     path("perfil/", views.perfil, name="perfil"),
 ]

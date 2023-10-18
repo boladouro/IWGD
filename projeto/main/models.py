@@ -5,8 +5,18 @@ from django.db.models import Model
 from django.contrib.auth.models import AbstractUser
 
 DATABASE_READY = False
-
-
+VALID_TOPICS = [
+  "music",
+  "movies",
+  "games",
+  "books",
+  "theater",
+  "dance",
+  "sculpture",
+  "painting",
+  "photography",
+  "meta"
+]
 class User(AbstractUser):
   date_created = models.DateTimeField(auto_now_add=True)
   signature = models.TextField(null=True)
@@ -85,17 +95,14 @@ class Topico(Model):
 
   @dataclass
   class TopicoData:
-    name: str
+    nome: str
     thread_count: int
-    latest_thread: Thread = None
+    latest_thread: Thread | None = None
 
   @staticmethod
   def get_topicos() -> list[TopicoData]:
-    if not DATABASE_READY:
-      # return dummy data
-      return [Topico.TopicoData("Test", 1, None)]
     topicos = []
     for topico in Topico.objects.all():
       topicos.append(Topico.TopicoData(topico.name, Thread.objects.filter(topico=topico).count()))
-      topicos[-1].latest_thread = Thread.objects.filter(topico=topico).order_by('-date_created')[0]
+      topicos[-1].latest_thread = Thread.objects.filter(topico=topico).order_by('-date_created').first()
     return topicos
