@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 
-from main.models import Topico
+from main.models import Topico, Thread
 
 
 def index(request):
@@ -12,7 +12,8 @@ def index(request):
 def topico(request, topico_name:str):
   if topico_name in [t.name for t in Topico.objects.all()]:
     return render(request, "topico.html", {
-      "topico": topico_name
+      "topico": topico_name,
+      "threads": Topico.get_topico(topico_name).get_threads()
     })
   else:
     return render(request, "404.html", status=404)
