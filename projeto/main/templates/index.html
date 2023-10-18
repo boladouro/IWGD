@@ -1,33 +1,33 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<style>
-  #lista-topicos {
-    border-collapse: collapse;
-    width: 100%;
-  }
-</style>
-
-{% for topico in topicos %}
 <div class="listagem">
-    <h2>titulo do topico</h2>
-    <ol>
+  <h2>Tópicos</h2>
+  <ol>
+    <li class="itens-header">
+      <div class="empty"></div>
+      <div class="content">Tópico</div>
+      <div class="stats">nº de Threads</div>
+      <div class="last">Última Thread</div>
+    </li>
+    {% for topico in topicos %}
       <li class="itens">
         <div class="icon"><span class="favourite-thread {{ topico.nome }} material-symbols-outlined">favorite</span></div>
         <div class="content">
-          <h4> <a href=""> {{ topico.name }} </a></h4>
-          <p>arte, pintura, batata</p>
+          <h3> <a class="" style="text-decoration: none" href=""> {{ topico.name }} </a></h3><!-- TODO por decoracao on hover -->
         </div>
         <div class="stats">{{ topico.thread_count }}</div>
         {% if topico.latest_thread %}
-          <div class="last">{{ topico.latest_thread.date_created }} 12/11/20023</div>
+          <div class="last">{{ topico.latest_thread.date_created }} 12/11/20023</div> <!-- TODO por link pra ela -->
         {% else %}
-          <div class="last">{{ topico.latest_thread.date_created }} 12/11/20023</div>
+          <div class="last"></div>
         {% endif %}
       </li>
-    </ol>
+    {% endfor %}
+  </ol>
+
 </div>
-  {% endfor %}
+
 {% endblock %}
 
 
