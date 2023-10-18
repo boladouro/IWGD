@@ -1,0 +1,18 @@
+
+{% load static %}
+<link rel="stylesheet" type="text/css" href='{% static "css/style_perfil.css" %}' />
+{% block content %}
+
+<div class="profile">
+    <img src="../static/img/perfil.png" alt="Foto de Perfil">
+    <h1>Nome do Usuário</h1>
+    <p>Descrição do usuário</p>
+    <ul class="stats">
+        <li>Seguidores: 100</li>
+        <li>Posts: 500</li>
+        <li>Curtidas: 1000</li>
+    </ul>
+</div>
+
+{% endblock %}
+

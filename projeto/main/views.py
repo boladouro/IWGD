@@ -23,4 +23,5 @@ def handler404(request, exception):
 
 def search_authors(request):
   return render(request, "search_authors.html")
-
+def perfil(request):
+  return render(request, "perfil.html")
