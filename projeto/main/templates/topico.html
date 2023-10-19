@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
-Topico: {{ topico }}
+<h2>{{ topico }}</h2>
+{% for thread in threads %}
+ É sticky? {{ thread.is_sticky }} - {{ thread.title }} - {{ thread.user.username }} - {{ thread.date_created }} - <a href="{% url 'main:thread' topico thread.id %}">Ver</a><br>
+{% endfor %}
 {% endblock content %}

@@ -71,6 +71,10 @@ class Thread(Model):
   def get_thread_by_id(thread_id: int) -> "Thread":
     return Thread.objects.get(pk=thread_id)
 
+  def get_posts(self) -> list["Post"]:
+    return Post.objects.filter(thread=self).order_by('date_created')
+
+
 class Post(Model):
   date_created = models.DateTimeField(auto_now_add=True)
   thread = models.ForeignKey(Thread, on_delete=models.CASCADE, related_name="thread")
