@@ -10,7 +10,7 @@
   </li>
   {% for topico in topicos %}
     <li class="itens">
-      <div class="icon"><span class="favourite-thread {{ topico.nome }} material-symbols-outlined">favorite</span></div>
+      <div class="icon"><a class="favourite-thread {{ topico.nome }} material-symbols-outlined">favorite</a></div>
       <div class="content">
         <h3> <a class="" style="text-decoration: none" href="{% url 'main:topico' topico.nome %}">{{ topico.nome }}</a></h3>
       </div>
@@ -23,7 +23,6 @@
     </li>
   {% endfor %}
 </ol>
-
 
 {% endblock %}
 

@@ -2,13 +2,15 @@
 {% block content %}
   <h2>{{ thread.title }}</h2>
   {% for post in posts %}
-    <div class="post">
-      <div class="meta">
-        <p>Posted by {{ post.user.username }} on {{ post.date_created }}</p>
-      </div> <!-- TODO aqui caixas de cada post seria melhor imo -->
-      <div class="message">
-        {{ post.text }}
+    <li class="itens">
+      <div class="post">
+        <div class="meta">
+          <p>Posted by {{ post.user.username }} on {{ post.date_created }}</p>
+        </div> <!-- TODO aqui caixas de cada post seria melhor imo -->
+        <div class="message">
+          {{ post.text }}
+        </div>
       </div>
-    </div>
+    </li>
   {% endfor %}
 {% endblock content %}

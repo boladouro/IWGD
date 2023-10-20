@@ -1,7 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>{{ topico }}</h2>
+<h2 style="font-size:40px;">{{ topico }}</h2>
 {% for thread in threads %}
- É sticky? {{ thread.is_sticky }} - {{ thread.title }} - {{ thread.user.username }} - {{ thread.date_created }} - <a href="{% url 'main:thread' topico thread.id %}">Ver</a><br>
+<div>
+  <li class="itens">
+    <div class="icon">{{ thread.is_sticky }}</div>
+    <div class="content">
+      <h3> <a class="" style="text-decoration: none" href="{% url 'main:thread' topico thread.id %}">{{ thread.title }}</a></h3>
+    </div>
+    <div class="stats">{{ thread.user.username }}</div>
+    <div class="last">{{ thread.date_created }}</div>
+  </li>
+ </div>
 {% endfor %}
 {% endblock content %}
