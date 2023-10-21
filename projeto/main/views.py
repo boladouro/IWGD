@@ -37,9 +37,3 @@ def thread(request, topico_name:str, thread_id:int):
     "thread": t,
     "posts": t.get_posts()
   })
-
-
-async def favorite(request,topico_name:str, thread_is_sticky:bool):
-  post = topico_name
-  if post is
-  await

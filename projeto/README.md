@@ -2,7 +2,7 @@
 
 Ideia: Forum :)
 
-Features
+## Features
 
 * Threads
 * follow ups
@@ -30,3 +30,18 @@ Features
 * Preview post system
 * rascunho?
 * favourite foruns per user
+
+## Coisas que falta
+* Logo
+* Banner
+* header na lista de topicos
+* autenticacao
+* remover home news contact e about e por home quando clicar no logo
+* barra de pesquisa
+* pesquisa
+* pagina de postar threads e postar posts
+* favourito a funcionar
+* Stickies
+* background especial para cada topico
+* link para o usar quando referenciado
+* nº de posts no thread
