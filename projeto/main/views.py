@@ -1,7 +1,7 @@
+from django.contrib import auth
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
-
-from main.models import Topico, Thread
+from main.models import Topico, Thread, User
 
 
 def index(request):
@@ -37,3 +37,43 @@ def thread(request, topico_name:str, thread_id:int):
     "thread": t,
     "posts": t.get_posts()
   })
+
+def login_view(request):
+  if request.method == "POST":
+    username = request.POST['username']
+    password = request.POST['password']
+    user = auth.authenticate(username=username, password=password)
+    if user is not None:
+      auth.login(request, user)
+    else:
+      return render(request, "login.html", {
+        "error": "Invalid username and/or password."
+      })
+  if request.user.is_authenticated:
+    return HttpResponseRedirect("/")
+  return render(request, "login.html")
+
+def logout_view(request):
+  auth.logout(request)
+  return HttpResponseRedirect("/")
+
+def register_view(request):
+  if request.method == "POST":
+    username = request.POST['username']
+    password = request.POST['password']
+    email = request.POST['email']
+    if User.objects.filter(username=username).exists():
+      return render(request, "register.html", {
+        "error": "Username already exists."
+      })
+    if User.objects.filter(email=email).exists():
+      return render(request, "register.html", {
+        "error": "Email already exists."
+      })
+    user = User.objects.create_user(username, email, password)
+    user.save()
+    auth.login(request, user)
+    return HttpResponseRedirect("/")
+  if request.user.is_authenticated:
+    return HttpResponseRedirect("/")
+  return render(request, "register.html")

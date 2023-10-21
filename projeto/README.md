@@ -45,3 +45,5 @@ Ideia: Forum :)
 * background especial para cada topico
 * link para o usar quando referenciado
 * nº de posts no thread
+* avatar
+* tirar aquele gradiente
