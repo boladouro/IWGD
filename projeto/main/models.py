@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from dataclasses import dataclass
 
 from django.db import models
@@ -15,10 +17,10 @@ class User(AbstractUser):
   is_timed_out = models.BooleanField(default=False)
   timeout_expires = models.DateTimeField(null=True)
   ban_or_timeout_reason = models.TextField(null=True)
+  favorites = models.ManyToManyField('Topico', related_name="favorites")
 
-  def get_user_by_id(user_id: int):
+  def get_user_by_id(user_id: int) -> "User":
     return User.objects.get(pk=user_id)
-
 
 
 class Mod(Model):
@@ -62,6 +64,7 @@ class Thread(Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="poster")
   is_sticky = models.BooleanField(default=False)
   topico = models.ForeignKey('Topico', on_delete=models.CASCADE, null=True, related_name="topico")
+
   @staticmethod
   def new_thread(title: str, user: User, topico: "Topico", is_sticky: bool = False) -> "Thread":
     thread = Thread(title=title, user=user, topico=topico, is_sticky=is_sticky)
@@ -82,6 +85,7 @@ class Post(Model):
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user")
   text = models.TextField()
 
+
 class Emotes(Model):  # TODO make better?
   name = models.CharField(max_length=50)
 
@@ -98,19 +102,26 @@ class PostEmotes(Model):
 class Topico(Model):
   name = models.CharField(max_length=50)
 
-  @dataclass
-  class TopicoData:
-    nome: str
-    thread_count: int
-    latest_thread: Thread | None = None
+  @property
+  def thread_count(self) -> int:
+    return Thread.objects.filter(topico=self).count()
+
+  @property
+  def latest_thread(self) -> Thread:
+    return Thread.objects.filter(topico=self).order_by('-date_created').first()
 
   @staticmethod
-  def get_topicos() -> list[TopicoData]: #TODO rewrite
-    topicos = []
-    for topico in Topico.objects.all():
-      topicos.append(Topico.TopicoData(topico.name, Thread.objects.filter(topico=topico).count()))
-      topicos[-1].latest_thread = Thread.objects.filter(topico=topico).order_by('-date_created').first()
-    return topicos
+  def get_topicos(user: User | None) -> list:
+    ret = Topico.objects.all()
+    if user is None:
+      for i in ret:
+        i.is_fav = 1
+    else:
+      for i in ret:
+        i.is_fav = 1 if i in user.favorites.all() else 0
+      # order ret by if it's a favorite
+      ret = sorted(ret, key=lambda x: x.is_fav == 1, reverse=True)
+    return ret
 
   @staticmethod
   def get_topico_by_name(topico_name: str) -> "Topico":

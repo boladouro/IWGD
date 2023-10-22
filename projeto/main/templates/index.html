@@ -11,10 +11,44 @@
       <div class="last">Última Thread</div>
     </li>
     {% for topico in topicos %}
+      <script>
+        $(document).ready(() => {
+          $("#favorite-{{ topico.name }}").on("click", () => {
+            $.ajax({
+              url: "{% url 'main:favorite' topico.name %}",
+              type: "POST",
+              data: {
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+              },
+              success: (response) => {
+                if(response.added) {
+                  $("#favorite-{{ topico.name }}").css("font-variation-settings", "'FILL' 1")
+                } else {
+                  $("#favorite-{{ topico.name }}").css("font-variation-settings", "'FILL' 0")
+                }
+              },
+              error: (response) => {
+                if (response.status in [302, 401]) {
+                  window.location.href = "{% url 'main:login' %}"
+                } else {
+                  console.log("error")
+                  console.log(response)
+                }
+              }
+            })
+          })
+        })
+      </script>
       <li class="itens">
-        <div class="icon"><a class="favourite-thread {{ topico.nome }} material-symbols-outlined">favorite</a></div>
+        <style>
+          #favorite-{{ topico.name }}:hover {
+            cursor: pointer;
+          }
+        </style>
+        <div class="icon"><span id="favorite-{{ topico.name }}"
+         class="material-symbols-outlined" style="font-variation-settings: 'FILL' {{ topico.is_fav }}">favorite</span></div>
         <div class="content">
-          <h3> <a class="" style="text-decoration: none" href="{% url 'main:topico' topico.nome %}">{{ topico.nome }}</a></h3>
+          <h3> <a class="" style="text-decoration: none" href="{% url 'main:topico' topico.name %}">{{ topico.name }}</a></h3>
         </div>
         <div class="stats">{{ topico.thread_count }}</div>
         {% if topico.latest_thread %}
