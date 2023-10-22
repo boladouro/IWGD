@@ -1,7 +1,9 @@
 from django.contrib import auth
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
-from main.models import Topico, Thread, User
+from .models import Topico, Thread, User
+from django.urls import reverse
+
 
 
 def index(request):
@@ -10,7 +12,7 @@ def index(request):
   })
 
 def topico(request, topico_name:str):
-  if topico_name in [t.name for t in Topico.objects.all()]:
+  if topico_name in [t.nome for t in Topico.get_topicos()]:
     return render(request, "topico.html", {
       "topico": topico_name,
       "threads": Topico.get_topico_by_name(topico_name).get_threads()
@@ -40,8 +42,8 @@ def thread(request, topico_name:str, thread_id:int):
 
 def login_view(request):
   if request.method == "POST":
-    username = request.POST['username']
-    password = request.POST['password']
+    username = request.POST.get('username')
+    password = request.POST.get('password')
     user = auth.authenticate(username=username, password=password)
     if user is not None:
       auth.login(request, user)
@@ -53,15 +55,16 @@ def login_view(request):
     return HttpResponseRedirect("/")
   return render(request, "login.html")
 
+
 def logout_view(request):
   auth.logout(request)
   return HttpResponseRedirect("/")
 
 def register_view(request):
   if request.method == "POST":
-    username = request.POST['username']
-    password = request.POST['password']
-    email = request.POST['email']
+    username = request.POST.get('username')
+    password = request.POST.get('password')
+    email = request.POST.get('email')
     if User.objects.filter(username=username).exists():
       return render(request, "register.html", {
         "error": "Username already exists."

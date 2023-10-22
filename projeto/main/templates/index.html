@@ -1,28 +1,30 @@
 {% extends 'base.html' %}
-{% block content %}
-<h2>Tópicos</h2>
-<ol>
-  <li class="itens-header">
-    <div class="empty"></div>
-    <div class="content">Tópico</div>
-    <div class="stats">nº de Threads</div>
-    <div class="last">Última Thread</div>
-  </li>
-  {% for topico in topicos %}
-    <li class="itens">
-      <div class="icon"><a class="favourite-thread {{ topico.nome }} material-symbols-outlined">favorite</a></div>
-      <div class="content">
-        <h3> <a class="" style="text-decoration: none" href="{% url 'main:topico' topico.nome %}">{{ topico.nome }}</a></h3>
-      </div>
-      <div class="stats">{{ topico.thread_count }}</div>
-      {% if topico.latest_thread %}
-        <div class="last">{{ topico.latest_thread.date_created }}</div> <!-- TODO por link pra ela -->
-      {% else %}
-        <div class="last"></div>
-      {% endif %}
-    </li>
-  {% endfor %}
-</ol>
 
+{% block content %}
+<div class="listagem">
+  <h2>Tópicos</h2>
+  <ol>
+    <li class="itens-header">
+      <div class="empty"></div>
+      <div class="content">Tópico</div>
+      <div class="stats">nº de Threads</div>
+      <div class="last">Última Thread</div>
+    </li>
+    {% for topico in topicos %}
+      <li class="itens">
+        <div class="icon"><a class="favourite-thread {{ topico.nome }} material-symbols-outlined">favorite</a></div>
+        <div class="content">
+          <h3> <a class="" style="text-decoration: none" href="{% url 'main:topico' topico.nome %}">{{ topico.nome }}</a></h3>
+        </div>
+        <div class="stats">{{ topico.thread_count }}</div>
+        {% if topico.latest_thread %}
+          <div class="last">{{ topico.latest_thread.date_created }}</div> <!-- TODO por link pra ela -->
+        {% else %}
+          <div class="last"></div>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ol>
+</div>
 {% endblock %}
 

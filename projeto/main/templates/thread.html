@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+<div class="listagem">
   <h2>{{ thread.title }}</h2>
   {% for post in posts %}
     <li class="itens">
@@ -13,4 +14,5 @@
       </div>
     </li>
   {% endfor %}
+</div>
 {% endblock content %}

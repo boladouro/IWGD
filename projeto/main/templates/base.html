@@ -14,7 +14,7 @@
   }
 </style>
 <body>
-  <header>
+  <header class="base">
       <div>
         <a href="{% url 'main:index' %}">Logo</a>
       </div>
@@ -35,10 +35,10 @@
     </ul>
 
   </nav>
-<main style="padding: 10px">
-  <div class="listagem">
+<main style="padding: 10px;">
   {% block content %} {% endblock %}
-  </div>
+  {% block login %} {% endblock %}
+  {% block register %} {% endblock %}
 </main>
   <!--
   <footer class="footer-distributed">

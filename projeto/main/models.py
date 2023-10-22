@@ -20,6 +20,7 @@ class User(AbstractUser):
     return User.objects.get(pk=user_id)
 
 
+
 class Mod(Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name="mod")
   date_turned_mod = models.DateTimeField(auto_now_add=True)
