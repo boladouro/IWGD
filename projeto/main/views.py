@@ -38,9 +38,11 @@ def perfil(request):
 
 def thread(request, topico_name: str, thread_id: int):
   t = Thread.get_thread_by_id(thread_id)
-  if t.topico.name != topico_name:
+  if t is None:
+    return render(request, "404.html", status=404)
+  if t.topico.name != topico_name:  # type: ignore
     # redirect to correct url
-    return HttpResponseRedirect(f"/t/{t.topico.name}/{t.id}/")
+    return HttpResponseRedirect(f"/t/{t.topico.name}/{t.id}/")  # type: ignore
   return render(request, "thread.html", {
     "thread": t,
     "posts": t.get_posts()
@@ -62,11 +64,13 @@ def login_view(request):
     return HttpResponseRedirect("/")
   return render(request, "login.html")
 
+
 def getUser(request):
   if request.user.is_authenticated:
     return request.user
   else:
     return None
+
 
 def logout_view(request):
   auth.logout(request)
@@ -137,9 +141,11 @@ def create_thread(request):
 def create_post(request):
   return render(request, 'new_post.html')
 
+
 @login_required(login_url="login/")
 def delete_post(request):
   return render(request, 'del_post.html')
+
 
 @login_required(login_url="login/")
 def delete_thread(request):

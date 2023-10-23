@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from typing import Iterable
 
 from django.db import models
 from django.db.models import Model
@@ -19,6 +20,7 @@ class User(AbstractUser):
   ban_or_timeout_reason = models.TextField(null=True)
   favorites = models.ManyToManyField('Topico', related_name="favorites")
 
+  @staticmethod
   def get_user_by_id(user_id: int) -> "User":
     return User.objects.get(pk=user_id)
 
@@ -72,10 +74,10 @@ class Thread(Model):
     return thread
 
   @staticmethod
-  def get_thread_by_id(thread_id: int) -> "Thread":
+  def get_thread_by_id(thread_id: int) -> "Thread" | None:
     return Thread.objects.get(pk=thread_id)
 
-  def get_posts(self) -> list["Post"]:
+  def get_posts(self) -> Iterable["Post"]:
     return Post.objects.filter(thread=self).order_by('date_created')
 
 
@@ -101,22 +103,20 @@ class PostEmotes(Model):
 
 class Topico(Model):
   name = models.CharField(max_length=50)
+  is_fav = 0
 
   @property
   def thread_count(self) -> int:
     return Thread.objects.filter(topico=self).count()
 
   @property
-  def latest_thread(self) -> Thread:
+  def latest_thread(self) -> Thread | None:
     return Thread.objects.filter(topico=self).order_by('-date_created').first()
 
   @staticmethod
-  def get_topicos(user: User | None) -> list:
-    ret = Topico.objects.all()
-    if user is None:
-      for i in ret:
-        i.is_fav = 1
-    else:
+  def get_topicos(user: User | None) -> Iterable["Topico"]:
+    ret: Iterable["Topico"] = Topico.objects.all()
+    if user is not None:
       for i in ret:
         i.is_fav = 1 if i in user.favorites.all() else 0
       # order ret by if it's a favorite
@@ -131,6 +131,6 @@ class Topico(Model):
   def get_topico_by_id(topico_id: int) -> "Topico":
     return Topico.objects.get(pk=topico_id)
 
-  def get_threads(self) -> list[Thread]:
+  def get_threads(self) -> Iterable[Thread]:
     # sort by if it's sticky, then date_created from earliest to latest
     return Thread.objects.filter(topico=self).order_by('-is_sticky', '-date_created')

@@ -47,3 +47,7 @@ Ideia: Forum :)
 * nº de posts no thread
 * avatar
 * tirar aquele gradiente
+* mensagem de erro se o login tiver mal ou faltar alguma coisa no registar
+* login e register ta em ingles
+* por o logo
+* pagination
