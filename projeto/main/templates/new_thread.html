@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block new_thread %}
+
+<body class="fooorm" style="background:url('https://wallup.net/wp-content/uploads/2019/09/22938-moon-school-uniforms-pink-hair-anime-girls-mirai-nikki-gasai-yuno.jpg');">
+    <div class="form" >
+        <form action="{% url 'main:create_thread' %}" class="login-form acrylic" method="POST">
+            {% csrf_token %}
+            <span>Criação de thread</span>
+            <input type="text" placeholder="Titulo" name="title"/>
+            <!--<input type="text" value="{{ topico }}" name="topics"/>-->
+            <button type="submit">Criar</button>
+            <p class="message"><a href="{% url 'main:index' %}">Voltar</a></p>
+        </form>
+    </div>
+</body>
+
+{% endblock new_thread %}

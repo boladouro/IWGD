@@ -1,8 +1,8 @@
 from django.contrib import auth
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.utils import timezone
 from django.views.decorators.http import require_POST
-
 from .models import Topico, Thread, User
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
@@ -114,3 +114,21 @@ def favorite(request, topico_str: str):
   return JsonResponse({
     "added": not exists,
   }, status=200)
+
+@login_required(login_url="login/")
+def create_thread(request):
+  if request.method == 'POST':
+    user_t = request.user
+    topico_t = request.POST.get('topics')
+    titulo_t = request.POST.get('title')
+    if topico_t != None and titulo_t != None:
+      kkk = Thread.new_thread(title=titulo_t,user=user_t,topico=topico_t)
+    print(user_t,topico_t,titulo_t)
+    return render(request, 'topico.html', topico_t)
+#     #return HttpResponseRedirect(reverse('man:topico', topico_t))
+  return render(request, 'new_thread.html')
+
+
+@login_required(login_url="login/")
+def create_post(request):
+  pass

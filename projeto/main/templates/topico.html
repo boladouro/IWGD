@@ -1,7 +1,17 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
 <div class="listagem">
-  <h2 style="font-size:40px;">{{ topico }}</h2>
+  <div style="display:flex;justify-content: space-between;">
+    <div>
+      <h2 style="font-size:40px;">{{ topico }}</h2>
+    </div>
+    <div class="button">
+      <a href="{% url 'main:create_thread' %}">Comentar</a>
+      <a href="{% url 'main:login' %}">Apagar</a>
+    </div>
+
+   </div>
   {% for thread in threads %}
   <div>
     <li class="itens">

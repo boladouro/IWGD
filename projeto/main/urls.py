@@ -17,6 +17,7 @@ urlpatterns = [
   path("logout/", views.logout_view, name="logout"),
   path("register/", views.register_view, name="register"),
   path("favorite/<str:topico_str>/", views.favorite, name="favorite"),
+  path("new_thread/", views.create_thread, name="create_thread"),
 ]
 
 handler404 = 'main.views.handler404'
