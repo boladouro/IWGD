@@ -38,7 +38,6 @@ Ideia: Forum :)
 * autenticacao
 * remover home news contact e about e por home quando clicar no logo
 * barra de pesquisa
-* pesquisa
 * pagina de postar threads e postar posts
 * favourito a funcionar
 * Stickies
@@ -51,3 +50,5 @@ Ideia: Forum :)
 * login e register ta em ingles
 * por o logo
 * pagination
+* barra de pesquisa a funcionar
+* verificar se novos threads e posts aparecem na pesquisa auto
