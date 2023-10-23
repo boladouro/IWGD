@@ -18,6 +18,9 @@ urlpatterns = [
   path("register/", views.register_view, name="register"),
   path("favorite/<str:topico_str>/", views.favorite, name="favorite"),
   path("new_thread/", views.create_thread, name="create_thread"),
+  path("new_post/", views.create_post, name="create_post"),
+  path("del_thread/", views.delete_thread, name="delete_thread"),
+  path("del_post/", views.delete_post, name="delete_post"),
 ]
 
 handler404 = 'main.views.handler404'

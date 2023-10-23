@@ -1,5 +1,5 @@
 from django.contrib import auth
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
@@ -115,20 +115,32 @@ def favorite(request, topico_str: str):
     "added": not exists,
   }, status=200)
 
+
 @login_required(login_url="login/")
 def create_thread(request):
+  topico_name = None
+  print(topico_name)
   if request.method == 'POST':
     user_t = request.user
-    topico_t = request.POST.get('topics')
+    topico_t = Topico.get_topico_by_id(topico_name)
     titulo_t = request.POST.get('title')
-    if topico_t != None and titulo_t != None:
-      kkk = Thread.new_thread(title=titulo_t,user=user_t,topico=topico_t)
-    print(user_t,topico_t,titulo_t)
-    return render(request, 'topico.html', topico_t)
-#     #return HttpResponseRedirect(reverse('man:topico', topico_t))
-  return render(request, 'new_thread.html')
+
+    if topico_t is not None and titulo_t is not None:
+      kkk = Thread.new_thread(title=titulo_t, user=user_t, topico=topico_t)
+    return render(request, 'index.html')
+
+  return render(request, 'new_thread.html',
+                {'topico_name': topico_name})
 
 
 @login_required(login_url="login/")
 def create_post(request):
-  pass
+  return render(request, 'new_post.html')
+
+@login_required(login_url="login/")
+def delete_post(request):
+  return render(request, 'del_post.html')
+
+@login_required(login_url="login/")
+def delete_thread(request):
+  return render(request, 'del_thread.html')

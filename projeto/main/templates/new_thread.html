@@ -6,9 +6,8 @@
     <div class="form" >
         <form action="{% url 'main:create_thread' %}" class="login-form acrylic" method="POST">
             {% csrf_token %}
-            <span>Criação de thread</span>
+            <span>Criação de thread {{topico_name}}</span>
             <input type="text" placeholder="Titulo" name="title"/>
-            <!--<input type="text" value="{{ topico }}" name="topics"/>-->
             <button type="submit">Criar</button>
             <p class="message"><a href="{% url 'main:index' %}">Voltar</a></p>
         </form>
