@@ -1,7 +1,22 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="listagem">
-  <h2>{{ thread.title }}</h2>
+  <div style="display:flex;justify-content: space-between;">
+    <div>
+      <h2 style="font-size:40px;">{{ thread.title }}</h2>
+    </div>
+    {% if request.user.is_authenticated %}
+      <div style="display:flex;">
+        <div class="button">
+          <a href="#postagem">New Post</a>
+        </div>
+        <div class="button">
+          <a href="{% url 'main:delete_thread' %}">Apagar Post</a>
+        </div>
+      </div>
+    {% else %}
+    {% endif %}
+   </div>
   {% for post in posts %}
     <li class="itens">
       <div class="post">
@@ -14,5 +29,15 @@
       </div>
     </li>
   {% endfor %}
+  {% if request.user.is_authenticated %}
+    <div id="postagem">
+        <form action="{% url 'main:thread' topico_name thread.id %}" class="" method="POST">
+            {% csrf_token %}
+            <input style="widht:100%;" type="text" placeholder="TEXTO" name="textt"/>
+            <button type="submit">Postar</button>
+        </form>
+    </div>
+  {% else %}
+  {% endif %}
 </div>
 {% endblock content %}
