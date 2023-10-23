@@ -20,6 +20,9 @@ class User(AbstractUser):
   ban_or_timeout_reason = models.TextField(null=True)
   favorites = models.ManyToManyField('Topico', related_name="favorites")
 
+  def __str__(self):
+    return self.username
+
   @staticmethod
   def get_user_by_id(user_id: int) -> "User":
     return User.objects.get(pk=user_id)
@@ -67,6 +70,9 @@ class Thread(Model):
   is_sticky = models.BooleanField(default=False)
   topico = models.ForeignKey('Topico', on_delete=models.CASCADE, null=True, related_name="topico")
 
+  def __str__(self):
+    return self.title
+
   @staticmethod
   def new_thread(title: str, user: User, topico: "Topico", is_sticky: bool = False) -> "Thread":
     thread = Thread(title=title, user=user, topico=topico, is_sticky=is_sticky)
@@ -87,12 +93,15 @@ class Post(Model):
   thread = models.ForeignKey(Thread, on_delete=models.CASCADE, related_name="thread")
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user")
 
+  def __str__(self):
+    return self.text
 
   @staticmethod
   def new_post(user: User, thread_id: Thread, text: str) -> "Post":
     post = Post(user=user, thread=thread_id, text=text)
     post.save()
     return post
+
 
 class Emotes(Model):  # TODO make better?
   name = models.CharField(max_length=50)
@@ -110,6 +119,9 @@ class PostEmotes(Model):
 class Topico(Model):
   name = models.CharField(max_length=50)
   is_fav = 0
+
+  def __str__(self):
+    return self.name
 
   @property
   def thread_count(self) -> int:
