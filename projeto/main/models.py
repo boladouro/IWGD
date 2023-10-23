@@ -83,10 +83,16 @@ class Thread(Model):
 
 class Post(Model):
   date_created = models.DateTimeField(auto_now_add=True)
+  text = models.TextField()
   thread = models.ForeignKey(Thread, on_delete=models.CASCADE, related_name="thread")
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user")
-  text = models.TextField()
 
+
+  @staticmethod
+  def new_post(user: User, thread_id: Thread, text: str) -> "Post":
+    post = Post(user=user, thread=thread_id, text=text)
+    post.save()
+    return post
 
 class Emotes(Model):  # TODO make better?
   name = models.CharField(max_length=50)

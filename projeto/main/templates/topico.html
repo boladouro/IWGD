@@ -6,14 +6,17 @@
     <div>
       <h2 style="font-size:40px;">{{ topico }}</h2>
     </div>
+    {% if request.user.is_authenticated %}
       <div style="display:flex;">
         <div class="button">
-          <a href="{% url 'main:create_thread' %}">New Thread</a>
+          <a href="{% url 'main:create_thread' topico %}">New Thread</a>
         </div>
         <div class="button">
           <a href="{% url 'main:delete_thread' %}">Apagar Thread</a>
         </div>
       </div>
+    {% else %}
+    {% endif %}
 
    </div>
   {% for thread in threads %}
