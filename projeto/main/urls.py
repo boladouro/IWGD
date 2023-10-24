@@ -22,6 +22,7 @@ urlpatterns = [
   path("del_thread/", views.delete_thread, name="delete_thread"),
   path("del_post/", views.delete_post, name="delete_post"),
   path('search/', include('haystack.urls')),
+  path("admin/", views.admin, name="admin"),
 ]
 
 handler404 = 'main.views.handler404'

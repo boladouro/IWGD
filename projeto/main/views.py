@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
-from .models import Topico, Thread, User, Post
+from .models import Topico, Thread, User, Post, Mod
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
@@ -36,7 +36,7 @@ def perfil(request):
   return render(request, "perfil.html")
 
 
-def thread(request, topico_name: str, thread_id: int ):
+def thread(request, topico_name: str, thread_id: int):
   if request.user.is_authenticated:
     if request.method == "POST":
       text_p = request.POST.get('textt')
@@ -75,7 +75,7 @@ def login_view(request):
   return render(request, "login.html")
 
 
-def getUser(request):
+def getUser(request) -> User | None:
   if request.user.is_authenticated:
     return request.user
   else:
@@ -135,7 +135,7 @@ def favorite(request, topico_str: str):
 
 
 @login_required(login_url="login/")
-def create_thread(request,topico_name):
+def create_thread(request, topico_name):
   if request.method == 'POST':
     user_t = request.user
     topico_t = Topico.get_topico_by_name(topico_name)
@@ -143,22 +143,24 @@ def create_thread(request,topico_name):
 
     if topico_t is not None and titulo_t is not None:
       kkk = Thread.new_thread(title=titulo_t, user=user_t, topico=topico_t)
-      return topico(request,topico_name)
+      return topico(request, topico_name)
   return render(request, 'new_thread.html', {'topico_name': topico_name})
 
 
 @login_required(login_url="login/")
 def create_post(request):
-#   if request.method == 'POST':
-#     user_p = request.user
-#     topico_p = Topico.get_topico_by_name(topico_name)
-#     text_p = request.POST.get('text')
-#
-#     if topico_t is not None and titulo_t is not None:
-#       kkk = Thread.new_thread(title=titulo_t, user=user_t, topico=topico_t)
-#       return topico(request,topico_name)
-#   return render(request, 'new_post.html', {'topico_name': topico_name})
-    pass
+  #   if request.method == 'POST':
+  #     user_p = request.user
+  #     topico_p = Topico.get_topico_by_name(topico_name)
+  #     text_p = request.POST.get('text')
+  #
+  #     if topico_t is not None and titulo_t is not None:
+  #       kkk = Thread.new_thread(title=titulo_t, user=user_t, topico=topico_t)
+  #       return topico(request,topico_name)
+  #   return render(request, 'new_post.html', {'topico_name': topico_name})
+  pass
+
+
 @login_required(login_url="login/")
 def delete_post(request):
   return render(request, 'del_post.html')
@@ -167,3 +169,11 @@ def delete_post(request):
 @login_required(login_url="login/")
 def delete_thread(request):
   return render(request, 'del_thread.html')
+
+
+@login_required(login_url="login/")
+def admin(request):
+  if Mod.is_mod(getUser(request)):
+    return render(request, "admin.html")
+  else:
+    return render(request, "401.html", status=401)

@@ -32,6 +32,10 @@ class Mod(Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name="mod")
   date_turned_mod = models.DateTimeField(auto_now_add=True)
 
+  @staticmethod
+  def is_mod(user: User) -> bool:
+    return Mod.objects.filter(user=user).exists()
+
 
 class ModPermissions(Model):
   mod = models.ForeignKey(Mod, on_delete=models.CASCADE, related_name="permissions")
@@ -153,3 +157,14 @@ class Topico(Model):
   def get_threads(self) -> Iterable[Thread]:
     # sort by if it's sticky, then date_created from earliest to latest
     return Thread.objects.filter(topico=self).order_by('-is_sticky', '-date_created')
+
+
+class Reports(Model):
+  post_reported = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="post_report")
+  created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_report")
+  reason = models.TextField()
+  mod_reason = models.TextField(null=True)
+  date_created = models.DateTimeField(auto_now_add=True)
+  accepted_report = models.BooleanField(default=False)
+  accepted_by = models.ForeignKey(Mod, on_delete=models.DO_NOTHING, null=True, related_name="accepted_by", default=None)
+  action = models.TextField()
