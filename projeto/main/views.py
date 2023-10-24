@@ -67,7 +67,8 @@ def login_view(request):
       auth.login(request, user)
     else:
       return render(request, "login.html", {
-        "error": "Invalid username and/or password."
+        "error": "Invalid username and/or password.",
+        "username_inserted": username,
       })
   if request.user.is_authenticated:
     return HttpResponseRedirect("/")
@@ -93,11 +94,15 @@ def register_view(request):
     email = request.POST.get('email')
     if User.objects.filter(username=username).exists():
       return render(request, "register.html", {
-        "error": "Username already exists."
+        "error": "Username already exists.",
+        "username_inserted": username,
+        "email_inserted": email,
       })
     if User.objects.filter(email=email).exists():
       return render(request, "register.html", {
-        "error": "Email already exists."
+        "error": "Email already exists.",
+        "username_inserted": username,
+        "email_inserted": email,
       })
     user = User.objects.create_user(username, email, password)
     user.save()

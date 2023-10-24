@@ -66,7 +66,8 @@ class Thread(Model):
   date_created = models.DateTimeField(auto_now_add=True)
   latest_update = models.DateTimeField(auto_now_add=True)
   follow_up_from = models.ForeignKey('Thread', on_delete=models.CASCADE, null=True, related_name="follow_ups")
-  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="poster")
+  # SET NULL HERE CAUSE THREADS BEING DELETED IS NOT GOOD
+  user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name="poster")
   is_sticky = models.BooleanField(default=False)
   topico = models.ForeignKey('Topico', on_delete=models.CASCADE, null=True, related_name="topico")
 
@@ -90,8 +91,8 @@ class Thread(Model):
 class Post(Model):
   date_created = models.DateTimeField(auto_now_add=True)
   text = models.TextField()
-  thread = models.ForeignKey(Thread, on_delete=models.CASCADE, related_name="thread")
-  user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user")
+  thread = models.ForeignKey(Thread, on_delete=models.DO_NOTHING, related_name="thread")
+  user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name="user")  # SAME THING HERE
 
   def __str__(self):
     return self.text

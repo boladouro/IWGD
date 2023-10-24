@@ -4,15 +4,20 @@
 
 {% block content %}
 <body class="fooorm">
-    <div class="form">
-        <form action="{% url 'main:login' %}" class="login-form acrylic" method="POST">
-            {% csrf_token %}
-            <span>Login to your account</span>
-            <input id="username" type="text" placeholder="Username" name="username"/>
-            <input id="password" type="password" placeholder="Password" name="password"/>
-            <button type="submit">Login</button>
-            <p class="message"><a href="{% url 'main:register' %}">Create Account</a></p>
-        </form>
-    </div>
+  <div class="form">
+    <form action="{% url 'main:login' %}" class="login-form acrylic" method="POST">
+      {% csrf_token %}
+      <span>Login to your account</span>
+      <input id="username" type="text" placeholder="Username" name="username" value={{ username_inserted }}/>
+      <input id="password" type="password" placeholder="Password" name="password"/>
+      <button type="submit">Login</button>
+      <p class="message"><a href="{% url 'main:register' %}">Create Account</a></p>
+    </form>
+    {% if error %}
+      <div class="error">
+        <p style="color: #ffadaa">{{ error }}</p>
+      </div>
+    {% endif %}
+  </div>
 </body>
 {% endblock %}

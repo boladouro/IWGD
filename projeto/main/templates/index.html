@@ -28,11 +28,12 @@
                 }
               },
               error: (response) => {
-                if (response.status in [302, 401]) {
+                if (response.status == 302 || response.status == 401) {
                   window.location.href = "{% url 'main:login' %}"
                 } else {
                   console.log("error")
                   console.log(response)
+                  console.log(response.status)
                 }
               }
             })

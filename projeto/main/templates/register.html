@@ -2,16 +2,21 @@
 {% load static %}
 {% block content %}
 <body class="fooorm">
-      <div class="form">
-        <form class="login-form acrylic" method="POST" action="{% url 'main:register' %}">
-          {% csrf_token %}
-          <span>Sign Up</span>
-          <input id="username" type="text" placeholder="username" name="username"/>
-          <input id="email" type="email" placeholder="Email" name="email"/>
-          <input id="password" type="password" placeholder="Password" name="password"/>
-          <button type="submit">GO</button>
-          <p class="message"><a href="{% url 'main:login' %}">I have Account</a></p>
-        </form>
+  <div class="form">
+    <form class="login-form acrylic" method="POST" action="{% url 'main:register' %}">
+      {% csrf_token %}
+      <span>Sign Up</span>
+      <input id="username" type="text" placeholder="username" name="username" value="{{ username_inserted }}" required/>
+      <input id="email" type="email" placeholder="Email" name="email" value="{{ email_inserted }}" required/>
+      <input id="password" type="password" placeholder="Password" name="password" required/>
+      <button type="submit">GO</button>
+      <p class="message"><a href="{% url 'main:login' %}">I have Account</a></p>
+    </form>
+    {% if error %}
+      <div class="error">
+        <p style="color: #ffadaa">{{ error }}</p>
       </div>
+    {% endif %}
+  </div>
 </body>
 {% endblock %}

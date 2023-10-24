@@ -53,3 +53,5 @@ Ideia: Forum :)
 * barra de pesquisa a funcionar
 * verificar se novos threads e posts aparecem na pesquisa auto
 * bookmarks
+* por acrilico + background em todas as paginas
+* change tab title (currently WIP)
