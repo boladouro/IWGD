@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+  <div id="reports">
+    <h1>Reports</h1>
+    <ul>
+      {% if n_reports != 0 %}
+        {% for report in reports %}
+          <li>
+            <p>Report por <a href="#">{{ report.created_by }}</a> em {{ report.post_reported.thread.topico.name }}</p><!-- TODO dps linkar perfil -->
+            <p>Thread: "<a href="{% url 'main:thread' report.post_reported.thread.topico report.post_reported.thread.id %}">{{ report.post_reported.thread.title }}</a>"</p>
+            <p>Post: "{{ report.post_reported.text }}"</p>
+            <p>Reason: {{ report.reason }}</p>
+            <button type="button">Take action</button>
+            <div class="Report-{{ report.id }}" style="display: none">
+              Reason: <input type="text" value="{{ report.reason }}"><br>
+              Action: <input type="text" value=""><br>
+              <button>Submit</button>
+            </div>
+          </li>
+        {% endfor %}
+      {% else %}
+        <li>Nothing reported.</li>
+      {% endif %}
+    </ul>
+  </div>
+  <!--
+  <div class="expandable" id="past-reports">
+    TODO past reports
+  </div>
+  -->
+{% endblock %}
