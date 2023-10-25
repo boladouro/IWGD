@@ -8,7 +8,7 @@
     <form action="{% url 'main:login' %}" class="login-form acrylic" method="POST">
       {% csrf_token %}
       <span>Login to your account</span>
-      <input id="username" type="text" placeholder="Username" name="username" value={{ username_inserted }}/>
+      <input id="username" type="text" placeholder="Username" name="username" value="{{ username_inserted }}"/>
       <input id="password" type="password" placeholder="Password" name="password"/>
       <button type="submit">Login</button>
       <p class="message"><a href="{% url 'main:register' %}">Create Account</a></p>
