@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
-from .models import Topico, Thread, User, Post, Mod
+from .models import Topico, Thread, User, Post, Mod, Reports
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
@@ -36,8 +36,8 @@ def perfil(request):
   return render(request, "perfil.html")
 
 
-def thread(request, topico_name: str, thread_id: int):
-  if request.user.is_authenticated:
+def thread(request, thread_id: int, topico_name: str = None):
+  if request.user.is_authenticated: #TODO move this cause thread id wont be known ahead of time
     if request.method == "POST":
       text_p = request.POST.get('textt')
       user_p = request.user
@@ -104,7 +104,7 @@ def register_view(request):
         "username_inserted": username,
         "email_inserted": email,
       })
-    user = User.objects.create_user(username, email, password)
+    user = User.create_user(username=username, password=password, email=email)
     user.save()
     auth.login(request, user)
     return HttpResponseRedirect("/")
@@ -174,6 +174,10 @@ def delete_thread(request):
 @login_required(login_url="login/")
 def admin(request):
   if Mod.is_mod(getUser(request)):
-    return render(request, "admin.html")
+    r = Reports.get_reports()
+    return render(request, "admin.html", {
+      "n_reports": len(r),
+      "reports": r,
+    })
   else:
     return render(request, "401.html", status=401)

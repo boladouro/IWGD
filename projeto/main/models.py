@@ -20,6 +20,18 @@ class User(AbstractUser):
   ban_or_timeout_reason = models.TextField(null=True)
   favorites = models.ManyToManyField('Topico', related_name="favorites")
 
+  @staticmethod
+  def create_user(username: str, password: str, email: str = None) -> User:
+    return User.objects.create_user(username, email, password)
+
+  @property
+  def is_mod(self) -> bool:
+    return Mod.is_mod(self)
+
+  @property
+  def is_admin(self) -> bool:
+    return Admin.is_admin(self)
+
   def __str__(self):
     return self.username
 
@@ -34,7 +46,14 @@ class Mod(Model):
 
   @staticmethod
   def is_mod(user: User) -> bool:
-    return Mod.objects.filter(user=user).exists()
+    return Mod.objects.filter(user=user).exists() or Admin.is_admin(user)
+
+  @staticmethod
+  def create_mod(user: User):
+    user.save()
+    mod = Mod(user=user)
+    mod.save()
+    return mod
 
 
 class ModPermissions(Model):
@@ -57,6 +76,16 @@ class ModPermissions(Model):
 class Admin(Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name="admin")
 
+  @staticmethod
+  def create_admin(user: User) -> Admin:
+    user.save()
+    admin = Admin(user=user)
+    admin.save()
+    return admin
+
+  @staticmethod
+  def is_admin(user: User) -> bool:
+    return Admin.objects.filter(user=user).exists()
 
 class Forum(Model):
   title = models.CharField(max_length=50)
@@ -107,6 +136,14 @@ class Post(Model):
     post.save()
     return post
 
+  def is_post_from_op(self) -> bool:
+    return self.user == self.thread.user
+
+  def get_emotes(self) -> Iterable["Emotes"]:
+    return Emotes.objects.filter(postemotes__post=self)
+
+  def is_first_post(self) -> bool:
+    return self.thread.get_posts().first() == self
 
 class Emotes(Model):  # TODO make better?
   name = models.CharField(max_length=50)
@@ -168,3 +205,7 @@ class Reports(Model):
   accepted_report = models.BooleanField(default=False)
   accepted_by = models.ForeignKey(Mod, on_delete=models.DO_NOTHING, null=True, related_name="accepted_by", default=None)
   action = models.TextField()
+
+  @staticmethod
+  def get_reports() -> Iterable["Reports"]:
+    return Reports.objects.all().filter(accepted_report=False)

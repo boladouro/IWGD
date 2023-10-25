@@ -27,11 +27,14 @@
     <img src="" alt="">
     <ul>
       {% if user.is_authenticated %}
-      <li>Welcome, {{ user.username }}</li>
-      <li style="float:right"><a href="{% url 'main:logout' %}">Logout</a></li>
+        <li>Welcome, {{ user.username }}</li>
+        <li style="float:right"><a href="{% url 'main:logout' %}">Logout</a></li>
+        {% if user.is_admin or user.is_mod %}
+          <li style="float:right"><a href="{% url 'main:admin' %}">Admin Panel</a></li>
+        {% endif %}
       {% else %}
-      <li style="float:right"><a href="{% url 'main:login' %}">Login</a></li>
-      <li style="float:right"><a href="{% url 'main:register' %}">Register</a></li>
+        <li style="float:right"><a href="{% url 'main:login' %}">Login</a></li>
+        <li style="float:right"><a href="{% url 'main:register' %}">Register</a></li>
       {% endif %}
     </ul>
 

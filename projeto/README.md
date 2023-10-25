@@ -35,7 +35,6 @@ Ideia: Forum :)
 * Logo
 * Banner
 * header na lista de topicos
-* autenticacao
 * remover home news contact e about e por home quando clicar no logo
 * barra de pesquisa
 * pagina de postar threads e postar posts
@@ -55,3 +54,4 @@ Ideia: Forum :)
 * bookmarks
 * por acrilico + background em todas as paginas
 * change tab title (currently WIP)
+* Url to post (vai pro thread e da scroll)
