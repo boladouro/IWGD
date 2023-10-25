@@ -19,9 +19,14 @@
    </div>
   {% for post in posts %}
     <li class="itens">
-      <div class="post">
+      <div class="post" style="width: 100%">
         <div class="meta">
-          <p>Posted by {{ post.user.username }} on {{ post.date_created }}</p>
+          <span>Posted by {{ post.user.username }} on {{ post.date_created }}</span>
+          {% if post.user == user %}
+            <span class="delete-button material-symbols-outlined" id="delete-{{ post.id }}">delete</span>
+          {% else %}
+            <span id="report-{{ post.id }}" class="report-button material-symbols-outlined">flag</span>
+          {% endif %}
         </div> <!-- TODO aqui caixas de cada post seria melhor imo -->
         <div class="message">
           {{ post.text }}
@@ -29,6 +34,112 @@
       </div>
     </li>
   {% endfor %}
+  <div id="page-mask" style="
+    display: none;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    background-color: rgba(0,0,0,0.6);"></div>
+  <div id="report-popup" style="
+    display: none;
+    opacity: 0.9;
+    position: fixed;
+    left: 20%;
+    right: 20%;
+    bottom: 20%;
+    top: 20%;
+    background-color: white;
+    border: solid 2px rgb(128,128,128);
+  ">
+    <!-- Submit Report -->
+    <input type="hidden" id="post-id" value="">
+    <input type="hidden" id="thread-id" value="{{ thread.id }}">
+    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+      <h2 style="margin-bottom: 5px; margin-top: 10px">Report Post</h2>
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+        <label for="report-reason">Reason</label>
+        <textarea required name="report_description" id="report-description" cols="80" rows="9"></textarea>
+        <button id="submit-report" type="submit">Submit</button>
+        <button id="cancel-report">Cancel</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    function showReportPopup() {
+      $("#page-mask").fadeIn();
+      $("#report-popup").fadeIn();
+    }
+    function hideReportPopup() {
+      $("#page-mask").fadeOut();
+      $("#report-popup").fadeOut();
+    }
+    $(document).ready(()=> {
+      $(".report-button").on("click",  (e) => {
+        showReportPopup();
+        $("#post-id").val(e.target.id.split("-")[1]);
+      });
+      $("#cancel-report").on("click", () => {
+        hideReportPopup()
+      });
+      $("#submit-report").on("click", () => {
+        $.ajax({
+          url: "{% url 'main:report' %}",
+          type: "POST",
+          data: {
+            post_id: $("#post-id").val(),
+            thread_id: $("#thread-id").val(),
+            report_description: $("#report-description").val(),
+            csrfmiddlewaretoken: "{{ csrf_token }}"
+          },
+          success: (data) => {
+            alert(data.message);
+            hideReportPopup();
+          },
+          error: (response) => {
+            if (response.status == 302 || response.status == 401) {
+              window.location.href = "{% url 'main:login' %}"
+            } else {
+              alert("Error;"+ response.error + " contact admin")
+              console.log(response.status)
+              console.log(response.error_object)
+            }
+          }
+        });
+      });
+    })
+    // now delete
+    $(document).ready(() => {
+      $(".delete-button").on("click", (e) => {
+        conf = confirm("Are you sure you want to delete this post?");
+        if (!conf) return;
+        $.ajax({
+          url: "{% url 'main:delete_post' %}",
+          type: "POST",
+          data: {
+            post_id: e.target.id.split("-")[1],
+            csrfmiddlewaretoken: "{{ csrf_token }}"
+          },
+          success: (data) => {
+            alert(data.message);
+            // Hide the post
+            $(e).parentsUntil(".itens").hide();
+            // TODO test
+          },
+          error: (response) => {
+            if (response.status == 302 || response.status == 401) {
+              window.location.href = "{% url 'main:login' %}"
+            } else {
+              alert("Error;"+ response.error + " contact admin")
+              console.log(response.status)
+              console.log(response.error_object)
+            }
+          }
+        });
+      });
+    });
+  </script>
   {% if request.user.is_authenticated %}
     <div id="postagem">
         <form action="{% url 'main:thread' topico_name thread.id %}" class="" method="POST">
