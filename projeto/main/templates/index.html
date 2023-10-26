@@ -4,11 +4,15 @@
 <div class="listagem">
   <h2>Tópicos</h2>
   <ol>
-    <li class="itens-header">
+    <li class="itens-header" style="display:flex; justify-content: space-between;">
+      <div class="batata" style="display:flex;">
       <div class="empty"></div>
       <div class="content">Tópico</div>
-      <div class="stats">nº de Threads</div>
-      <div class="last">Última Thread</div>
+      </div>
+      <div class="batata" style="display:flex;">
+      <div class="stats" style="padding: 0px 10px 0px 0px;">nº de Threads</div>
+      <div class="last" style="padding: 0px 0px 0px 10px;">Última Thread</div>
+      </div>
     </li>
     {% for topico in topicos %}
       <script>

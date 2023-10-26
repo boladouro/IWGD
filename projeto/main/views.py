@@ -44,7 +44,7 @@ def thread(request, thread_id: int, topico_name: str = None):
       thread_p = Thread.get_thread_by_id(thread_id)
       if text_p is not None:
         kkk = Post.new_post(user=user_p, text=text_p, thread_id=thread_p)
-        return topico(request, topico_name)
+        return HttpResponseRedirect(f"{request.path}")
   t = Thread.get_thread_by_id(thread_id)
   if t is None:
     return render(request, "404.html", status=404)

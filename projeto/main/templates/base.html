@@ -18,28 +18,39 @@
 </style>
 {% if request.path == "/t/Música/" or request.path == "/new_thread/Música" or topico_name == "Música" %}
     <body class="fooorm1">
+        <header class="base fooorm1">
 {% elif request.path == "/t/Filmes/" or request.path == "/new_thread/Filmes" or topico_name == "Filmes" %}
     <body class="fooorm2">
+        <header class="base fooorm2">
 {% elif request.path == "/t/Jogos/" or request.path == "/new_thread/Jogos" or topico_name == "Jogos" %}
     <body class="fooorm3">
+        <header class="base fooorm3">
 {% elif request.path == "/t/Livros/" or request.path == "/new_thread/Livros" or topico_name == "Livros" %}
     <body class="fooorm4">
+        <header class="base fooorm4">
 {% elif request.path == "/t/Teatro/" or request.path == "/new_thread/Teatro" or topico_name == "Teatro" %}
     <body class="fooorm5">
+        <header class="base fooorm5">
 {% elif request.path == "/t/Dança/" or request.path == "/new_thread/Dança" or topico_name == "Dança" %}
     <body class="fooorm6">
+        <header class="base fooorm6">
 {% elif request.path == "/t/Escultura/" or request.path == "/new_thread/Escultura" or topico_name == "Escultura" %}
     <body class="fooorm7">
+        <header class="base fooorm7">
 {% elif request.path == "/t/Pintura/" or request.path == "/new_thread/Pintura" or topico_name == "Pintura" %}
     <body class="fooorm8">
+        <header class="base fooorm8">
 {% elif request.path == "/t/Fotografia/" or request.path == "/new_thread/Fotografia" or topico_name == "Fotografia" %}
     <body class="fooorm9">
+        <header class="base fooorm9">
 {% elif request.path == "/t/Meta/" or request.path == "/new_thread/Meta" or topico_name == "Meta" %}
     <body class="fooorm10">
+        <header class="base fooorm10">
 {% else %}
   <body class="fooorm">
+    <header class="base fooorm">
 {% endif %}
-  <header class="base">
+
       <div>
         <a href="{% url 'main:index' %}">Logo</a>
       </div>
