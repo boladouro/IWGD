@@ -140,10 +140,15 @@ def create_thread(request, topico_name):
     user_t = request.user
     topico_t = Topico.get_topico_by_name(topico_name)
     titulo_t = request.POST.get('title')
+    text_t = request.POST.get('texxt')
 
     if topico_t is not None and titulo_t is not None:
-      kkk = Thread.new_thread(title=titulo_t, user=user_t, topico=topico_t)
-      return topico(request, topico_name)
+      kkk1 = Thread.new_thread(title=titulo_t, user=user_t, topico=topico_t)
+      thread_p = Thread.get_thread_by_id(kkk1.id)
+      if text_t is not None:
+        kkk = Post.new_post(user=user_t, text=text_t, thread_id=thread_p)
+        return HttpResponseRedirect(f"/t/{topico_name}/{kkk1.id}")
+
   return render(request, 'new_thread.html', {'topico_name': topico_name})
 
 

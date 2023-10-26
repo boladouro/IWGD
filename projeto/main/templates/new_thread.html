@@ -27,8 +27,10 @@
         <form action="{% url 'main:create_thread' topico_name %}" class="login-form acrylic" method="POST">
     {% endif %}
             {% csrf_token %}
-            <span>Criação de thread <bold>{{topico_name}}</bold></span>
+            <span>Titulo para a nova thread <bold>{{topico_name}}</bold></span>
             <input type="text" placeholder="Titulo" name="title"/>
+            <span>Post para a thread</span>
+            <input type="text" placeholder="TEXTO" name="texxt"/>
             <button type="submit">Criar</button>
             <p class="message"><a href="{% url 'main:index' %}">Voltar</a></p>
         </form>
