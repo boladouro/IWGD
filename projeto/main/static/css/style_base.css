@@ -1,4 +1,5 @@
 @import url(https://fonts.googleapis.com/css?family=Noto+Sans:400,500,300,700);
+@import url(https://fonts.googleapis.com/css?family=Roboto:300);
 
 :root {
     --active-brightness: 0.85;
@@ -20,11 +21,11 @@ body h1 {
     background-size: 100% 80px;
     background-repeat: no-repeat;
     color: rgb(45, 55, 72);
-    padding: 20px 0px;
+    padding: 20px 0;
 }
 
 .base div {
-      padding: 0px 100px;
+      padding: 0 100px;
       color:white;
       display: inline;
 
@@ -482,9 +483,7 @@ section {
 
 /* ==============Form-register===================== */
 
-@import url(https://fonts.googleapis.com/css?family=Roboto:300);
-
-    .login-page {
+.login-page {
       width: 360px;
       padding: 1% 0 0;
       margin: auto;
@@ -603,10 +602,7 @@ section {
       color: #EF3B3A;
     }
     .fooorm, .acrylic::before {
-      background: url("https://wallup.net/wp-content/uploads/2017/11/23/502910-Firewatch-night-forest.jpg");
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      background-position: center;
+      background: url("https://wallup.net/wp-content/uploads/2017/11/23/502910-Firewatch-night-forest.jpg") no-repeat fixed center;
       background-size: cover;
       -webkit-background-size: cover;
       -moz-background-size: cover;
@@ -637,16 +633,12 @@ section {
       z-index: -1;
       opacity: 0.3;
       border: 1px solid #fff;
-      background: #fff;
-      background-image: url(data:image/png;base64,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);
+      background: #fff url(data:image/png;base64,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);
     }
 
 .fooorm1, .acrylic1::before {
-      background: url("https://wallup.net/wp-content/uploads/2019/10/186322-music-piano-old-instruments-depth-of-field-piano-keys-musical-instruments-1.jpg");
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      background-position: center;
-      background-size: cover;
+  background: url("https://wallup.net/wp-content/uploads/2019/10/186322-music-piano-old-instruments-depth-of-field-piano-keys-musical-instruments-1.jpg") no-repeat fixed center;
+  background-size: cover;
       -webkit-background-size: cover;
       -moz-background-size: cover;
       -o-background-size: cover;
@@ -666,11 +658,8 @@ section {
       z-index: -1;
     }
 .fooorm2, .acrylic2::before {
-      background: url("https://wallup.net/wp-content/uploads/2016/01/19926-The_Godfather-film_stills-Marlon_Brando-Mafia.jpg");
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      background-position: center;
-      background-size: cover;
+  background: url("https://wallup.net/wp-content/uploads/2016/01/19926-The_Godfather-film_stills-Marlon_Brando-Mafia.jpg") no-repeat fixed center;
+  background-size: cover;
       -webkit-background-size: cover;
       -moz-background-size: cover;
       -o-background-size: cover;
@@ -690,11 +679,8 @@ section {
       z-index: -1;
     }
 .fooorm3, .acrylic3::before {
-      background: url("https://wallup.net/wp-content/uploads/2019/09/32310-original-alice-wonderland-children-houses-art-video-games-animals-rabbit.jpg");
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      background-position: center;
-      background-size: cover;
+  background: url("https://wallup.net/wp-content/uploads/2019/09/32310-original-alice-wonderland-children-houses-art-video-games-animals-rabbit.jpg") no-repeat fixed center;
+  background-size: cover;
       -webkit-background-size: cover;
       -moz-background-size: cover;
       -o-background-size: cover;
@@ -714,11 +700,8 @@ section {
       z-index: -1;
     }
 .fooorm4, .acrylic4::before {
-      background: url("https://wallup.net/wp-content/uploads/2019/09/08/220113-original-black-hair-book-cake-dress-flowers-original-ribbons-stairs-tree-vividyuxi.jpg");
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      background-position: center;
-      background-size: cover;
+  background: url("https://wallup.net/wp-content/uploads/2019/09/08/220113-original-black-hair-book-cake-dress-flowers-original-ribbons-stairs-tree-vividyuxi.jpg") no-repeat fixed center;
+  background-size: cover;
       -webkit-background-size: cover;
       -moz-background-size: cover;
       -o-background-size: cover;
@@ -739,11 +722,8 @@ section {
     }
 
 .fooorm5, .acrylic5::before {
-      background: url("https://wallup.net/wp-content/uploads/2018/09/28/687926-artistic-art-artwork-painting-original.jpg");
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      background-position: center;
-      background-size: cover;
+  background: url("https://wallup.net/wp-content/uploads/2018/09/28/687926-artistic-art-artwork-painting-original.jpg") no-repeat fixed center;
+  background-size: cover;
       -webkit-background-size: cover;
       -moz-background-size: cover;
       -o-background-size: cover;
@@ -765,11 +745,8 @@ section {
 
 
 .fooorm6, .acrylic6::before {
-      background: url("https://wallup.net/wp-content/uploads/2017/05/30/147461-dancing-colorful-Elektra-artwork-women-dancers.jpg");
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      background-position: center;
-      background-size: cover;
+  background: url("https://wallup.net/wp-content/uploads/2017/05/30/147461-dancing-colorful-Elektra-artwork-women-dancers.jpg") no-repeat fixed center;
+  background-size: cover;
       -webkit-background-size: cover;
       -moz-background-size: cover;
       -o-background-size: cover;
@@ -791,11 +768,8 @@ section {
 
 
 .fooorm7, .acrylic7::before {
-      background: url("https://wallup.net/wp-content/uploads/2016/08/08/118201-women-model-moon-hand-sculpture.jpg");
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      background-position: center;
-      background-size: cover;
+  background: url("https://wallup.net/wp-content/uploads/2016/08/08/118201-women-model-moon-hand-sculpture.jpg") no-repeat fixed center;
+  background-size: cover;
       -webkit-background-size: cover;
       -moz-background-size: cover;
       -o-background-size: cover;
@@ -817,11 +791,8 @@ section {
 
 
 .fooorm8, .acrylic8::before {
-      background: url("https://wallup.net/wp-content/uploads/2016/03/03/321591-women-model-brunette-Asian-long_hair-women_outdoors-painting-painters-nature-jeans-T-shirt-trees-brush-depth_of_field-abstract-thumbs_up.jpg");
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      background-position: center;
-      background-size: cover;
+  background: url("https://wallup.net/wp-content/uploads/2016/03/03/321591-women-model-brunette-Asian-long_hair-women_outdoors-painting-painters-nature-jeans-T-shirt-trees-brush-depth_of_field-abstract-thumbs_up.jpg") no-repeat fixed center;
+  background-size: cover;
       -webkit-background-size: cover;
       -moz-background-size: cover;
       -o-background-size: cover;
@@ -843,11 +814,8 @@ section {
 
 
 .fooorm9, .acrylic9::before {
-      background: url("https://wallup.net/wp-content/uploads/2016/05/13/338800-men-artwork-photography-camera-photo_manipulation.jpg");
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      background-position: center;
-      background-size: cover;
+  background: url("https://wallup.net/wp-content/uploads/2016/05/13/338800-men-artwork-photography-camera-photo_manipulation.jpg") no-repeat fixed center;
+  background-size: cover;
       -webkit-background-size: cover;
       -moz-background-size: cover;
       -o-background-size: cover;
@@ -869,11 +837,8 @@ section {
 
 
 .fooorm10, .acrylic10::before {
-      background: url("https://wallup.net/wp-content/uploads/2016/05/14/46988-Naruto_Shippuuden-Haruno_Sakura-symbols-Full_Metal_Alchemist.jpg");
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      background-position: center;
-      background-size: cover;
+  background: url("https://wallup.net/wp-content/uploads/2016/05/14/46988-Naruto_Shippuuden-Haruno_Sakura-symbols-Full_Metal_Alchemist.jpg") no-repeat fixed center;
+  background-size: cover;
       -webkit-background-size: cover;
       -moz-background-size: cover;
       -o-background-size: cover;
@@ -895,6 +860,14 @@ section {
 
 
 /* ==============Botão-threads===================== */
+.report-button {
+  float: right;
+  color:darkred
+}
+
+.report-button:hover{
+  cursor: pointer;
+}
 
 .listagem .button a {
   background: #76B3FA;
@@ -1015,3 +988,89 @@ keyframes active {
   100% { -webkit-transform: matrix3d(1.1, 0, 0, 0, 0, 1.1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); transform: matrix3d(1.1, 0, 0, 0, 0, 1.1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1); }
 }
 
+@-webkit-keyframes fadeInFromNone {
+  0% {
+    display: none;
+    opacity: 0;
+  }
+
+  1% {
+    display: block;
+    opacity: 0;
+  }
+
+  100% {
+    display: block;
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes fadeInFromNone {
+  0% {
+    display: none;
+    opacity: 0;
+  }
+
+  1% {
+    display: block;
+    opacity: 0;
+  }
+
+  100% {
+    display: block;
+    opacity: 1;
+  }
+}
+
+@-o-keyframes fadeInFromNone {
+  0% {
+    display: none;
+    opacity: 0;
+  }
+
+  1% {
+    display: block;
+    opacity: 0;
+  }
+
+  100% {
+    display: block;
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInFromNone {
+  0% {
+    display: none;
+    opacity: 0;
+  }
+
+  1% {
+    display: block;
+    opacity: 0;
+  }
+
+  100% {
+    display: block;
+    opacity: 1;
+  }
+}
+@keyframes fadeOutFromBlock {
+  0% {
+    position: relative;
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  90% {
+    position: relative;
+    opacity: 0;
+    transform: translateX(0);
+  }
+
+  100% {
+    position: absolute;
+    opacity: 0;
+    transform: translateX(-999px);
+  }
+}

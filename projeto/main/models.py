@@ -87,6 +87,7 @@ class Admin(Model):
   def is_admin(user: User) -> bool:
     return Admin.objects.filter(user=user).exists()
 
+
 class Forum(Model):
   title = models.CharField(max_length=50)
   description = models.TextField()
@@ -145,6 +146,10 @@ class Post(Model):
   def is_first_post(self) -> bool:
     return self.thread.get_posts().first() == self
 
+  @staticmethod
+  def get_post_by_id(post_id: int) -> "Post":
+    return Post.objects.get(pk=post_id)
+
 class Emotes(Model):  # TODO make better?
   name = models.CharField(max_length=50)
 
@@ -200,12 +205,33 @@ class Reports(Model):
   post_reported = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="post_report")
   created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_report")
   reason = models.TextField()
-  mod_reason = models.TextField(null=True)
+  mod_reason = models.TextField(null=True, default=None)
   date_created = models.DateTimeField(auto_now_add=True)
   accepted_report = models.BooleanField(default=False)
   accepted_by = models.ForeignKey(Mod, on_delete=models.DO_NOTHING, null=True, related_name="accepted_by", default=None)
-  action = models.TextField()
+  action = models.TextField(null=True, default=None)
 
   @staticmethod
   def get_reports() -> Iterable["Reports"]:
     return Reports.objects.all().filter(accepted_report=False)
+
+  @staticmethod
+  def create_report(post: Post, user: User, reason: str) -> Reports:
+    report = Reports(post_reported=post, created_by=user, reason=reason)
+    report.save()
+    return report
+
+  @staticmethod
+  def does_report_exist(post: Post, user: User) -> bool:
+    return Reports.objects.filter(post_reported=post, created_by=user).exists()
+
+  @staticmethod
+  def create_or_alter_report(post: Post, user: User, reason: str) -> bool:
+    # returns true if created, false if substituted
+    report = Reports.objects.filter(post_reported=post, created_by=user).first()
+    if report is None:
+      Reports.create_report(post, user, reason)
+      return True
+    report.reason = reason
+    report.save()
+    return False

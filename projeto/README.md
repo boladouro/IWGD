@@ -55,3 +55,6 @@ Ideia: Forum :)
 * por acrilico + background em todas as paginas
 * change tab title (currently WIP)
 * Url to post (vai pro thread e da scroll)
+* DELETE
+
+Nao esquecer de ver TODOs

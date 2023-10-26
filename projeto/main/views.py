@@ -163,7 +163,7 @@ def create_post(request):
 
 @login_required(login_url="login/")
 def delete_post(request):
-  return render(request, 'del_post.html')
+  raise NotImplementedError("TODO")
 
 
 @login_required(login_url="login/")
@@ -181,3 +181,28 @@ def admin(request):
     })
   else:
     return render(request, "401.html", status=401)
+
+
+@login_required(login_url="login/")
+@require_POST
+def report(request):
+  post_id = request.POST["post_id"]
+  thread_id = request.POST["thread_id"]
+  report_description = request.POST["report_description"]
+  try:
+    created = Reports.create_or_alter_report(Post.get_post_by_id(post_id), getUser(request), report_description)
+  except Exception as e:
+    return JsonResponse({
+      "error": str(e),
+      "error_object": e,
+    }, status=500)
+  if created:
+    return JsonResponse({
+      "success": True,
+      "message": "Report created successfully."
+    }, status=200)
+  else:
+    return JsonResponse({
+      "success": True,
+      "message": "Report altered successfully."
+    }, status=200)
