@@ -166,6 +166,13 @@ class Post(Model):
     kaka.save()
     return kaka
 
+  @staticmethod
+  def delete_post(post_id: int) -> "Post":
+    kaka = Post.objects.get(pk=post_id)
+    kaka.is_removed = True
+    kaka.save()
+    return kaka
+
 
 class PostEmotes(Model):
   class Emotes(models.TextChoices):

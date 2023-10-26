@@ -42,7 +42,7 @@ def thread(request, thread_id: int, topico_name: str = None):
       text_p = request.POST.get('textt')
       user_p = request.user
       thread_p = Thread.get_thread_by_id(thread_id)
-      if text_p is not None:
+      if text_p is not None and text_p != "" :
         kkk = Post.new_post(user=user_p, text=text_p, thread_id=thread_p)
         return HttpResponseRedirect(f"{request.path}")
   t = Thread.get_thread_by_id(thread_id)
@@ -239,3 +239,6 @@ def emote(request):
     "message": "Emote added successfully." if added else "Emote removed successfully."
   }, status=200)
 
+
+def searchs(request):
+  return render(request,"search.html")

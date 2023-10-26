@@ -182,9 +182,7 @@
           success: (data) => {
             alert(data.message);
             // Hide the post
-            let vvv = $(e.target).parentsUntil(".itens").hide()
-            let vvvv = $(e.target).parentsUntil(".itens").remove();
-            $(e.target).parentsUntil(".itens").removeClass("itens").remove();
+            $("#line-"+e.target.id.split("-")[1]).remove()
             // TODO test
           },
           error: (response) => {
