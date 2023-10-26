@@ -56,5 +56,5 @@ Ideia: Forum :)
 * change tab title (currently WIP)
 * Url to post (vai pro thread e da scroll)
 * DELETE
-
+* QUANDO DELETE MOSTRAR Q ALGUMA COISA FOI DELETADA (trarar do get_posts)
 Nao esquecer de ver TODOs
