@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style_thread.css' %}">
 <div class="listagem acrylic">
   <div style="display:flex;justify-content: space-between;">
     <div>
@@ -13,46 +15,106 @@
    </div>
   {% for post in posts %}
     <li class="itens">
-      <div class="post" style="width: 100%">
-        <div class="meta">
-          <span>Posted by {{ post.user.username }} on {{ post.date_created }}</span>
-          {% if post.user == user %}
-            <span class="delete-button material-symbols-outlined" id="delete-{{ post.id }}">delete</span>
-          {% else %}
-            <span id="report-{{ post.id }}" class="report-button material-symbols-outlined">flag</span>
-          {% endif %}
-        </div> <!-- TODO aqui caixas de cada post seria melhor imo -->
-        <div class="message">
-          {{ post.text }}
+      <div class="post">
+        <div class="post-perfil" style="border-right: #cccccc 2px solid"><p>{{ post.user.username }}</p> TODO avatar
+        </div>
+        <div class="post-text">
+          <div class="meta">
+            <span style="color:dimgray">{{ post.date_created }}</span>
+            {% if post.user == user %}
+              <span class="delete-button material-symbols-outlined" id="delete-{{ post.id }}">delete</span>
+            {% else %}
+              <span id="report-{{ post.id }}" class="report-button material-symbols-outlined">flag</span>
+            {% endif %}
+          </div> <!-- TODO aqui caixas de cada post seria melhor imo -->
+          <div class="message">
+            {{ post.text }}
+          </div>
+          <div class="emotes-section">
+            <span class="button-emotes material-symbols-outlined">add_reaction</span>
+            <!-- open box on hover -->
+            <div class="emote-box emote-box-hidden">
+              {% for emote, emote_count in post.emotes.items %}
+                  <span class="emote" data-post-id="{{ post.id }}" data-emote-count="{{ emote_count }}" data-emote="{{ emote }}">{{ emote }} {{ emote_count }}</span>
+              {% endfor %}
+            </div>
+          </div>
         </div>
       </div>
     </li>
   {% endfor %}
-  <div id="page-mask" style="
-    display: none;
-    position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    top: 0;
-    background-color: rgba(0,0,0,0.6);"></div>
-  <div id="report-popup" style="
-    display: none;
-    opacity: 0.9;
-    position: fixed;
-    left: 20%;
-    right: 20%;
-    bottom: 20%;
-    top: 20%;
-    background-color: white;
-    border: solid 2px rgb(128,128,128);
-  ">
+  <script>
+    function showEmotes(emotesSection) {
+      let element = $(emotesSection)
+      element.find(".emote").each((i, e) => {
+        $(e).show()
+      })
+      element.removeClass("emote-box-hidden")
+    }
+    function hideEmotes(emotesSection) {
+      let element = $(emotesSection)
+      element.find(".emote").each((i, e) => {
+        console.log($(e).attr("data-emote-count"))
+        if ($(e).attr("data-emote-count") == 0) {
+          $(e).hide()
+        }
+      })
+      element.addClass("emote-box-hidden")
+    }
+    $(document).ready(() => {
+      $(".emotes-section").each((i, e) => {
+        hideEmotes($(e))
+      })
+      $(".emote").on("click", (e) => {
+        let element_here = $(e.target)
+        element_here.toggleClass("selected", !element_here.hasClass("selected"))
+        $.ajax({
+          url: "{% url 'main:emote' %}",
+          type: "POST",
+          data: {
+            post_id: element_here.attr("data-post-id"),
+            emote: element_here.attr("data-emote"),
+            removing: element_here.hasClass("selected"),
+            csrfmiddlewaretoken: "{{ csrf_token }}"
+          },
+          success: (data) => {
+            let element = $(e.target)
+            // increment
+            if (element.hasClass("selected")) {
+              element.attr("data-emote-count", parseInt($(e.target).attr("data-emote-count")) + 1)
+            } else {
+              element.attr("data-emote-count", parseInt($(e.target).attr("data-emote-count")) - 1)
+            }
+            element.text(element.attr("data-emote") + " " + element.attr("data-emote-count"))
+          },
+          error: (response) => {
+            if (response.status == 302 || response.status == 401) {
+              window.location.href = "{% url 'main:login' %}"
+            } else {
+              alert("Error;"+ response.error + " contact admin")
+              console.log(response)
+            }
+          }
+        });
+      })
+      $(".button-emotes").on("click", (e) => {
+        let emotesSection = $(e.target).parent()
+        if(emotesSection.hasClass("emote-box-hidden")) {
+          showEmotes(emotesSection)
+        }else {
+          hideEmotes(emotesSection)
+        }
+      })
+    })
+  </script>
+  <div id="page-mask" style=""></div>
+  <div id="report-popup" style="display: none;">
     <!-- Submit Report -->
     <input type="hidden" id="post-id" value="">
     <input type="hidden" id="thread-id" value="{{ thread.id }}">
-    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
-      <h2 style="margin-bottom: 5px; margin-top: 10px">Report Post</h2>
-      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+    <div id="report-form">
+      <h2 id="report-form-title">Report Post</h2>
+      <div id="report-form-content">
         <label for="report-reason">Reason</label>
         <textarea required name="report_description" id="report-description" cols="80" rows="9"></textarea>
         <button id="submit-report" type="submit">Submit</button>
@@ -61,6 +123,7 @@
     </div>
   </div>
   <script>
+    // js has to be here because of url tag
     function showReportPopup() {
       $("#page-mask").fadeIn();
       $("#report-popup").fadeIn();

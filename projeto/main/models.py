@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Iterable
+from typing import Iterable, Mapping, Literal
 
+import emoji
 from django.db import models
 from django.db.models import Model
 from django.contrib.auth.models import AbstractUser
+from emoji import emojize, demojize
 
+# from django.utils.translation import gettext_lazy as _
 DATABASE_READY = False
 
 
@@ -21,7 +24,7 @@ class User(AbstractUser):
   favorites = models.ManyToManyField('Topico', related_name="favorites")
 
   @staticmethod
-  def create_user(username: str, password: str, email: str = None) -> User:
+  def create_user(username: str, password: str, email: str | None = None) -> User:
     return User.objects.create_user(username, email, password)
 
   @property
@@ -142,8 +145,12 @@ class Post(Model):
   def is_post_from_op(self) -> bool:
     return self.user == self.thread.user
 
-  def get_emotes(self) -> Iterable["Emotes"]:
-    return Emotes.objects.filter(postemotes__post=self)
+  def get_emotes(self) -> Mapping[str, int]:
+    return {i: PostEmotes.objects.filter(post=self, emote=i).count() for i in PostEmotes.get_emotes_possible()}
+
+  @property
+  def emotes(self) -> Mapping[str, int]:
+    return self.get_emotes()
 
   def is_first_post(self) -> bool:
     return self.thread.get_posts().first() == self
@@ -152,17 +159,55 @@ class Post(Model):
   def get_post_by_id(post_id: int) -> "Post":
     return Post.objects.get(pk=post_id)
 
-class Emotes(Model):  # TODO make better?
-  name = models.CharField(max_length=50)
-
-  def get_emote_path(self):
-    return f"img/emotes/{self.name}.png"
-
 
 class PostEmotes(Model):
+  class Emotes(models.TextChoices):
+    LIKE = emoji.demojize("👍")
+    DISLIKE = emoji.demojize("👎")
+    LOVE = emoji.demojize("❤️")
+    WARNING = emoji.demojize("⚠️")
+    PARTY = emoji.demojize("🎉")
+    EYES = emoji.demojize("👀")
+    SAD = emoji.demojize("😕")
+    ROLLING_EYES = emoji.demojize("🙄")
+
+    @staticmethod
+    def get_emotes_possible() -> Iterable[str]:
+      # this method is for backend (it's not emojis)
+      # Maybe better names would help but whtv
+      return PostEmotes.Emotes.values
+
   post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="post")
-  emote = models.ForeignKey(Emotes, on_delete=models.CASCADE, related_name="emote")
   user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="emote_user")
+  emote = models.CharField(
+    choices=Emotes.choices,
+    max_length=24,
+  )
+
+  @staticmethod
+  def toggle_emote(post: Post, user: User, emote: str, adding_or_removing: Literal["add", "remove", None] = None) -> bool:
+    # returns true if added, false if removed
+    emote = demojize(emote)
+    if emote not in PostEmotes.Emotes.get_emotes_possible():
+      raise ValueError("Invalid emote")
+    if adding_or_removing is None:
+      if PostEmotes.objects.filter(post=post, user=user, emote=emote).exists():
+        adding_or_removing = "remove"
+      else:
+        adding_or_removing = "add"
+    if adding_or_removing == "remove":
+      PostEmotes.objects.filter(post=post, user=user, emote=emote).delete()
+      return False
+    elif adding_or_removing == "add":
+      PostEmotes(post=post, user=user, emote=emote).save()
+      return True
+    else:
+      raise ValueError("Invalid adding_or_removing")
+
+  @staticmethod
+  def get_emotes_possible() -> Iterable[str]:
+    # this method is for frontend (it's emojis)
+    return [emoji.emojize(i[0]) for i in PostEmotes.Emotes.choices]
 
 
 class Topico(Model):

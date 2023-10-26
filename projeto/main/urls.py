@@ -24,6 +24,7 @@ urlpatterns = [
   path('search/', include('haystack.urls')),
   path("admin/", views.admin, name="admin"),
   path("report/", views.report, name="report"),
+  path("emote/", views.emote, name="emote"),
 ]
 
 handler404 = 'main.views.handler404'

@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.utils import timezone
 from django.views.decorators.http import require_POST
-from .models import Topico, Thread, User, Post, Mod, Reports
+from .models import Topico, Thread, User, Post, Mod, Reports, PostEmotes
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
@@ -54,7 +54,8 @@ def thread(request, thread_id: int, topico_name: str = None):
   return render(request, "thread.html", {
     "topico_name": topico_name,
     "thread": t,
-    "posts": t.get_posts()
+    "posts": t.get_posts(),
+    "emotes": PostEmotes.get_emotes_possible()
   })
 
 
@@ -211,3 +212,32 @@ def report(request):
       "success": True,
       "message": "Report altered successfully."
     }, status=200)
+
+@login_required(login_url="login/")
+@require_POST
+def emote(request):
+  post = Post.get_post_by_id(int(request.POST["post_id"]))
+  emote = request.POST["emote"]
+  removing = bool(request.POST["removing"])
+
+  if emote not in PostEmotes.get_emotes_possible():
+    return JsonResponse({
+      "error": "Emote not available."
+    }, status=400)
+  if post is None:
+    return JsonResponse({
+      "error": "Post not found."
+    }, status=404)
+  print(removing)
+  try:
+    added = PostEmotes.toggle_emote(post, getUser(request), emote, adding_or_removing="remove" if removing else "add")
+  except Exception as e:
+    return JsonResponse({
+      "error": str(e),
+      "error_object": e,
+    }, status=500)
+  return JsonResponse({
+    "success": True,
+    "message": "Emote added successfully." if added else "Emote removed successfully."
+  }, status=200)
+

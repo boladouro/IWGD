@@ -297,9 +297,9 @@ section {
       -moz-osx-font-smoothing: grayscale;
     }
 */
-.listagem h2 {
+.listagem h1 {
     margin-bottom: 10px;
-    animation: glitch 3s steps(100) infinite;
+    animation: glitch 100s steps(100) infinite;
     color: #151515;
     font-size: 5em;
 
@@ -362,14 +362,14 @@ section {
 }
 
 @media screen and (min-width: 480px)
-  .listagem h2 {
+  .listagem h1 {
     margin-bottom: 5px;
-    animation: glitch 3s steps(100) infinite;
+    animation: glitch 100s steps(100) infinite;
     color: #151515;
     font-size: 2em;
 
 }
-}
+
 
 
 /* ==============Login=====================
