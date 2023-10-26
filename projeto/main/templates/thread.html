@@ -12,7 +12,7 @@
     {% endif %}
    </div>
   {% for post in posts %}
-    <li class="itens">
+    <li class="itens" id="line-{{ post.id }}">
       <div class="post" style="width: 100%">
         <div class="meta">
           <span>Posted by {{ post.user.username }} on {{ post.date_created }}</span>
@@ -119,9 +119,7 @@
           success: (data) => {
             alert(data.message);
             // Hide the post
-            let vvv = $(e.target).parentsUntil(".itens").hide()
-            let vvvv = $(e.target).parentsUntil(".itens").remove();
-            $(e.target).parentsUntil(".itens").removeClass("itens").remove();
+            $("#line-"+e.target.id.split("-")[1]).remove()
             // TODO test
           },
           error: (response) => {

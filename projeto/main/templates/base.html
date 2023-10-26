@@ -48,14 +48,30 @@
         <header class="base fooorm10">
 {% else %}
   <body class="fooorm">
-    <header class="base fooorm">
+    <header class="base fooorm" style="display:flex;place-content: space-between;">
 {% endif %}
 
       <div>
-        <a href="{% url 'main:index' %}">Logo</a>
+          <!--<img src="../static/img/1123.png" style="width:5%;">-->
+        <a href="{% url 'main:index' %}"><img src="../static/img/1123.png" style="width:5%;"></a>
       </div>
-      <div>
-        barra de pesquisa
+      <div style="text-align:center;">
+        <form method="get" action="">
+    <input type="search" id="search-input">
+    <button type="submit" id="search-button">Search</button>
+</form>
+
+<script>
+    document.getElementById('search-button').addEventListener('click', function(event) {
+        event.preventDefault(); // Impede o envio do formulário
+
+        var searchValue = document.getElementById('search-input').value;
+        var searchLink = '/search/?q=' + encodeURIComponent(searchValue);
+
+        // Redireciona para a página de busca com o valor da pesquisa
+        window.location.href = searchLink;
+    });
+</script>
       </div>
   </header>
   <nav>
