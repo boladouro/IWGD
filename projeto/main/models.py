@@ -117,10 +117,10 @@ class Thread(Model):
 
   @staticmethod
   def get_thread_by_id(thread_id: int) -> "Thread" | None:
-    return Thread.objects.get(pk=thread_id)
+    return Thread.objects.get(pk=thread_id, is_removed=False)
 
   def get_posts(self) -> Iterable["Post"]:
-    return Post.objects.filter(thread=self).order_by('date_created')
+    return Post.objects.filter(thread=self, is_removed=False).order_by('date_created')
 
 
 class Post(Model):
@@ -150,7 +150,14 @@ class Post(Model):
 
   @staticmethod
   def get_post_by_id(post_id: int) -> "Post":
-    return Post.objects.get(pk=post_id)
+    return Post.objects.get(pk=post_id,is_removed=False)
+
+  @staticmethod
+  def delete_post(post_id: int) -> "Post":
+    kaka = Post.objects.get(pk=post_id)
+    kaka.is_removed = True
+    kaka.save()
+    return kaka
 
 class Emotes(Model):  # TODO make better?
   name = models.CharField(max_length=50)
@@ -174,11 +181,11 @@ class Topico(Model):
 
   @property
   def thread_count(self) -> int:
-    return Thread.objects.filter(topico=self).count()
+    return Thread.objects.filter(topico=self, is_removed=False).count()
 
   @property
   def latest_thread(self) -> Thread | None:
-    return Thread.objects.filter(topico=self).order_by('-date_created').first()
+    return Thread.objects.filter(topico=self, is_removed=False).order_by('-date_created').first()
 
   @staticmethod
   def get_topicos(user: User | None) -> Iterable["Topico"]:
@@ -200,7 +207,7 @@ class Topico(Model):
 
   def get_threads(self) -> Iterable[Thread]:
     # sort by if it's sticky, then date_created from earliest to latest
-    return Thread.objects.filter(topico=self).order_by('-is_sticky', '-date_created')
+    return Thread.objects.filter(topico=self, is_removed=False).order_by('-is_sticky', '-date_created')
 
 
 class Reports(Model):

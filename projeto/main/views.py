@@ -148,27 +148,25 @@ def create_thread(request, topico_name):
       if text_t is not None:
         kkk = Post.new_post(user=user_t, text=text_t, thread_id=thread_p)
         return HttpResponseRedirect(f"/t/{topico_name}/{kkk1.id}")
-
   return render(request, 'new_thread.html', {'topico_name': topico_name})
 
 
-@login_required(login_url="login/")
-def create_post(request):
-  #   if request.method == 'POST':
-  #     user_p = request.user
-  #     topico_p = Topico.get_topico_by_name(topico_name)
-  #     text_p = request.POST.get('text')
-  #
-  #     if topico_t is not None and titulo_t is not None:
-  #       kkk = Thread.new_thread(title=titulo_t, user=user_t, topico=topico_t)
-  #       return topico(request,topico_name)
-  #   return render(request, 'new_post.html', {'topico_name': topico_name})
-  pass
-
 
 @login_required(login_url="login/")
+@require_POST
 def delete_post(request):
-  raise NotImplementedError("TODO")
+  post_id = request.POST["post_id"]
+  print(post_id)
+  thread_id = request.POST["thread_id"]
+  topico_name = Thread.get_thread_by_id(thread_id)
+  aaa = Post.get_post_by_id(post_id)
+  if aaa.user == request.user:
+    Post.delete_post(post_id)
+    return JsonResponse({
+      "success": True,
+      "message": "Report created successfully."
+    }, status=200)
+  return render(request, 'thread.html', {'topico_name': topico_name, 'thread_id':thread_id})
 
 
 @login_required(login_url="login/")

@@ -113,12 +113,15 @@
           type: "POST",
           data: {
             post_id: e.target.id.split("-")[1],
+            thread_id: $("#thread-id").val(),
             csrfmiddlewaretoken: "{{ csrf_token }}"
           },
           success: (data) => {
             alert(data.message);
             // Hide the post
-            $(e).parentsUntil(".itens").hide();
+            let vvv = $(e.target).parentsUntil(".itens").hide()
+            let vvvv = $(e.target).parentsUntil(".itens").remove();
+            $(e.target).parentsUntil(".itens").removeClass("itens").remove();
             // TODO test
           },
           error: (response) => {
