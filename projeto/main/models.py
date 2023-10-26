@@ -104,6 +104,7 @@ class Thread(Model):
   user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name="poster")
   is_sticky = models.BooleanField(default=False)
   topico = models.ForeignKey('Topico', on_delete=models.CASCADE, null=True, related_name="topico")
+  is_removed = models.BooleanField(default=False)
 
   def __str__(self):
     return self.title
@@ -127,6 +128,7 @@ class Post(Model):
   text = models.TextField()
   thread = models.ForeignKey(Thread, on_delete=models.DO_NOTHING, related_name="thread")
   user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name="user")  # SAME THING HERE
+  is_removed = models.BooleanField(default=False)
 
   def __str__(self):
     return self.text
