@@ -8,6 +8,9 @@
     </div>
     {% if request.user.is_authenticated %}
       <div style="display:flex;">
+        <div class="button">
+          <a href="{% url 'main:create_thread' topico %}">New Thread</a>
+        </div>
       </div>
     {% else %}
     {% endif %}
@@ -24,6 +27,9 @@
       <div class="last">{{ thread.date_created }}</div>
     </li>
    </div>
+
+
+
   {% endfor %}
 </div>
 {% endblock content %}

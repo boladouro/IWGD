@@ -68,12 +68,10 @@ nav li a:hover {
 section {
   width: 100%;
   display: inline-block;
-
-  height: 50vh;
+  height: auto;
   text-align: center;
   font-size: 22px;
   font-weight: 700;
-  text-decoration: underline;
 }
 
 
@@ -885,7 +883,7 @@ section {
 .listagem .button a {
   background: #76B3FA;
   border-radius: 100px;
-  padding:5px 15px;
+  padding:10px 30px;
   color: #fff;
   text-decoration: none;
   font-size: 1.45em;
@@ -1207,5 +1205,98 @@ keyframes active {
 
 
 
-/*==========*/
+/*==========================parte do perfil=============================*/
+
+.user-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-info img {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    margin-right: 20px;
+}
+
+.user-details {
+    text-align: left;
+}
+
+.user-details h2 {
+    font-size: 2.5em;
+    margin: 0;
+    color:#fff;
+}
+
+.user-details p {
+    font-size: 1.2em;
+    margin: 0;
+    color:#fff;
+}
+
+main {
+    padding: 20px;
+}
+
+.user-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 30px;
+    background-color: rgba(255, 255, 255, 0.7); /* Define a cor de fundo com opacidade */
+    backdrop-filter: blur(10px); /* Aplica um desfoque ao fundo */
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat h2 {
+    font-size: 1.2em;
+    margin: 0;
+}
+
+.stat p {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 0;
+    color: #000;
+}
+
+.recent-activity {
+    display:flex;
+    justify-content: space-around;
+    margin-bottom: 30px;
+    background-color: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+}
+
+.recent-activity h2 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.recent-activity ul {
+    list-style: none;
+    padding: 0;
+}
+
+.recent-activity li {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.recent-activity a {
+    color: #fff;
+    text-decoration: none;
+}
+
 
