@@ -152,17 +152,23 @@ class Post(Model):
 
   def get_emotes(self, user) -> Mapping[str, GetEmotesResult]:
     # emote: {post_id: is_emoted_by_user}
-    return {i: Post.GetEmotesResult(
+    return {i: result for i in PostEmotes.Emotes.get_emotes_possible() if (result := Post.GetEmotesResult(
       count=PostEmotes.objects.filter(post=self, emote=i).count(),
       is_emoted_by_user=PostEmotes.objects.filter(post=self, emote=i, user=user).exists(),
-    ) for i in PostEmotes.Emotes.get_emotes_possible()}
+    )).count > 0}
+
+  def emotes(self) -> Mapping[str, int]:
+    return {
+      i: PostEmotes.objects.filter(post=self, emote=emoji.demojize(i)).count()
+      for i in PostEmotes.get_emotes_possible()
+    }
 
   def is_first_post(self) -> bool:
     return self.thread.get_posts().first() == self
 
   @staticmethod
   def get_post_by_id(post_id: int) -> "Post":
-    return Post.objects.get(pk=post_id,is_removed=False)
+    return Post.objects.get(pk=post_id, is_removed=False)
 
   @staticmethod
   def delete_post(post_id: int) -> "Post":
@@ -204,7 +210,8 @@ class PostEmotes(Model):
   )
 
   @staticmethod
-  def toggle_emote(post: Post, user: User, emote: str, adding_or_removing: Literal["add", "remove", None] = None) -> bool:
+  def toggle_emote(post: Post, user: User, emote: str,
+                   adding_or_removing: Literal["add", "remove", None] = None) -> bool:
     # returns true if added, false if removed
     emote = demojize(emote)
     if emote not in PostEmotes.Emotes.get_emotes_possible():
@@ -233,11 +240,13 @@ class PostEmotes(Model):
     return [emoji.emojize(i.emote) for i in PostEmotes.objects.filter(post=post, user=user)]
 
   @staticmethod
-  def get_emotes_in_thread(thread: Thread, user: User) -> Mapping[int, Mapping[str, Post.GetEmotesResult]]:
-    # post_id: {emote: {post_count: is_emoted_by_user}}
+  def get_emotes_in_thread(thread: Thread, user: User) -> Mapping[int, Iterable[str]]:
     if not user.is_authenticated: return {}
-    # use get_emotes
-    return {i.id: i.get_emotes(user) for i in thread.get_posts()}
+    return {
+      i.post.id: PostEmotes.get_emotes_from_user(i.post, user)
+      for i in PostEmotes.objects.filter(post__thread=thread, user=user)
+    }
+
 
 class Topico(Model):
   name = models.CharField(max_length=50)

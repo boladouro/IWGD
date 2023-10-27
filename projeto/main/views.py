@@ -227,7 +227,6 @@ def emote(request):
     return JsonResponse({
       "error": "Post not found."
     }, status=404)
-  print(removing)
   try:
     added = PostEmotes.toggle_emote(post, getUser(request), emote, adding_or_removing="remove" if removing else "add")
   except Exception as e:
