@@ -16,7 +16,7 @@
    </div>
 
   {% for post in posts %}
-    <li class="itens">
+    <li class="itens" id="line-{{ post.id }}">
       <div class="post">
         <div class="post-perfil" style="border-right: #cccccc 2px solid"><p>{{ post.user.username }}</p> TODO avatar
         </div>

@@ -48,31 +48,29 @@
         <header class="base fooorm10">
 {% else %}
   <body class="fooorm">
-    <header class="base fooorm" style="display:flex;place-content: space-between;">
+    <header class="base fooorm">
 {% endif %}
-
+    <div style="display:flex;place-content: space-between;">
       <div>
           <!--<img src="../static/img/1123.png" style="width:5%;">-->
-        <a href="{% url 'main:index' %}"><img src="../static/img/1123.png" style="width:5%;"></a>
+        <a href="{% url 'main:index' %}"><img src="../../../static/img/1123.png"></a>
       </div>
-      <div style="text-align:center;">
+      <div style="align-self: center;">
         <form method="get" action="">
-    <input type="search" id="search-input">
-    <button type="submit" id="search-button">Search</button>
-</form>
+            <input type="search" id="search-input">
+            <button type="submit" id="search-button">Search</button>
+        </form>
 
-<script>
-    document.getElementById('search-button').addEventListener('click', function(event) {
-        event.preventDefault(); // Impede o envio do formulário
-
-        var searchValue = document.getElementById('search-input').value;
-        var searchLink = '/search/?q=' + encodeURIComponent(searchValue);
-
-        // Redireciona para a página de busca com o valor da pesquisa
-        window.location.href = searchLink;
-    });
-</script>
+        <script>
+            document.getElementById('search-button').addEventListener('click', function(event) {
+                event.preventDefault();
+                var searchValue = document.getElementById('search-input').value;
+                var searchLink = '/search/?q=' + encodeURIComponent(searchValue);
+                window.location.href = searchLink;
+            });
+        </script>
       </div>
+    </div>
   </header>
   <nav>
     <img src="" alt="">

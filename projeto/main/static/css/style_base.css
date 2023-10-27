@@ -30,6 +30,10 @@ body h1 {
       display: inline;
 
 }
+.base a{
+    width:80%;
+
+}
 
 
 div{
@@ -622,6 +626,7 @@ section {
       font-family: "Roboto", sans-serif;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      position:initial;
     }
     /*Thanks Chris Shank*/
     .acrylic::before {
