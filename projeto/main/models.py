@@ -8,7 +8,6 @@ from django.db import models
 from django.db.models import Model
 from django.contrib.auth.models import AbstractUser
 from emoji import emojize, demojize
-
 # from django.utils.translation import gettext_lazy as _
 DATABASE_READY = False
 
@@ -171,18 +170,10 @@ class Post(Model):
     return Post.objects.get(pk=post_id, is_removed=False)
 
   @staticmethod
-  def delete_post(post_id: int) -> "Post":
-    kaka = Post.objects.get(pk=post_id)
-    kaka.is_removed = True
-    kaka.save()
-    return kaka
-
-  @staticmethod
-  def delete_post(post_id: int) -> "Post":
-    kaka = Post.objects.get(pk=post_id)
-    kaka.is_removed = True
-    kaka.save()
-    return kaka
+  def delete_post(post: Post) -> "Post":
+    post.is_removed = True
+    post.save()
+    return post
 
 
 class PostEmotes(Model):

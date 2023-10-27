@@ -90,10 +90,21 @@
 }
 
 .signature {
-  border-top: 1px solid #e6e6e6;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  border-top: 2px solid #e6e6e6;
 }
 
 #thread-title {
   font-size:2em;
   padding-bottom: 10px;
+}
+
+.post-button{
+  float: right;
+  color:darkred
+}
+
+.post-button:hover{
+  cursor: pointer;
 }

@@ -878,14 +878,6 @@ section {
 
 
 /* ==============Botão-threads===================== */
-.report-button {
-  float: right;
-  color:darkred
-}
-
-.report-button:hover{
-  cursor: pointer;
-}
 
 .listagem .button a {
   background: #76B3FA;

@@ -59,4 +59,5 @@ Ideia: Forum :)
 * relatorio (eu)
 * QUANDO DELETE MOSTRAR Q ALGUMA COISA FOI DELETADA (eu)
 * mudar logo para wip (eu)
+* report popup ta broken
 * Nao esquecer de ver TODOs
