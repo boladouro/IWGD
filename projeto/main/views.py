@@ -55,7 +55,8 @@ def thread(request, thread_id: int, topico_name: str = None):
     "topico_name": topico_name,
     "thread": t,
     "posts": t.get_posts(),
-    "emotes": PostEmotes.get_emotes_possible()
+    "emotes": PostEmotes.get_emotes_possible(),
+    "emotes_user": PostEmotes.get_emotes_in_thread(t,request.user)
   })
 
 
@@ -216,7 +217,7 @@ def report(request):
 def emote(request):
   post = Post.get_post_by_id(int(request.POST["post_id"]))
   emote = request.POST["emote"]
-  removing = bool(request.POST["removing"])
+  removing = bool(int(request.POST["removing"])) # idiotic but it works
 
   if emote not in PostEmotes.get_emotes_possible():
     return JsonResponse({

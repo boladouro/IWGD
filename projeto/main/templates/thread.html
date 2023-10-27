@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load static %}
+{% load thread_helper %}
 <link rel="stylesheet" href="{% static 'css/style_thread.css' %}">
 <div class="listagem acrylic">
   <div style="display:flex;justify-content: space-between;">
@@ -13,6 +14,7 @@
     {% else %}
     {% endif %}
    </div>
+
   {% for post in posts %}
     <li class="itens">
       <div class="post">
@@ -34,8 +36,10 @@
             <span class="button-emotes material-symbols-outlined">add_reaction</span>
             <!-- open box on hover -->
             <div class="emote-box emote-box-hidden">
-              {% for emote, emote_count in post.emotes.items %}
-                  <span class="emote" data-post-id="{{ post.id }}" data-emote-count="{{ emote_count }}" data-emote="{{ emote }}">{{ emote }} {{ emote_count }}</span>
+            {{ emotes_user|pprint }}
+            <!-- regroup so I get if the user has reacted to the post -->
+              {% for emote, emote_result in emotes_user.items %}
+                <span class="emote {% if emote_result.is_emoted_by_user %} selected {% endif %}" data-post-id="{{ post.id }}" data-emote-count="{{ emote_result.count }}" data-emote="{{ emote }}">{{ emote }} {{ emote_count }}</span>
               {% endfor %}
             </div>
           </div>
@@ -67,25 +71,25 @@
       })
       $(".emote").on("click", (e) => {
         let element_here = $(e.target)
-        element_here.toggleClass("selected", !element_here.hasClass("selected"))
+        element_here.toggleClass("selected")
         $.ajax({
           url: "{% url 'main:emote' %}",
           type: "POST",
           data: {
-            post_id: element_here.attr("data-post-id"),
-            emote: element_here.attr("data-emote"),
-            removing: element_here.hasClass("selected"),
+            post_id: element_here.data("post-id"),
+            emote: element_here.data("emote"),
+            removing: !element_here.hasClass("selected") | 0,
             csrfmiddlewaretoken: "{{ csrf_token }}"
           },
           success: (data) => {
             let element = $(e.target)
             // increment
             if (element.hasClass("selected")) {
-              element.attr("data-emote-count", parseInt($(e.target).attr("data-emote-count")) + 1)
+              element.data("emote-count", parseInt($(e.target).data("emote-count")) + 1)
             } else {
-              element.attr("data-emote-count", parseInt($(e.target).attr("data-emote-count")) - 1)
+              element.data("emote-count", parseInt($(e.target).data("emote-count")) - 1)
             }
-            element.text(element.attr("data-emote") + " " + element.attr("data-emote-count"))
+            element.text(element.data("emote") + " " + element.data("emote-count"))
           },
           error: (response) => {
             if (response.status == 302 || response.status == 401) {
@@ -200,7 +204,7 @@
   </script>
   {% if request.user.is_authenticated %}
     <div id="postagem">
-        <form action="{% url 'main:thread' topico_name thread.id %}" class="" method="POST">
+        <form action="{% url 'main:thread' topico_name thread.id %}" method="POST">
             {% csrf_token %}
             <input style="widht:100%;" type="text" placeholder="TEXTO" name="textt"/>
             <button type="submit">Postar</button>

@@ -145,12 +145,17 @@ class Post(Model):
   def is_post_from_op(self) -> bool:
     return self.user == self.thread.user
 
-  def get_emotes(self) -> Mapping[str, int]:
-    return {i: PostEmotes.objects.filter(post=self, emote=i).count() for i in PostEmotes.get_emotes_possible()}
+  @dataclass
+  class GetEmotesResult:
+    count: int
+    is_emoted_by_user: bool
 
-  @property
-  def emotes(self) -> Mapping[str, int]:
-    return self.get_emotes()
+  def get_emotes(self, user) -> Mapping[str, GetEmotesResult]:
+    # emote: {post_id: is_emoted_by_user}
+    return {i: Post.GetEmotesResult(
+      count=PostEmotes.objects.filter(post=self, emote=i).count(),
+      is_emoted_by_user=PostEmotes.objects.filter(post=self, emote=i, user=user).exists(),
+    ) for i in PostEmotes.Emotes.get_emotes_possible()}
 
   def is_first_post(self) -> bool:
     return self.thread.get_posts().first() == self
@@ -223,6 +228,16 @@ class PostEmotes(Model):
     # this method is for frontend (it's emojis)
     return [emoji.emojize(i[0]) for i in PostEmotes.Emotes.choices]
 
+  @staticmethod
+  def get_emotes_from_user(post: Post, user: User) -> Iterable[str]:
+    return [emoji.emojize(i.emote) for i in PostEmotes.objects.filter(post=post, user=user)]
+
+  @staticmethod
+  def get_emotes_in_thread(thread: Thread, user: User) -> Mapping[int, Mapping[str, Post.GetEmotesResult]]:
+    # post_id: {emote: {post_count: is_emoted_by_user}}
+    if not user.is_authenticated: return {}
+    # use get_emotes
+    return {i.id: i.get_emotes(user) for i in thread.get_posts()}
 
 class Topico(Model):
   name = models.CharField(max_length=50)
