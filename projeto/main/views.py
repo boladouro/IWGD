@@ -5,7 +5,20 @@ from django.utils import timezone
 from django.views.decorators.http import require_POST
 from .models import Topico, Thread, User, Post, Mod, Reports, PostEmotes
 from django.urls import reverse
-from django.contrib.auth.decorators import login_required
+
+
+# from django.contrib.auth.decorators import login_required
+
+
+def login_required(function):
+  def wrapper(request, *args, **kwargs):
+    if not request.user.is_authenticated:
+      return JsonResponse({
+        "error": "User is not authenticated."
+      }, status=401)
+    return function(request, *args, **kwargs)
+
+  return wrapper
 
 
 def index(request):
@@ -66,6 +79,17 @@ def login_view(request):
     password = request.POST.get('password')
     user = auth.authenticate(username=username, password=password)
     if user is not None:
+      is_timed_out, timedout_until = user.is_timed_out
+      if is_timed_out:
+        return render(request, "login.html", {
+          "error": f"User is timed out until {user.timedout_until.strftime('%d/%m/%Y %H:%M:%S')}. Reason: {user.ban_or_timeout_reason}",
+          "username_inserted": username,
+        })
+      if user.is_banned:
+        return render(request, "login.html", {
+          "error": f"User is banned. Reason: {user.ban_or_timeout_reason}",
+          "username_inserted": username,
+        })
       auth.login(request, user)
     else:
       return render(request, "login.html", {
@@ -136,7 +160,7 @@ def favorite(request, topico_str: str):
   }, status=200)
 
 
-@login_required(login_url="login/")
+@login_required
 def create_thread(request, topico_name):
   if request.method == 'POST':
     user_t = request.user
@@ -153,7 +177,7 @@ def create_thread(request, topico_name):
   return render(request, 'new_thread.html', {'topico_name': topico_name})
 
 
-@login_required(login_url="login/")
+@login_required
 @require_POST
 def delete_post(request):
   post_id = request.POST["post_id"]
@@ -169,12 +193,12 @@ def delete_post(request):
   return render(request, 'thread.html', {'topico_name': topico_name, 'thread_id': thread_id})
 
 
-@login_required(login_url="login/")
+@login_required
 def delete_thread(request):
   return render(request, 'del_thread.html')
 
 
-@login_required(login_url="login/")
+@login_required
 def admin(request):
   if Mod.is_mod(getUser(request)):
     r = Reports.get_reports()
@@ -186,7 +210,7 @@ def admin(request):
     return render(request, "401.html", status=401)
 
 
-@login_required(login_url="login/")
+@login_required
 @require_POST
 def report(request):
   post_id = request.POST["post_id"]
@@ -211,7 +235,7 @@ def report(request):
     }, status=200)
 
 
-@login_required(login_url="login/")
+@login_required
 @require_POST
 def emote(request):
   post = Post.get_post_by_id(int(request.POST["post_id"]))
@@ -241,3 +265,147 @@ def emote(request):
 
 def searchs(request):
   return render(request, "search.html")
+
+
+@login_required
+def handle_report(request, ignore: int | bool):
+  report = Reports.get_report_by_id(request.POST["report_id"])
+  if ignore:
+    report.ignore()
+    return JsonResponse({
+      "success": True,
+      "message": "Report ignored successfully."
+    }, status=200)
+  action = request.POST["action"]
+  reason = request.POST["reason"]
+  is_thread = report.post_reported.is_first_post()
+  try:
+    match action:
+      case "delete":
+        if is_thread:
+          Thread.delete_thread(report.post_reported.thread)
+        Post.delete_post(report.post_reported)
+        message = "Deleted successfully."
+      case "ban":
+        report.post_reported.user.ban(request.user, reason)
+        message = "User banned successfully."
+      case "delete_ban":
+        if is_thread:
+          Thread.delete_thread(report.post_reported.thread)
+        Post.delete_post(report.post_reported)
+        report.post_reported.user.ban(request.user, reason)
+        message = "Deleted and user banned successfully."
+      case "timeout":
+        report.post_reported.user.timeout(request.user, reason)
+        message = "User timed out successfully."
+      case "delete_timeout":
+        if is_thread:
+          Thread.delete_thread(report.post_reported.thread)
+        Post.delete_post(report.post_reported)
+        report.post_reported.user.timeout(request.user, reason)
+        message = "Deleted and user timed out successfully."
+      case "lock":
+        report.post_reported.thread.lock()
+        message = "Thread locked successfully."
+      case _:
+        return JsonResponse({
+          "error": "Invalid action."
+        }, status=400)
+
+    report.delete()
+    return JsonResponse({
+      "success": True,
+      "message": message
+    }, status=200)
+  except Exception as e:
+    return JsonResponse({
+      "error": str(e),
+      "error_object": e,
+    }, status=500)
+
+
+def is_banned(request):
+  if request.user.is_authenticated:
+    if request.user.is_banned or request.user.is_timed_out[0]:
+      return JsonResponse({
+        "banned": True,
+        "reason": request.user.ban_or_timeout_reason,
+        "until": request.user.timedout_until.strftime("%d/%m/%Y %H:%M:%S") if request.user.is_timed_out[0] else None,
+      }, status=200)
+  return JsonResponse({
+    "banned": False,
+  }, status=200)
+
+
+@login_required
+@require_POST
+def sticky(request):
+  thread = Thread.get_thread_by_id(request.POST["thread_id"])
+  if thread is None:
+    return JsonResponse({
+      "error": "Thread not found."
+    }, status=404)
+  if not Mod.is_mod(getUser(request)):
+    return JsonResponse({
+      "error": "User is not a mod."
+    }, status=401)
+  thread.sticky()
+  return JsonResponse({
+    "success": True,
+    "message": "Thread stickied successfully."
+  }, status=200)
+
+
+@login_required
+@require_POST
+def lock(request):
+  thread = Thread.get_thread_by_id(request.POST["thread_id"])
+  if thread is None:
+    return JsonResponse({
+      "error": "Thread not found."
+    }, status=404)
+  if not Mod.is_mod(getUser(request)):
+    return JsonResponse({
+      "error": "User is not a mod."
+    }, status=401)
+  thread.lock()
+  return JsonResponse({
+    "success": True,
+    "message": "Thread locked successfully."
+  }, status=200)
+
+@login_required
+@require_POST
+def ban(request):
+  user = User.get_user_by_id(request.POST["user_id"])
+  if user is None:
+    return JsonResponse({
+      "error": "User not found."
+    }, status=404)
+  if not Mod.is_mod(getUser(request)):
+    return JsonResponse({
+      "error": "User is not a mod."
+    }, status=401)
+  user.ban(request.user, request.POST["reason"])
+  return JsonResponse({
+    "success": True,
+    "message": "User banned successfully."
+  }, status=200)
+
+@login_required
+@require_POST
+def timeout(request):
+  user = User.get_user_by_id(request.POST["user_id"])
+  if user is None:
+    return JsonResponse({
+      "error": "User not found."
+    }, status=404)
+  if not Mod.is_mod(getUser(request)):
+    return JsonResponse({
+      "error": "User is not a mod."
+    }, status=401)
+  user.timeout(request.user, request.POST["reason"])
+  return JsonResponse({
+    "success": True,
+    "message": "User timed out successfully."
+  }, status=200)

@@ -1,27 +1,40 @@
 {% extends 'base.html' %}
 {% block content %}
 {% load static %}
-{% load thread_helper %}
 <link rel="stylesheet" href="{% static 'css/style_thread.css' %}">
 <div class="listagem acrylic">
-  <div style="display:flex;justify-content: space-between;">
-    <div>
-      <h2 id="thread-title">{{ thread.title }}</h2>
-    </div>
+  <div id="thread-title-div">
+    <h2 id="thread-title">
+      {% if thread.is_sticky %}
+        <span class="sticky-icon material-symbols-outlined is-sticky-dark">push_pin</span>
+      {% endif %}
+      {% if thread.is_locked %}
+        <span class="locked-icon material-symbols-outlined is-locked-dark">lock</span>
+      {% endif %}
+      {{ thread.title }}
+      {% if user.is_mod or user.is_admin %}
+        <span class="material-symbols-outlined mod-button mod-button-on-thread" data-thread-id="{{ thread.id }}" data-button-on="thread">shield</span>
+      {% endif %}
+    </h2>
   </div>
   {% for post in posts %}
     <li class="itens" id="line-{{ post.id }}">
       <div class="post">
-        <div class="post-perfil" style="border-right: #cccccc 2px solid"><p>{{ post.user.username }}</p> TODO avatar
+
+        <div class="post-perfil" style="border-right: #cccccc 2px solid"><p>{{ post.user.username }}{% if user.is_mod or user.is_admin %} <span class="material-symbols-outlined mod-button mod-button-on-user" data-button-on="user" data-post-id="{{ post.id }}" data-user-id="{{ post.user.id }}" data-button-on="post">shield</span>{% endif %}</p> TODO avatar
         </div>
         <div class="post-text">
           <div class="meta">
             <span style="color:dimgray">{{ post.date_created }}</span>
+            {% if user.is_mod or user.id_admin %}
+              <span class="material-symbols-outlined post-button mod-button mod-button" data-post-id="{{ post.id }}" data-button-on="post">shield</span>
+            {% endif %}
             {% if post.user == user %}
               <span class="post-button delete-button material-symbols-outlined" id="delete-{{ post.id }}">delete</span>
             {% else %}
               <span id="report-{{ post.id }}" class="post-button report-button material-symbols-outlined">flag</span>
             {% endif %}
+
           </div> <!-- TODO aqui caixas de cada post seria melhor imo -->
           <div class="message">
             {{ post.text }}
@@ -44,6 +57,172 @@
       </div>
     </li>
   {% endfor %}
+  {% if user.is_mod or user.is_admin %}
+    <div class="admin-context-box">
+      <span class="material-symbols-outlined admin-context-box-button admin-context-box-button-all" id="admin-context-box-close">close</span>
+      <span class="material-symbols-outlined admin-context-box-button admin-context-box-button-post" id="admin-context-box-delete">delete</span>
+      <span class="material-symbols-outlined admin-context-box-button admin-context-box-button-thread {% if thread.is_sticky %} is-sticky {% endif %}" id="admin-context-box-sticky" >push_pin</span>
+      <span class="material-symbols-outlined admin-context-box-button admin-context-box-button-thread {% if thread.is_locked %} is-locked {% endif %}" id="admin-context-box-lock">lock</span>
+      <span class="material-symbols-outlined admin-context-box-button admin-context-box-button-deleted-post" id="admin-context-box-restore">restore_from_trash</span>
+      <span class="material-symbols-outlined admin-context-box-button admin-context-box-button-user" id="admin-context-box-ban">block</span>
+      <span class="material-symbols-outlined admin-context-box-button admin-context-box-button-user" id="admin-context-box-timeout">timer</span>
+    </div>
+    <script id="mod-actions-script">
+      function hideAdminContextBox() {
+        $(".admin-context-box").hide()
+        $(".admin-context-box").children().hide()
+      }
+      function turnButtonToColor(button, color) {
+        button.css("color", color)
+        setTimeout(() => {
+          button.css("color", "inherit")
+        }, 2000)
+      }
+      $(document).ready(() => {
+        hideAdminContextBox()
+        $(".mod-button").on("click", (e) => {
+          let element = $(e.target)
+          let adminContextBox = $(".admin-context-box")
+          // get type of button
+          let buttonOn = element.data("button-on")
+          // show appropriate buttons based on buttonOn (and hide others)
+          adminContextBox.find(".admin-context-box-button-all").show()
+          adminContextBox.find(".admin-context-box-button-" + buttonOn).show()
+          adminContextBox.css("top", e.pageY)
+          adminContextBox.css("left", e.pageX)
+          adminContextBox.show()
+
+          // set data
+          adminContextBox.data("post-id", element.data("post-id"))
+          adminContextBox.data("thread-id", element.data("thread-id"))
+          adminContextBox.data("user-id", element.data("user-id"))
+        });
+        $("#admin-context-box-close").on("click", () => {
+          hideAdminContextBox()
+        });
+
+        $("#admin-context-box-delete").on("click", (e) => {
+          turnButtonToColor($(e.target), "red")
+        }).on("dblclick", (e) => {
+          $.ajax({
+            url: "{% url 'main:delete_post' %}",
+            type: "POST",
+            data: {
+              post_id: $(".admin-context-box").data("post-id"),
+              thread_id: $(".admin-context-box").data("thread-id"),
+              csrfmiddlewaretoken: "{{ csrf_token }}"
+            },
+            success: (data) => {
+              $("#line-"+$(".admin-context-box").data("post-id")).remove()
+              alert(data.message);
+            },
+            error: (response) => {
+              if (response.status == 302 || response.status == 401) {
+                window.location.href = "{% url 'main:login' %}"
+              } else {
+                alert("Error;"+ response.error + " contact admin")
+                console.log(response.status)
+                console.log(response.error_object)
+              }
+            }
+          });
+        });
+        $("#admin-context-box-sticky").on("click", (e) => {
+          $.ajax({
+            url: "{% url 'main:sticky' %}",
+            type: "POST",
+            data: {
+              thread_id: $(".admin-context-box").data("thread-id"),
+              csrfmiddlewaretoken: "{{ csrf_token }}"
+            },
+            success: (data) => {
+              alert(data.message);
+              window.location.reload()
+            },
+            error: (response) => {
+              if (response.status == 302 || response.status == 401) {
+                window.location.href = "{% url 'main:login' %}"
+              } else {
+                alert("Error;"+ response.error + " contact admin")
+                console.log(response.status)
+                console.log(response.error_object)
+              }
+            }
+          });
+        });
+        $("#admin-context-box-lock").on("click", turnButtonRed).on("dblclick", (e) => {
+          $.ajax({
+            url: "{% url 'main:lock' %}",
+            type: "POST",
+            data: {
+              thread_id: $(".admin-context-box").data("thread-id"),
+              csrfmiddlewaretoken: "{{ csrf_token }}"
+            },
+            success: (data) => {
+              alert(data.message);
+              window.location.reload()
+            },
+            error: (response) => {
+              if (response.status == 302 || response.status == 401) {
+                window.location.href = "{% url 'main:login' %}"
+              } else {
+                alert("Error;"+ response.error + " contact admin")
+                console.log(response.status)
+                console.log(response.error_object)
+              }
+            }
+          });
+        });
+        $("#admin-context-box-ban").on("click", turnButtonRed).on("dblclick", (e) => {
+          $.ajax({
+            url: "{% url 'main:ban' %}",
+            type: "POST",
+            data: {
+              user_id: $(".admin-context-box").data("user-id"),
+              csrfmiddlewaretoken: "{{ csrf_token }}"
+            },
+            success: (data) => {
+              alert(data.message);
+              window.location.reload()
+            },
+            error: (response) => {
+              if (response.status == 302 || response.status == 401) {
+                window.location.href = "{% url 'main:login' %}"
+              } else {
+                alert("Error;"+ response.error + " contact admin")
+                console.log(response.status)
+                console.log(response.error_object)
+              }
+            }
+          });
+        });
+        $("#admin-context-box-timeout").on("click", turnButtonRed).on("dblclick", (e) => {
+          $.ajax({
+            url: "{% url 'main:timeout' %}",
+            type: "POST",
+            data: {
+              user_id: $(".admin-context-box").data("user-id"),
+              csrfmiddlewaretoken: "{{ csrf_token }}"
+            },
+            success: (data) => {
+              alert(data.message);
+              window.location.reload()
+            },
+            error: (response) => {
+              if (response.status == 302 || response.status == 401) {
+                window.location.href = "{% url 'main:login' %}"
+              } else {
+                alert("Error;"+ response.error + " contact admin")
+                console.log(response.status)
+                console.log(response.error_object)
+              }
+            }
+          });
+        });
+
+      });
+    </script>
+  {% endif %}
   <script id="emotes-user-script">
       $(document).ready(() => {
       {% for post_id, emojis in emotes_user.items %}
@@ -213,7 +392,7 @@
     <div id="postagem">
         <form action="{% url 'main:thread' topico_name thread.id %}" method="POST">
             {% csrf_token %}
-            <input style="widht:100%;" type="text" placeholder="TEXTO" name="textt"/>
+            <textarea cols="90" rows="3" type="text" placeholder="TEXTO" name="textt"></textarea><br>
             <button type="submit">Postar</button>
         </form>
     </div>

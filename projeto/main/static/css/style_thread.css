@@ -98,6 +98,7 @@
 #thread-title {
   font-size:2em;
   padding-bottom: 10px;
+  width: 100%;
 }
 
 .post-button{
@@ -107,4 +108,53 @@
 
 .post-button:hover{
   cursor: pointer;
+}
+
+.mod-button{
+  color:darkgreen !important;
+  cursor: pointer;
+}
+
+.mod-button-on-thread {
+  float: right;
+  margin-right: 10px;
+}
+
+#thread-title-div {
+  display:flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.mod-button-on-user{
+  font-size: 1em;
+  position: relative;
+  top: 2px;
+}
+
+.admin-context-box-button {
+  cursor: pointer;
+}
+
+.admin-context-box {
+  background-color: #666666;
+  position: absolute;
+  display: none;
+  opacity: 1;
+}
+
+.is-sticky {
+  color: mediumspringgreen;
+}
+
+.is-sticky-dark {
+  color: darkgreen;
+}
+
+.is-locked {
+  color: yellow;
+}
+
+.is-locked-dark {
+  color: darkgoldenrod;
 }

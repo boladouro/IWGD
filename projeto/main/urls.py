@@ -24,6 +24,12 @@ urlpatterns = [
   path("admin/", views.admin, name="admin"),
   path("report/", views.report, name="report"),
   path("emote/", views.emote, name="emote"),
+  path("handle_report/<int:ignore>/", views.handle_report, name="handle_report"),
+  path("is_banned/", views.is_banned, name="is_banned"),
+  path("sticky/", views.sticky, name="sticky"),
+  path("lock/", views.lock, name="lock"),
+  path("ban/", views.ban, name="ban"),
+  path("timeout/", views.timeout, name="timeout"),
 ]
 
 handler404 = 'main.views.handler404'

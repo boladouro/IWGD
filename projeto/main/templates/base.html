@@ -2,12 +2,26 @@
 
 <html lang="pt">
 <head>
-  <title>WIP</title>
+  <title>PCK</title>
 </head>
 <link rel="stylesheet" type="text/css" href='{% static "css/reset.css" %}' >
 <link rel="stylesheet" type="text/css" href='{% static "css/style_base.css" %}' />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+  // redirect if user is bannedF
+  $(document).ready(function() {
+    $.ajax({
+      url: "{% url 'main:is_banned' %}",
+      type: "GET",
+      success: function(response) {
+        if (response.is_banned) {
+          window.location.href = "{% url 'main:logout' %}";
+        }
+      }
+    });
+  });
+</script>
 <title>Index</title>
 {% if request.path == "/t/Música/" or request.path == "/new_thread/Música" or topico_name == "Música" %}
     <body class="fooorm1">
@@ -46,7 +60,7 @@
     <div style="display:flex;place-content: space-between;">
       <div>
           <!--<img src="../static/img/1123.png" style="width:5%;">-->
-        <a href="{% url 'main:index' %}"><img src="{% static 'img/1123.png' %}"></a>
+        <a href="{% url 'main:index' %}"><img src="{% static 'img/logo.png' %}"></a>
       </div>
       <div style="align-self: center; padding-top:20px">
         <form method="get" action="">

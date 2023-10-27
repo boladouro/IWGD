@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import datetime, timedelta
 from typing import Iterable, Mapping, Literal
 
 import emoji
@@ -17,10 +18,13 @@ class User(AbstractUser):
   signature = models.TextField(null=True, default=None)
   avatar = models.ImageField(default='default.png', upload_to='avatars')
   is_banned = models.BooleanField(default=False)
-  is_timed_out = models.BooleanField(default=False)
   timeout_expires = models.DateTimeField(null=True)
   ban_or_timeout_reason = models.TextField(null=True)
   favorites = models.ManyToManyField('Topico', related_name="favorites")
+
+  def get_avatar_url(self) -> str:
+    # or self.avatar.url
+    return self.avatar.path
 
   @staticmethod
   def create_user(username: str, password: str, email: str | None = None) -> User:
@@ -38,9 +42,29 @@ class User(AbstractUser):
     return self.username
 
   @staticmethod
-  def get_user_by_id(user_id: int) -> "User":
+  def get_user_by_id(user_id: int|str) -> "User":
     return User.objects.get(pk=user_id)
 
+  def ban(self, auth: User, reason: str):
+    if not auth.is_mod or not auth.is_admin:
+      raise PermissionError("User has no permission to ban")
+    self.is_banned = True
+    self.ban_or_timeout_reason = reason
+    self.save()
+
+  def timeout(self, auth: User, reason: str, timeout: timedelta = timedelta(days=1)):
+    if not auth.is_mod or not auth.is_admin:
+      raise PermissionError("User has no permission to timeout")
+    self.is_timed_out = True
+    self.ban_or_timeout_reason = reason
+    self.timeout_expires = datetime.now() + timeout
+    self.save()
+
+  @property
+  def is_timed_out(self) -> tuple[bool, datetime]:
+    if self.timeout_expires is None:
+      return False, datetime.now()
+    return self.timeout_expires > datetime.now(), self.timeout_expires
 
 class Mod(Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name="mod")
@@ -118,11 +142,23 @@ class Thread(Model):
     return thread
 
   @staticmethod
-  def get_thread_by_id(thread_id: int) -> "Thread" | None:
+  def get_thread_by_id(thread_id: int|str) -> "Thread" | None:
     return Thread.objects.get(pk=thread_id, is_removed=False)
 
   def get_posts(self) -> Iterable["Post"]:
     return Post.objects.filter(thread=self, is_removed=False).order_by('date_created')
+
+  def delete_thread(self):
+    self.is_removed = True
+    self.save()
+
+  def lock(self):
+    self.is_locked = True
+    self.save()
+
+  def sticky(self):
+    self.is_sticky = True
+    self.save()
 
 
 class Post(Model):
@@ -311,3 +347,10 @@ class Reports(Model):
     report.reason = reason
     report.save()
     return False
+
+  @staticmethod
+  def get_report_by_id(report_id: int) -> Reports:
+    return Reports.objects.get(pk=report_id)
+
+  def ignore(self):
+    self.delete()

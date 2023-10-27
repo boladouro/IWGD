@@ -61,3 +61,4 @@ Ideia: Forum :)
 * mudar logo para wip (eu)
 * report popup ta broken
 * Nao esquecer de ver TODOs
+* favicon

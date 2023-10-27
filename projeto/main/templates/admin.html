@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
+  <style>p {color:white;} label {color:white;}</style> {# TODO mudar style desta pagina #}
   <div id="reports">
     <h1>Reports</h1>
     <ul>
@@ -10,17 +11,91 @@
             <p>Thread: "<a href="{% url 'main:thread' report.post_reported.thread.topico report.post_reported.thread.id %}">{{ report.post_reported.thread.title }}</a>"</p>
             <p>Post: "{{ report.post_reported.text }}"</p>
             <p>Reason: {{ report.reason }}</p>
-            <button type="button">Take action</button>
-            <div class="Report-{{ report.id }}" style="display: none">
-              Reason: <input type="text" value="{{ report.reason }}"><br>
-              Action: <input type="text" value=""><br>
-              <button>Submit</button>
+            <button style="color:black" type="button" class="button-take-action" data-id="{{ report.id }}">Take action</button>
+            <button style="color:black" type="button" class="button-ignore" data-id="{{ report.id }}">Ignore</button>
+            <div id="report-{{ report.id }}" class="report-box" style="display: none">
+              <label>Reason:</label> <input type="text" value="{{ report.reason }}"><br>
+              {% with is_thread=report.post_reported.is_first_post|yesno:"Thread,Post" %}
+                <label>Action:</label> <select id="action-{{ report.id }}">
+                  <option value="delete">Delete {{ is_thread }}</option>
+                  <option value="ban">Ban {{ report.created_by.username }}</option>
+                  <option value="delete_ban">Delete {{ is_thread }} and ban {{ report.created_by.username }}</option>
+                  <option value="timeout">Timeout {{ report.created_by.username }}</option>
+                  <option value="delete_timeout">Delete {{ is_thread }} and timeout {{ report.created_by.username }}</option>
+                  {% if report.post_reported.is_first_post %}
+                    <option value="lock">Lock thread</option>
+                  {% endif %}
+                </select>
+              {% endwith %}
+              <br>
+              <button type="button" class="button-submit" data-id="{{ report.id }}">Submit</button>
             </div>
           </li>
         {% endfor %}
       {% else %}
         <li>Nothing reported.</li>
       {% endif %}
+      <script>
+        $(document).ready(function(){
+          $(".button-take-action").on( "click", (e) => {
+            element = $(e.target)
+            $("#report-" + element.data("id")).toggle()
+          });
+          // change text when clicked to confirm
+          $(".button-ignore").on("click", (e) => {
+            element = $(e.target)
+            element.text("Confirm ignore")
+            element.css("color", "red")
+            setTimeout(() => {
+              element.text("Ignore")
+              element.css("color", "inherit")
+            }, 2000)
+          }).on("dblclick", (e) => {
+            element = $(e.target)
+            $.ajax({
+              url: "{% url 'main:handle_report' ignore=1 %}",
+              type: "POST",
+              data: {
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+                report_id: element.data("id")
+              },
+              success: (data) => {
+                element.parent().remove()
+              },
+              error: (data) => {
+                alert("Error ignoring report.")
+              }
+            });
+          });
+          $(".button-submit").on("click", (e) => {
+            element = $(e.target)
+            element.text("Confirm submit")
+            element.css("color", "red")
+            setTimeout(() => {
+              element.text("Submit")
+              element.css("color", "inherit")
+            }, 2000)
+          }).on("dblclick", (e) => {
+            element = $(e.target)
+            $.ajax({
+              url: "{% url 'main:handle_report' ignore=0 %}",
+              type: "POST",
+              data: {
+                csrfmiddlewaretoken: "{{ csrf_token }}",
+                report_id: element.data("id"),
+                action: $("#action-" + element.data("id")).val(),
+                reason: $("#report-" + element.data("id") + " input").val()
+              },
+              success: function(data){
+                element.parent().parent().remove()
+              },
+              error: function(data){
+                alert("Error handling report.")
+              }
+            });
+          });
+        });
+      </script>
     </ul>
   </div>
   <!--
