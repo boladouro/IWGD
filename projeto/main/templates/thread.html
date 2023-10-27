@@ -6,15 +6,9 @@
 <div class="listagem acrylic">
   <div style="display:flex;justify-content: space-between;">
     <div>
-      <h2 style="font-size:40px;">{{ thread.title }}</h2>
+      <h2 id="thread-title">{{ thread.title }}</h2>
     </div>
-    {% if request.user.is_authenticated %}
-      <div style="display:flex;">
-      </div>
-    {% else %}
-    {% endif %}
-   </div>
-
+  </div>
   {% for post in posts %}
     <li class="itens" id="line-{{ post.id }}">
       <div class="post">
@@ -32,6 +26,11 @@
           <div class="message">
             {{ post.text }}
           </div>
+          {% if post.user.signature %} <!-- TODO test this -->
+            <div class="signature">
+              {{ post.signature }}
+            </div>
+          {% endif %}
           <div class="emotes-section">
             <span class="button-emotes material-symbols-outlined">add_reaction</span>
             <!-- open box on hover -->

@@ -88,3 +88,12 @@
   grid-template-columns: 1fr 5fr;
   grid-gap: 9px
 }
+
+.signature {
+  border-top: 1px solid #e6e6e6;
+}
+
+#thread-title {
+  font-size:2em;
+  padding-bottom: 10px;
+}
