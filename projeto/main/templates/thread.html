@@ -36,10 +36,8 @@
             <span class="button-emotes material-symbols-outlined">add_reaction</span>
             <!-- open box on hover -->
             <div class="emote-box emote-box-hidden">
-            {{ emotes_user|pprint }}
-            <!-- regroup so I get if the user has reacted to the post -->
-              {% for emote, emote_result in emotes_user.items %}
-                <span class="emote {% if emote_result.is_emoted_by_user %} selected {% endif %}" data-post-id="{{ post.id }}" data-emote-count="{{ emote_result.count }}" data-emote="{{ emote }}">{{ emote }} {{ emote_count }}</span>
+              {% for emote, emote_count in post.emotes.items %}
+                <span id="{{ emote }}-{{ post.id }}" class="emote" data-post-id="{{ post.id }}" data-emote-count="{{ emote_count }}" data-emote="{{ emote }}">{{ emote }} {{ emote_count }}</span >
               {% endfor %}
             </div>
           </div>
@@ -48,6 +46,23 @@
     </li>
   {% endfor %}
   <script>
+    $(document).ready(() => {
+      {% for post_id, emojis in emotes_user.items %}
+        {% for emoji in emojis %}
+          $("#{{ emoji }}-{{ post_id }}").addClass("selected")
+        {% endfor %}
+      {% endfor %}
+    })
+  </script>
+  <script>
+    function toggleEmotes(emotesSection) {
+      let element = $(emotesSection)
+      if (element.hasClass("emote-box-hidden")) {
+        showEmotes(emotesSection)
+      } else {
+        hideEmotes(emotesSection)
+      }
+    }
     function showEmotes(emotesSection) {
       let element = $(emotesSection)
       element.find(".emote").each((i, e) => {
@@ -58,8 +73,7 @@
     function hideEmotes(emotesSection) {
       let element = $(emotesSection)
       element.find(".emote").each((i, e) => {
-        console.log($(e).attr("data-emote-count"))
-        if ($(e).attr("data-emote-count") == 0) {
+        if ($(e).data("emote-count") == 0) {
           $(e).hide()
         }
       })
@@ -70,19 +84,18 @@
         hideEmotes($(e))
       })
       $(".emote").on("click", (e) => {
-        let element_here = $(e.target)
-        element_here.toggleClass("selected")
+        let element = $(e.target)
+        element.toggleClass("selected")
         $.ajax({
           url: "{% url 'main:emote' %}",
           type: "POST",
           data: {
-            post_id: element_here.data("post-id"),
-            emote: element_here.data("emote"),
-            removing: !element_here.hasClass("selected") | 0,
+            post_id: element.data("post-id"),
+            emote: element.data("emote"),
+            removing: !element.hasClass("selected") | 0,
             csrfmiddlewaretoken: "{{ csrf_token }}"
           },
           success: (data) => {
-            let element = $(e.target)
             // increment
             if (element.hasClass("selected")) {
               element.data("emote-count", parseInt($(e.target).data("emote-count")) + 1)
@@ -90,6 +103,7 @@
               element.data("emote-count", parseInt($(e.target).data("emote-count")) - 1)
             }
             element.text(element.data("emote") + " " + element.data("emote-count"))
+            hideEmotes(element.parent().parent())
           },
           error: (response) => {
             if (response.status == 302 || response.status == 401) {
@@ -103,11 +117,7 @@
       })
       $(".button-emotes").on("click", (e) => {
         let emotesSection = $(e.target).parent()
-        if(emotesSection.hasClass("emote-box-hidden")) {
-          showEmotes(emotesSection)
-        }else {
-          hideEmotes(emotesSection)
-        }
+        toggleEmotes(emotesSection)
       })
     })
   </script>
