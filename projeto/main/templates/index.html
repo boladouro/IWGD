@@ -57,7 +57,7 @@
         </div>
         <div class="stats">{{ topico.thread_count }}</div>
         {% if topico.latest_thread %}
-          <div class="last">{{ topico.latest_thread.date_created }}</div> <!-- TODO por link pra ela -->
+          <div class="last">{{ topico.latest_thread.date_created|date:"d/m/Y" }}</div> <!-- TODO por link pra ela -->
         {% else %}
           <div class="last"></div>
         {% endif %}

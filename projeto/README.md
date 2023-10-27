@@ -32,29 +32,31 @@ Ideia: Forum :)
 * favourite foruns per user
 
 ## Coisas que falta
-* Logo
-* Banner
-* header na lista de topicos
-* remover home news contact e about e por home quando clicar no logo
-* barra de pesquisa
-* pagina de postar threads e postar posts
-* favourito a funcionar
-* Stickies
-* background especial para cada topico
-* link para o usar quando referenciado
-* nº de posts no thread
+* search redisign
+* welcome mais pra baixo (centrado ou em baixo)
+* clicar no nome vai pro perfil
+* pagina de perfil
 * avatar
-* tirar aquele gradiente
-* mensagem de erro se o login tiver mal ou faltar alguma coisa no registar
-* login e register ta em ingles
-* por o logo
-* pagination
-* barra de pesquisa a funcionar
-* verificar se novos threads e posts aparecem na pesquisa auto
-* bookmarks
-* por acrilico + background em todas as paginas
-* change tab title (currently WIP)
-* Url to post (vai pro thread e da scroll)
-* DELETE
-* QUANDO DELETE MOSTRAR Q ALGUMA COISA FOI DELETADA (trarar do get_posts)
-Nao esquecer de ver TODOs
+* signature (Eu)
+* background partido
+* pin (Eu)
+* caixa de texto para texto (Eu) no comment e new thread
+* fazer posts pra todos
+* admin page
+* admin page take action (eu)
+* follow ups (eu)
+* reply (eu)
+* customizado (eu)
+* stalk maybe (eu)
+* promover mod
+* stickies falta o simboolo (eu)
+* link pro usuario
+* traduzir td para pt
+* paginacao maybe
+* pesquisa transformacao
+* apagar testar
+* bookmars maybe (eu)
+* relatorio (eu)
+* QUANDO DELETE MOSTRAR Q ALGUMA COISA FOI DELETADA (eu)
+* mudar logo para wip (eu)
+* Nao esquecer de ver TODOs
