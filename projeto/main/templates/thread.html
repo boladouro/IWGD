@@ -6,15 +6,9 @@
 <div class="listagem acrylic">
   <div style="display:flex;justify-content: space-between;">
     <div>
-      <h2 style="font-size:40px;">{{ thread.title }}</h2>
+      <h2 id="thread-title">{{ thread.title }}</h2>
     </div>
-    {% if request.user.is_authenticated %}
-      <div style="display:flex;">
-      </div>
-    {% else %}
-    {% endif %}
-   </div>
-
+  </div>
   {% for post in posts %}
     <li class="itens" id="line-{{ post.id }}">
       <div class="post">
@@ -24,14 +18,19 @@
           <div class="meta">
             <span style="color:dimgray">{{ post.date_created }}</span>
             {% if post.user == user %}
-              <span class="delete-button material-symbols-outlined" id="delete-{{ post.id }}">delete</span>
+              <span class="post-button delete-button material-symbols-outlined" id="delete-{{ post.id }}">delete</span>
             {% else %}
-              <span id="report-{{ post.id }}" class="report-button material-symbols-outlined">flag</span>
+              <span id="report-{{ post.id }}" class="post-button report-button material-symbols-outlined">flag</span>
             {% endif %}
           </div> <!-- TODO aqui caixas de cada post seria melhor imo -->
           <div class="message">
             {{ post.text }}
           </div>
+          {% if post.user.signature|length > 0 %}
+            <div class="signature">
+              {{ post.user.signature }}
+            </div>
+          {% endif %}
           <div class="emotes-section">
             <span class="button-emotes material-symbols-outlined">add_reaction</span>
             <!-- open box on hover -->
@@ -45,8 +44,8 @@
       </div>
     </li>
   {% endfor %}
-  <script>
-    $(document).ready(() => {
+  <script id="emotes-user-script">
+      $(document).ready(() => {
       {% for post_id, emojis in emotes_user.items %}
         {% for emoji in emojis %}
           $("#{{ emoji }}-{{ post_id }}").addClass("selected")
@@ -54,7 +53,7 @@
       {% endfor %}
     })
   </script>
-  <script>
+  <script id="emotes-script">
     function toggleEmotes(emotesSection) {
       let element = $(emotesSection)
       if (element.hasClass("emote-box-hidden")) {
@@ -136,7 +135,7 @@
       </div>
     </div>
   </div>
-  <script>
+  <script id="report-script">
     // js has to be here because of url tag
     function showReportPopup() {
       $("#page-mask").fadeIn();
@@ -180,7 +179,6 @@
         });
       });
     })
-    // now delete
     $(document).ready(() => {
       $(".delete-button").on("click", (e) => {
         conf = confirm("Are you sure you want to delete this post?");
@@ -194,10 +192,8 @@
             csrfmiddlewaretoken: "{{ csrf_token }}"
           },
           success: (data) => {
-            alert(data.message);
-            // Hide the post
             $("#line-"+e.target.id.split("-")[1]).remove()
-            // TODO test
+            alert(data.message);
           },
           error: (response) => {
             if (response.status == 302 || response.status == 401) {
@@ -212,6 +208,7 @@
       });
     });
   </script>
+
   {% if request.user.is_authenticated %}
     <div id="postagem">
         <form action="{% url 'main:thread' topico_name thread.id %}" method="POST">

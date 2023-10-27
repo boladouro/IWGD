@@ -37,12 +37,12 @@ def perfil(request):
 
 
 def thread(request, thread_id: int, topico_name: str = None):
-  if request.user.is_authenticated: #TODO move this cause thread id wont be known ahead of time
+  if request.user.is_authenticated:  # TODO move this cause thread id wont be known ahead of time
     if request.method == "POST":
       text_p = request.POST.get('textt')
       user_p = request.user
       thread_p = Thread.get_thread_by_id(thread_id)
-      if text_p is not None and text_p != "" :
+      if text_p is not None and text_p != "":
         kkk = Post.new_post(user=user_p, text=text_p, thread_id=thread_p)
         return HttpResponseRedirect(f"{request.path}")
   t = Thread.get_thread_by_id(thread_id)
@@ -56,7 +56,7 @@ def thread(request, thread_id: int, topico_name: str = None):
     "thread": t,
     "posts": t.get_posts(),
     "emotes": PostEmotes.get_emotes_possible(),
-    "emotes_user": PostEmotes.get_emotes_in_thread(t,request.user)
+    "emotes_user": PostEmotes.get_emotes_in_thread(t, request.user)
   })
 
 
@@ -153,22 +153,20 @@ def create_thread(request, topico_name):
   return render(request, 'new_thread.html', {'topico_name': topico_name})
 
 
-
 @login_required(login_url="login/")
 @require_POST
 def delete_post(request):
   post_id = request.POST["post_id"]
-  print(post_id)
   thread_id = request.POST["thread_id"]
   topico_name = Thread.get_thread_by_id(thread_id)
-  aaa = Post.get_post_by_id(post_id)
-  if aaa.user == request.user:
-    Post.delete_post(post_id)
+  post = Post.get_post_by_id(post_id)
+  if post.user == request.user:
+    Post.delete_post(Post.get_post_by_id(post_id))
     return JsonResponse({
       "success": True,
-      "message": "Report created successfully."
+      "message": "Deleted successfully."
     }, status=200)
-  return render(request, 'thread.html', {'topico_name': topico_name, 'thread_id':thread_id})
+  return render(request, 'thread.html', {'topico_name': topico_name, 'thread_id': thread_id})
 
 
 @login_required(login_url="login/")
@@ -212,12 +210,13 @@ def report(request):
       "message": "Report altered successfully."
     }, status=200)
 
+
 @login_required(login_url="login/")
 @require_POST
 def emote(request):
   post = Post.get_post_by_id(int(request.POST["post_id"]))
   emote = request.POST["emote"]
-  removing = bool(int(request.POST["removing"])) # idiotic but it works
+  removing = bool(int(request.POST["removing"]))  # idiotic but it works
 
   if emote not in PostEmotes.get_emotes_possible():
     return JsonResponse({
@@ -241,4 +240,4 @@ def emote(request):
 
 
 def searchs(request):
-  return render(request,"search.html")
+  return render(request, "search.html")

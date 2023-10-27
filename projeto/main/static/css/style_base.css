@@ -25,7 +25,7 @@ body h1 {
 }
 
 .base div {
-      padding: 0 100px;
+      padding: 0 30px;
       color:white;
       display: inline;
 
@@ -61,6 +61,7 @@ nav li a {
   padding: 14px 16px;
   text-decoration: none;
 }
+
 nav li a:hover {
   background-color: #111;
   color:#fff;
@@ -363,6 +364,7 @@ section {
     color: #777;
     font-size: 14px;
     font-style: italic;
+  padding-left: 5em;
 }
 
 @media screen and (min-width: 480px)
@@ -876,14 +878,6 @@ section {
 
 
 /* ==============Botão-threads===================== */
-.report-button {
-  float: right;
-  color:darkred
-}
-
-.report-button:hover{
-  cursor: pointer;
-}
 
 .listagem .button a {
   background: #76B3FA;
