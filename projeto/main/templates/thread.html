@@ -2,7 +2,7 @@
 {% block content %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/style_thread.css' %}">
-<div class="listagem acrylic">
+<div class="listagem">
   <div id="thread-title-div">
     <h2 id="thread-title">
       {% if thread.is_sticky %}
@@ -18,9 +18,8 @@
     </h2>
   </div>
   {% for post in posts %}
-    <li class="itens" id="line-{{ post.id }}">
-      <div class="post">
-
+    <li class="itens" id="line-{{ post.id }}" style="{% if post.is_removed %} background-color: #C15757;{% endif %}">
+      <div id="post-{{ post.id }}" class="post" >
         <div class="post-perfil" style="border-right: #cccccc 2px solid"><p>{{ post.user.username }}{% if user.is_mod or user.is_admin %} <span class="material-symbols-outlined mod-button mod-button-on-user" data-button-on="user" data-post-id="{{ post.id }}" data-user-id="{{ post.user.id }}" data-button-on="post">shield</span>{% endif %}</p> TODO avatar
         </div>
         <div class="post-text">
@@ -66,11 +65,18 @@
       <span class="material-symbols-outlined admin-context-box-button admin-context-box-button-deleted-post" id="admin-context-box-restore">restore_from_trash</span>
       <span class="material-symbols-outlined admin-context-box-button admin-context-box-button-user" id="admin-context-box-ban">block</span>
       <span class="material-symbols-outlined admin-context-box-button admin-context-box-button-user" id="admin-context-box-timeout">timer</span>
+      <input class="admin-context-box-input" id="admin-context-box-input-reason" placeholder="Reason">
     </div>
     <script id="mod-actions-script">
       function hideAdminContextBox() {
         $(".admin-context-box").hide()
         $(".admin-context-box").children().hide()
+        // make delete button not red so transition between posts dont show it red
+        $("#admin-context-box-delete").css("color", "inherit")
+        $("#admin-context-box-input-reason").hide().val("")
+
+        $("#admin-context-box-ban").css("color", "inherit")
+        $("#admin-context-box-timeout").css("color", "inherit")
       }
       function turnButtonToColor(button, color) {
         button.css("color", color)
@@ -81,6 +87,7 @@
       $(document).ready(() => {
         hideAdminContextBox()
         $(".mod-button").on("click", (e) => {
+          hideAdminContextBox()
           let element = $(e.target)
           let adminContextBox = $(".admin-context-box")
           // get type of button
@@ -94,7 +101,6 @@
 
           // set data
           adminContextBox.data("post-id", element.data("post-id"))
-          adminContextBox.data("thread-id", element.data("thread-id"))
           adminContextBox.data("user-id", element.data("user-id"))
         });
         $("#admin-context-box-close").on("click", () => {
@@ -102,19 +108,22 @@
         });
 
         $("#admin-context-box-delete").on("click", (e) => {
-          turnButtonToColor($(e.target), "red")
-        }).on("dblclick", (e) => {
+          if($(e.target).css("color") != "rgb(255, 0, 0)") {
+            turnButtonToColor($(e.target), "red")
+            return
+          }
+          console.log("removing")
+          adminContextBox = $(".admin-context-box")
           $.ajax({
             url: "{% url 'main:delete_post' %}",
             type: "POST",
             data: {
-              post_id: $(".admin-context-box").data("post-id"),
-              thread_id: $(".admin-context-box").data("thread-id"),
+              post_id: adminContextBox.data("post-id"),
               csrfmiddlewaretoken: "{{ csrf_token }}"
             },
             success: (data) => {
-              $("#line-"+$(".admin-context-box").data("post-id")).remove()
-              alert(data.message);
+              // turn .post of deleted post red
+              $("#post-" + adminContextBox.data("post-id")).parent().css("background-color", "#C15757")
             },
             error: (response) => {
               if (response.status == 302 || response.status == 401) {
@@ -127,16 +136,17 @@
             }
           });
         });
+
         $("#admin-context-box-sticky").on("click", (e) => {
           $.ajax({
             url: "{% url 'main:sticky' %}",
             type: "POST",
             data: {
-              thread_id: $(".admin-context-box").data("thread-id"),
+              thread_id: {{ thread.id }},
+              removing: {% if thread.is_sticky %} 1 {% else %} 0 {% endif %},
               csrfmiddlewaretoken: "{{ csrf_token }}"
             },
             success: (data) => {
-              alert(data.message);
               window.location.reload()
             },
             error: (response) => {
@@ -150,62 +160,16 @@
             }
           });
         });
-        $("#admin-context-box-lock").on("click", turnButtonRed).on("dblclick", (e) => {
+        $("#admin-context-box-lock").on("click", (e) => {
           $.ajax({
             url: "{% url 'main:lock' %}",
             type: "POST",
             data: {
-              thread_id: $(".admin-context-box").data("thread-id"),
+              thread_id: {{ thread.id }},
+              removing: {% if thread.is_locked %} 1 {% else %} 0 {% endif %},
               csrfmiddlewaretoken: "{{ csrf_token }}"
             },
             success: (data) => {
-              alert(data.message);
-              window.location.reload()
-            },
-            error: (response) => {
-              if (response.status == 302 || response.status == 401) {
-                window.location.href = "{% url 'main:login' %}"
-              } else {
-                alert("Error;"+ response.error + " contact admin")
-                console.log(response.status)
-                console.log(response.error_object)
-              }
-            }
-          });
-        });
-        $("#admin-context-box-ban").on("click", turnButtonRed).on("dblclick", (e) => {
-          $.ajax({
-            url: "{% url 'main:ban' %}",
-            type: "POST",
-            data: {
-              user_id: $(".admin-context-box").data("user-id"),
-              csrfmiddlewaretoken: "{{ csrf_token }}"
-            },
-            success: (data) => {
-              alert(data.message);
-              window.location.reload()
-            },
-            error: (response) => {
-              if (response.status == 302 || response.status == 401) {
-                window.location.href = "{% url 'main:login' %}"
-              } else {
-                alert("Error;"+ response.error + " contact admin")
-                console.log(response.status)
-                console.log(response.error_object)
-              }
-            }
-          });
-        });
-        $("#admin-context-box-timeout").on("click", turnButtonRed).on("dblclick", (e) => {
-          $.ajax({
-            url: "{% url 'main:timeout' %}",
-            type: "POST",
-            data: {
-              user_id: $(".admin-context-box").data("user-id"),
-              csrfmiddlewaretoken: "{{ csrf_token }}"
-            },
-            success: (data) => {
-              alert(data.message);
               window.location.reload()
             },
             error: (response) => {
@@ -220,6 +184,72 @@
           });
         });
 
+        $("#admin-context-box-ban").on("click", (e) => {
+          if ($(e.target).css("color") != "rgb(255, 0, 0)") {
+            $(e.target).css("color", "red")
+            $("#admin-context-box-input-reason").show()
+            return
+          } else {
+            if($("#admin-context-box-input-reason").val().length == 0) {
+              alert("Please enter a reason")
+              return
+            }
+          }
+          $.ajax({
+            url: "{% url 'main:ban' %}",
+            type: "POST",
+            data: {
+              user_id: $(".admin-context-box").data("user-id"),
+              reason: $("#admin-context-box-input-reason").val(),
+              csrfmiddlewaretoken: "{{ csrf_token }}"
+            },
+            success: (data) => {
+              alert(data.message);
+            },
+            error: (response) => {
+              if (response.status == 302 || response.status == 401) {
+                window.location.href = "{% url 'main:login' %}"
+              } else {
+                alert("Error;"+ response.error + " contact admin")
+                console.log(response.status)
+                console.log(response.error_object)
+              }
+            }
+          });
+        });
+        $("#admin-context-box-timeout").on("click", (e) => {
+          if ($(e.target).css("color") != "rgb(255, 0, 0)") {
+            $(e.target).css("color", "red")
+            $("#admin-context-box-input-reason").show()
+            return
+          } else {
+            if($("#admin-context-box-input-reason").val().length == 0) {
+              alert("Please enter a reason")
+              return
+            }
+          }
+          $.ajax({
+            url: "{% url 'main:timeout' %}",
+            type: "POST",
+            data: {
+              user_id: $(".admin-context-box").data("user-id"),
+              reason: $("#admin-context-box-input-reason").val(),
+              csrfmiddlewaretoken: "{{ csrf_token }}"
+            },
+            success: (data) => {
+              alert(data.message);
+            },
+            error: (response) => {
+              if (response.status == 302 || response.status == 401) {
+                window.location.href = "{% url 'main:login' %}"
+              } else {
+                alert("Error;"+ response.error + " contact admin")
+                console.log(response.status)
+                console.log(response.error_object)
+              }
+            }
+          });
+        });
       });
     </script>
   {% endif %}
@@ -388,7 +418,7 @@
     });
   </script>
 
-  {% if request.user.is_authenticated %}
+  {% if request.user.is_authenticated and not thread.is_locked %}
     <div id="postagem">
         <form action="{% url 'main:thread' topico_name thread.id %}" method="POST">
             {% csrf_token %}

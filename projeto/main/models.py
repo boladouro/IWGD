@@ -45,20 +45,29 @@ class User(AbstractUser):
   def get_user_by_id(user_id: int|str) -> "User":
     return User.objects.get(pk=user_id)
 
-  def ban(self, auth: User, reason: str):
+  def ban(self, auth: User, reason: str) -> bool:
+    # returns true if banned, false if it was already banned
     if not auth.is_mod or not auth.is_admin:
       raise PermissionError("User has no permission to ban")
+    if self.is_banned:
+      return False
     self.is_banned = True
     self.ban_or_timeout_reason = reason
     self.save()
+    return True
 
   def timeout(self, auth: User, reason: str, timeout: timedelta = timedelta(days=1)):
+    # returns true if timedout, false if it was timedout or banned
     if not auth.is_mod or not auth.is_admin:
       raise PermissionError("User has no permission to timeout")
-    self.is_timed_out = True
-    self.ban_or_timeout_reason = reason
+    if self.is_banned or self.is_timed_out:
+      return False
     self.timeout_expires = datetime.now() + timeout
+    self.ban_or_timeout_reason = reason
     self.save()
+    return True
+
+
 
   @property
   def is_timed_out(self) -> tuple[bool, datetime]:
@@ -131,6 +140,7 @@ class Thread(Model):
   is_sticky = models.BooleanField(default=False)
   topico = models.ForeignKey('Topico', on_delete=models.CASCADE, null=True, related_name="topico")
   is_removed = models.BooleanField(default=False)
+  is_locked = models.BooleanField(default=False)
 
   def __str__(self):
     return self.title
@@ -145,7 +155,9 @@ class Thread(Model):
   def get_thread_by_id(thread_id: int|str) -> "Thread" | None:
     return Thread.objects.get(pk=thread_id, is_removed=False)
 
-  def get_posts(self) -> Iterable["Post"]:
+  def get_posts(self, user: User | None) -> Iterable["Post"]:
+    if user and user.is_mod or user.is_admin:
+      return Post.objects.filter(thread=self).order_by('date_created')
     return Post.objects.filter(thread=self, is_removed=False).order_by('date_created')
 
   def delete_thread(self):
@@ -158,6 +170,14 @@ class Thread(Model):
 
   def sticky(self):
     self.is_sticky = True
+    self.save()
+
+  def unsticky(self):
+    self.is_sticky = False
+    self.save()
+
+  def unlock(self):
+    self.is_locked = False
     self.save()
 
 
@@ -199,7 +219,7 @@ class Post(Model):
     }
 
   def is_first_post(self) -> bool:
-    return self.thread.get_posts().first() == self
+    return self.thread.get_posts(None).first() == self
 
   @staticmethod
   def get_post_by_id(post_id: int) -> "Post":

@@ -55,9 +55,9 @@ def thread(request, thread_id: int, topico_name: str = None):
       text_p = request.POST.get('textt')
       user_p = request.user
       thread_p = Thread.get_thread_by_id(thread_id)
-      if text_p is not None and text_p != "":
+      if not thread_p.is_locked and text_p is not None and text_p != "":
         kkk = Post.new_post(user=user_p, text=text_p, thread_id=thread_p)
-        return HttpResponseRedirect(f"{request.path}")
+      return HttpResponseRedirect(f"{request.path}")
   t = Thread.get_thread_by_id(thread_id)
   if t is None:
     return render(request, "404.html", status=404)
@@ -67,7 +67,7 @@ def thread(request, thread_id: int, topico_name: str = None):
   return render(request, "thread.html", {
     "topico_name": topico_name,
     "thread": t,
-    "posts": t.get_posts(),
+    "posts": t.get_posts(request.user),
     "emotes": PostEmotes.get_emotes_possible(),
     "emotes_user": PostEmotes.get_emotes_in_thread(t, request.user)
   })
@@ -181,16 +181,16 @@ def create_thread(request, topico_name):
 @require_POST
 def delete_post(request):
   post_id = request.POST["post_id"]
-  thread_id = request.POST["thread_id"]
-  topico_name = Thread.get_thread_by_id(thread_id)
   post = Post.get_post_by_id(post_id)
-  if post.user == request.user:
+  if post.user == request.user or request.user.is_mod or request.user.is_admin:
     Post.delete_post(Post.get_post_by_id(post_id))
     return JsonResponse({
       "success": True,
       "message": "Deleted successfully."
     }, status=200)
-  return render(request, 'thread.html', {'topico_name': topico_name, 'thread_id': thread_id})
+  return JsonResponse({
+    "error": "No auth"
+  } ,status=401)
 
 
 @login_required
@@ -341,6 +341,7 @@ def is_banned(request):
 @require_POST
 def sticky(request):
   thread = Thread.get_thread_by_id(request.POST["thread_id"])
+  removing = bool(int(request.POST["removing"]))  # idiotic but it works
   if thread is None:
     return JsonResponse({
       "error": "Thread not found."
@@ -349,8 +350,15 @@ def sticky(request):
     return JsonResponse({
       "error": "User is not a mod."
     }, status=401)
-  thread.sticky()
-  return JsonResponse({
+  if removing:
+    thread.unsticky()
+    return JsonResponse({
+      "success": True,
+      "message": "Thread unstickied successfully."
+    }, status=200)
+  else:
+    thread.sticky()
+    return JsonResponse({
     "success": True,
     "message": "Thread stickied successfully."
   }, status=200)
@@ -360,6 +368,7 @@ def sticky(request):
 @require_POST
 def lock(request):
   thread = Thread.get_thread_by_id(request.POST["thread_id"])
+  removing = bool(int(request.POST["removing"]))  # idiotic but it works
   if thread is None:
     return JsonResponse({
       "error": "Thread not found."
@@ -368,11 +377,18 @@ def lock(request):
     return JsonResponse({
       "error": "User is not a mod."
     }, status=401)
-  thread.lock()
-  return JsonResponse({
-    "success": True,
-    "message": "Thread locked successfully."
-  }, status=200)
+  if removing:
+    thread.unlock()
+    return JsonResponse({
+      "success": True,
+      "message": "Thread unlocked successfully."
+    }, status=200)
+  else:
+    thread.lock()
+    return JsonResponse({
+      "success": True,
+      "message": "Thread locked successfully."
+    }, status=200)
 
 @login_required
 @require_POST
@@ -386,11 +402,17 @@ def ban(request):
     return JsonResponse({
       "error": "User is not a mod."
     }, status=401)
-  user.ban(request.user, request.POST["reason"])
-  return JsonResponse({
-    "success": True,
-    "message": "User banned successfully."
-  }, status=200)
+  wasBanned = user.ban(request.user, request.POST["reason"])
+  if wasBanned:
+    return JsonResponse({
+      "success": True,
+      "message": "User banned successfully."
+    }, status=200)
+  else:
+    return JsonResponse({
+      "sucess": True,
+      "message": "User already banned."
+    }, status=200)
 
 @login_required
 @require_POST
@@ -404,8 +426,14 @@ def timeout(request):
     return JsonResponse({
       "error": "User is not a mod."
     }, status=401)
-  user.timeout(request.user, request.POST["reason"])
-  return JsonResponse({
-    "success": True,
-    "message": "User timed out successfully."
-  }, status=200)
+  wasTimedOut = user.timeout(request.user, request.POST["reason"])
+  if wasTimedOut:
+    return JsonResponse({
+      "success": True,
+      "message": "User timed out successfully."
+    }, status=200)
+  else:
+    return JsonResponse({
+      "sucess": True,
+      "message": "User already timed out or banned."
+    }, status=200)
