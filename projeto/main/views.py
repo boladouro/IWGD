@@ -1,13 +1,9 @@
 from django.contrib import auth
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.utils import timezone
+from django.shortcuts import render, redirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.views.decorators.http import require_POST
 from .models import Topico, Thread, User, Post, Mod, Reports, PostEmotes
-from django.urls import reverse
-
-
-# from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required as kard_required
 
 
 def login_required(function):
@@ -44,9 +40,41 @@ def handler404(request, exception):
 def search_authors(request):
   return render(request, "search_authors.html")
 
-
+@kard_required(login_url="/login/")
 def perfil(request):
-  return render(request, "perfil.html")
+  if request.user.is_authenticated:
+    if request.method == "POST":
+      imaeee = request.FILES.get("image_perfil")
+      username = request.POST.get("username")
+      bio = request.POST.get("bio")
+      senha1 = request.POST.get("password1")
+      senha2 = request.POST.get("password2")
+      if imaeee is not None and imaeee != "":
+        useer = request.user
+        useer.avatar = imaeee
+        useer.save()
+      if username is not None and username != "" and username != request.user:
+        useer = request.user
+        useer.username = username
+        useer.save()
+      if bio is not None and bio != "":
+        useer = request.user
+        useer.bio = bio
+        useer.save()
+      if senha1 is not None and senha1 != "" and senha2 is not None and senha2 != "" and senha2 == senha1:
+        useer = request.user
+        useer.set_password(f"{senha1}")
+        useer.save()
+        return redirect('/')
+  return render(request, "perfil.html", {
+    "threads": Topico.get_threads_user(user=getUser(request)),
+    "posts": Thread.get_posts_user(user=getUser(request)),
+    "image": ("" if request.user.avatar == "" else request.user.get_avatar_url),
+    "bios": request.user.bio,
+    "n_p": len(Thread.get_posts_user(user=getUser(request))),
+    "n_tre": len(Topico.get_threads_user(user=getUser(request))),
+    "n_top": len(Thread.get_posts_user(user=getUser(request))),
+  })
 
 
 def thread(request, thread_id: int, topico_name: str = None):
@@ -438,3 +466,25 @@ def timeout(request):
       "sucess": True,
       "message": "User already timed out or banned."
     }, status=200)
+
+@login_required
+def charge_img_avatar(request):
+  if request.user.is_authenticated:
+    imaeee = request.FILES.get("image_perfil")
+    if imaeee is not None or imaeee != "":
+      useer = request.user
+      useer.avatar = imaeee
+      useer.save()
+    return JsonResponse({
+      "success": True,
+      "message": "Deleted successfully."
+    }, status=200)
+  return JsonResponse({
+    "error": "No auth"
+  }, status=401)
+
+
+
+
+
+
