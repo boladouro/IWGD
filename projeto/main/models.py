@@ -38,6 +38,10 @@ class User(AbstractUser):
   def is_admin(self) -> bool:
     return Admin.is_admin(self)
 
+  @staticmethod
+  def is_mod_or_admin(user) -> bool:
+    return user.is_authenticated and (user.is_mod or user.is_admin)
+
   def __str__(self):
     return self.username
 
@@ -156,7 +160,7 @@ class Thread(Model):
     return Thread.objects.get(pk=thread_id, is_removed=False)
 
   def get_posts(self, user: User | None) -> Iterable["Post"]:
-    if user and user.is_mod or user.is_admin:
+    if user is not None and user.is_authenticated and (user.is_mod or user.is_admin):
       return Post.objects.filter(thread=self).order_by('date_created')
     return Post.objects.filter(thread=self, is_removed=False).order_by('date_created')
 

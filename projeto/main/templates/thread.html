@@ -12,7 +12,7 @@
         <span class="locked-icon material-symbols-outlined is-locked-dark">lock</span>
       {% endif %}
       {{ thread.title }}
-      {% if user.is_mod or user.is_admin %}
+      {% if user_is_mod %}
         <span class="material-symbols-outlined mod-button mod-button-on-thread" data-thread-id="{{ thread.id }}" data-button-on="thread">shield</span>
       {% endif %}
     </h2>
@@ -20,7 +20,7 @@
   {% for post in posts %}
     <li class="itens" id="line-{{ post.id }}" style="{% if post.is_removed %} background-color: #C15757;{% endif %}">
       <div id="post-{{ post.id }}" class="post" >
-        <div class="post-perfil" style="border-right: #cccccc 2px solid"><p>{{ post.user.username }}{% if user.is_mod or user.is_admin %} <span class="material-symbols-outlined mod-button mod-button-on-user" data-button-on="user" data-post-id="{{ post.id }}" data-user-id="{{ post.user.id }}" data-button-on="post">shield</span>{% endif %}</p> TODO avatar
+        <div class="post-perfil" style="border-right: #cccccc 2px solid"><p>{{ post.user.username }}{% if user_is_mod %} <span class="material-symbols-outlined mod-button mod-button-on-user" data-button-on="user" data-post-id="{{ post.id }}" data-user-id="{{ post.user.id }}" data-button-on="post">shield</span>{% endif %}</p> TODO avatar
         </div>
         <div class="post-text">
           <div class="meta">
@@ -56,7 +56,7 @@
       </div>
     </li>
   {% endfor %}
-  {% if user.is_mod or user.is_admin %}
+  {% if user_is_mod %}
     <div class="admin-context-box">
       <span class="material-symbols-outlined admin-context-box-button admin-context-box-button-all" id="admin-context-box-close">close</span>
       <span class="material-symbols-outlined admin-context-box-button admin-context-box-button-post" id="admin-context-box-delete">delete</span>

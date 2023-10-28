@@ -69,7 +69,8 @@ def thread(request, thread_id: int, topico_name: str = None):
     "thread": t,
     "posts": t.get_posts(request.user),
     "emotes": PostEmotes.get_emotes_possible(),
-    "emotes_user": PostEmotes.get_emotes_in_thread(t, request.user)
+    "emotes_user": PostEmotes.get_emotes_in_thread(t, request.user),
+    "user_is_mod": User.is_mod_or_admin(request.user)
   })
 
 
