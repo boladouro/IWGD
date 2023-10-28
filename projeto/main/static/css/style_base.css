@@ -577,7 +577,7 @@ strong {
   border-radius: 10px;
   opacity: 1;
 }
-.form span{
+.form > span{
   font-family: "Roboto", sans-serif;
   position: relative;
   display: inline-block;
@@ -1337,3 +1337,15 @@ main {
 }
 
 
+div#format {
+  display: flex;
+  align-content: start;
+}
+
+div#format > span {
+  cursor: pointer;
+  color: black;
+}
+div#format > span:hover {
+  color: blue;
+}

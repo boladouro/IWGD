@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-
 <div class="form big-form" >
   {% if topico_name == "Música" %}
     <form action="{% url 'main:create_thread' topico_name %}" class="login-form acrylic1" method="POST">
@@ -29,11 +28,50 @@
       {% csrf_token %}
       <span>Nova Thread de <b>{{topico_name}}</b></span>
       <input type="text" placeholder="Titulo" name="title"/>
-      <textarea type="text" placeholder="TEXTO" name="texxt" cols="109" rows="3" style="margin-bottom: 15px"></textarea>
+      <div id="format">
+        <span id="format-italic" class="material-symbols-outlined">format_italic</span>
+        <span id="format-bold" class="material-symbols-outlined">format_bold</span>
+        <span id="format-link" class="material-symbols-outlined">link</span>
+        <span id="format-strikethrough" class="material-symbols-outlined">format_strikethrough</span>
+        <span id="format-superscript" class="material-symbols-outlined">superscript</span>
+        <span id="format-code" class="material-symbols-outlined">code</span>
+        <span id="format-quote" class="material-symbols-outlined">format_quote</span>
+        <span id="format-list" class="material-symbols-outlined">format_list_bulleted</span>
+        <span id="format-spoiler" class="material-symbols-outlined">rainy_heavy</span>
+        <span id="format-image" class="material-symbols-outlined">image</span>
+      </div>
+      <textarea id="post-content" type="text" placeholder="TEXTO" name="texxt" cols="109" rows="3" style="margin-bottom: 15px"></textarea>
       <button type="submit">Criar</button>
-      <p class="message"><a href="{% url 'main:index' %}">Voltar</a></p>
+      <p class="message"><a href="{% url 'main:topico' topico_name %}">Voltar</a></p>
+      <script src="{% static 'js/jquery.selection.js' %}"></script>
+      <script>
+        function insertAtCursor(idClicked, before, after) {
+          $(idClicked).on("click", (e) => {
+            let post = $("#post-content");
+            if (post.selection().length > 0) {
+              post.selection("replace", {text: before + post.selection() + after})
+            } else {
+              post.selection("insert", {text: before + after})
+              // move caret to middle
+              let pos = post.selection("getPos");
+              post.selection("setPos", {start: pos.start + before.length, end: pos.start + before.length});
+            }
+          });
+        }
+        $(document).ready(() => {
+          insertAtCursor("#format-italic", "*", "*");
+          insertAtCursor("#format-bold", "**", "**");
+          insertAtCursor("#format-link", "[", "](url)");
+          insertAtCursor("#format-strikethrough", "~~", "~~");
+          insertAtCursor("#format-superscript", "^", "^");
+          insertAtCursor("#format-code", "`", "`");
+          insertAtCursor("#format-quote", "\n> ", "");
+          insertAtCursor("#format-list", "\n* ", "");
+          insertAtCursor("#format-spoiler", "||", "||");
+          insertAtCursor("#format-image", "\n![", "](url)");
+        });
+      </script>
     </form>
 </div>
-
 
 {% endblock %}

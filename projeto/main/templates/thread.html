@@ -453,9 +453,10 @@
                 post.selection("replace", {text: before + post.selection() + after})
               } else {
                 post.selection("insert", {text: before + after})
+                // move caret to middle
+                let pos = post.selection("getPos");
+                post.selection("setPos", {start: pos.start + before.length, end: pos.start + before.length});
               }
-              // let pos = post.selection("getPos")
-              // if (pos.start == pos.finish)
             });
           }
           $(document).ready(() => {
