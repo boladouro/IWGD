@@ -16,15 +16,18 @@ DATABASE_READY = False
 class User(AbstractUser):
   date_created = models.DateTimeField(auto_now_add=True)
   signature = models.TextField(null=True, default=None)
-  avatar = models.ImageField(default='default.png', upload_to='avatars')
+  avatar = models.ImageField(default='avatars/default.webp', upload_to='avatars')
   is_banned = models.BooleanField(default=False)
   timeout_expires = models.DateTimeField(null=True)
   ban_or_timeout_reason = models.TextField(null=True)
   favorites = models.ManyToManyField('Topico', related_name="favorites")
+  bio = models.TextField(null=True, default="Clique no lapis para escrever uma bio")
 
   def get_avatar_url(self) -> str:
-    # or self.avatar.url
-    return self.avatar.path
+    if self.avatar == "":
+      return ""
+    return self.avatar
+
 
 
 
@@ -72,6 +75,7 @@ class User(AbstractUser):
     self.ban_or_timeout_reason = reason
     self.save()
     return True
+
 
 
 
@@ -166,6 +170,10 @@ class Thread(Model):
       return Post.objects.filter(thread=self).order_by('date_created')
     return Post.objects.filter(thread=self, is_removed=False).order_by('date_created')
 
+  @staticmethod
+  def get_posts_user(user: User | None) -> Iterable["Post"]:
+    return Post.objects.filter(is_removed=False, user=user).order_by('date_created')
+
   def delete_thread(self):
     self.is_removed = True
     self.save()
@@ -185,6 +193,10 @@ class Thread(Model):
   def unlock(self):
     self.is_locked = False
     self.save()
+
+  @property
+  def url(self) -> str:
+    return f"/t/{self.topico.name}/{self.id}"
 
 
 class Post(Model):
@@ -238,6 +250,9 @@ class Post(Model):
       post.thread.delete_thread()
     post.save()
     return post
+  @property
+  def url(self) -> str:
+    return f"/t/{self.thread.topico.name}/{self.thread.id}/#post-{self.id}"
 
 class PostEmotes(Model):
   class Emotes(models.TextChoices):
@@ -338,6 +353,10 @@ class Topico(Model):
   def get_threads(self) -> Iterable[Thread]:
     # sort by if it's sticky, then date_created from earliest to latest
     return Thread.objects.filter(topico=self, is_removed=False).order_by('-is_sticky', '-date_created')
+
+  @staticmethod
+  def get_threads_user(user: User | None) -> Iterable[Thread]:
+    return Thread.objects.filter(is_removed=False, user=user).order_by('-is_sticky', '-date_created')
 
 
 class Reports(Model):

@@ -21,15 +21,53 @@
     <li class="itens">
       <div class="icon">{{ thread.is_sticky }}</div>
       <div class="content">
-        <h3> <a class="" style="text-decoration: none" href="{% url 'main:thread' topico thread.id %}">{{ thread.title }}</a></h3>
+        <h3> <a class="" style="text-decoration: none" href="{% url 'main:thread' topico thread.id %}">{{ thread.title }}</a> {% if thread.user == user %}
+              <span class="post-button delete-button material-symbols-outlined" id="delete-{{ post.id }}">delete</span>
+            {% else %}
+              <span id="report-{{ post.id }}" class="post-button report-button material-symbols-outlined">flag</span>
+            {% endif %}</h3>
+
       </div>
       <div class="stats">{{ thread.user.username }}</div>
       <div class="last">{{ thread.date_created }}</div>
+
     </li>
    </div>
 
 
 
   {% endfor %}
+  <script>
+   $(document).ready(() => {
+      $(".delete-button").on("click", (e) => {
+        conf = confirm("Are you sure you want to delete this post?");
+        if (!conf) return;
+        $.ajax({
+          url: "{% url 'main:delete_post' %}",
+          type: "POST",
+          data: {
+            post_id: e.target.id.split("-")[1],
+            thread_id: $("#thread-id").val(),
+            csrfmiddlewaretoken: "{{ csrf_token }}"
+          },
+          success: (data) => {
+            $("#line-"+e.target.id.split("-")[1]).remove()
+            alert(data.message);
+          },
+          error: (response) => {
+            if (response.status == 302 || response.status == 401) {
+              window.location.href = "{% url 'main:login' %}"
+            } else {
+              alert("Error;"+ response.error + " contact admin")
+              console.log(response.status)
+              console.log(response.error_object)
+            }
+          }
+        });
+      });
+    });
+  </script>
+
+
 </div>
 {% endblock content %}

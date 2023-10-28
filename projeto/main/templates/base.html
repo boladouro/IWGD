@@ -8,6 +8,8 @@
 <link rel="stylesheet" type="text/css" href='{% static "css/style_base.css" %}' />
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
 <script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
 <script>
   // redirect if user is bannedF
   $(document).ready(function() {
@@ -53,13 +55,15 @@
 {% elif request.path == "/t/Meta/" or request.path == "/new_thread/Meta" or topico_name == "Meta" %}
     <body class="fooorm10">
         <header class="base fooorm10">
+{% elif request.path == "/perfil/" %}
+    <body class="fooorm11">
+        <header class="base fooorm11">
 {% else %}
   <body class="fooorm">
     <header class="base fooorm">
 {% endif %}
     <div style="display:flex;place-content: space-between;">
       <div>
-          <!--<img src="../static/img/1123.png" style="width:5%;">-->
         <a href="{% url 'main:index' %}"><img src="{% static 'img/logo.png' %}"></a>
       </div>
       <div style="align-self: center; padding-top:20px">
@@ -79,10 +83,10 @@
       </div>
     </div>
   </header>
-  <nav>
+  <nav class="base-nav">
     <ul>
       {% if user.is_authenticated %}
-        <li style="text-align: end; padding: 14px 16px;">Welcome, {{ user.username }}</li>
+        <li style="text-align: end; padding: 14px 16px;">Welcome, <a href="/perfil/" class="adaw" style="text-decoration: none;">{{ user.username }} </a></li>
         <li style="float:right"><a href="{% url 'main:logout' %}">Logout</a></li>
         {% if user.is_admin or user.is_mod %}
           <li style="float:right"><a href="{% url 'main:admin' %}">Admin Panel</a></li>

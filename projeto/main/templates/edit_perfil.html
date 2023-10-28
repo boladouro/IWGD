@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<body class="fooorm">
+  <div class="form">
+    <form action="{% url 'main:edicao_perfil' %}" class="login-form acrylic" method="POST" enctype= multipart/form-data>
+      {% csrf_token %}
+      <span>importe sua imagem</span>
+      <input id="username" type="file" name="image_perfil"/>
+      <span>Novo nome</span>
+      <input type="text" placeholder="Username" name="username"/>
+      <span>Nova senha</span>
+      <input  type="password" placeholder="password" name="password1"/>
+      <input  type="password" placeholder="repassword" name="password2"/>
+      <button type="submit">Login</button>
+      <p class="message"><a href="{% url 'main:perfil' %}">Cancelar</a></p>
+    </form>
+    {% if error %}
+      <div class="error">
+        <p style="color: #ffadaa">{{ error }}</p>
+      </div>
+    {% endif %}
+  </div>
+</body>
+{% endblock %}

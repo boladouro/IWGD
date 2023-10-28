@@ -2,42 +2,136 @@
 {% load static %}
 <link rel="stylesheet" type="text/css" href='{% static "css/style_perfil.css" %}' />
 {% block content %}
-<div class="fooorm">
+<div class="fooorm11">
     <div class="user-info">
-        <img src="../static/img/perfil.png" alt="Profile Picture">
+        <img src="/media/{{ image }}" alt="Profile Picture" id="avar">
+        <span class="post-button alter-button-img material-symbols-outlined" style="color:white;">edit</span>
         <div class="user-details">
-            <h2>{{ request.user}}</h2>
-            <p>Qualquer coisa</p>
+            <h2 id="avar-name">{{ request.user}} <span class="post-button alter-button-name material-symbols-outlined">edit</span></h2>
+            <p id="avar_bio">{{ bios }}
+              <span class="post-button alter-button-bio material-symbols-outlined">edit</span></p>
+            <button class="alter-button-pass">Mudar senha</button>
         </div>
+
     </div>
+    <script>
+   $(document).ready(() => {
+  $(".alter-button-img").on("click", (e) => {
+    e.preventDefault();
+    conf = confirm("Você tem certeza que deseja mudar seu avatar?");
+    if (!conf) return;
+    $('#button-img').modal({modalClass: "modal2",showClose: false});
+  });
+});
+   $(document).ready(() => {
+  $(".alter-button-name").on("click", (e) => {
+    e.preventDefault();
+    conf = confirm("Você tem certeza que deseja mudar seu username?");
+    if (!conf) return;
+        $('#button-name').modal({modalClass: "modal2",showClose: false});
+  });
+});
+  $(document).ready(() => {
+  $(".alter-button-bio").on("click", (e) => {
+    e.preventDefault();
+    conf = confirm("Você tem certeza que deseja mudar sua Bio?");
+    if (!conf) return;
+    $('#button-bio').modal({modalClass: "modal2",showClose: false});
+  });
+});
+ $(document).ready(() => {
+  $(".alter-button-pass").on("click", (e) => {
+    e.preventDefault();
+    conf = confirm("Você tem certeza que deseja mudar sua senha?");
+    if (!conf) return;
+    $('#button-pass').modal({modalClass: "modal2",showClose: false});
+  });
+});
+
+  </script>
+
+
     <section class="user-stats">
         <div class="stat">
             <h2>Thread</h2>
-            <p>20</p>
+            <p>{{ n_tre }}</p>
         </div>
         <div class="stat">
             <h2>Post</h2>
-            <p>100</p>
+            <p>{{ n_p }}</p>
         </div>
         <div class="stat">
             <h2>Topicos</h2>
-            <p>5</p>
+            <p>não sei</p>
         </div>
     </section>
+
+
+    <div id="button-pass" class="modal2" style="display:none;">
+        <div class="form" id="pass">
+             <form class="login-form acrylic11" id="alter-button-pass" enctype="multipart/form-data" method="POST" action="{% url 'main:perfil' %}">
+              {% csrf_token %}
+                 <span>Alterar senha</span>
+              <input type="password" placeholder="Nova senha 1" name="password1">
+                 <input type="password" placeholder="mesma senha 1" name="password2">
+              <button type="submit">Enviar</button>
+                <a href="{% url 'main:perfil' %}"><button>Cancelar</button></a>
+            </form>
+        </div>
+    </div>
+    <div id="button-bio" class="modal2" style="display:none;">
+        <div class="form" id="bioss" >
+            <form id="alter-button-bio" class="login-form acrylic11" enctype="multipart/form-data" method="POST" action="{% url 'main:perfil' %}">
+              {% csrf_token %}
+                <span>Alterar a bio</span>
+              <input type="text" placeholder="escreva sua bio aqui" name="bio">
+              <button type="submit">Enviar</button>
+                <a href="{% url 'main:perfil' %}"><button>Cancelar</button></a>
+            </form>
+        </div>
+    </div>
+    <div id="button-name" class="modal2" style="display:none;">
+       <div class="form" id="namess" >
+            <form id="alter-button-name" class="login-form acrylic11" enctype="multipart/form-data" method="POST" action="{% url 'main:perfil' %}">
+              {% csrf_token %}
+                <span>Alterar o nome</span>
+              <input type="text" name="username">
+              <button type="submit">Enviar</button>
+                <p class="message"><a href="{% url 'main:perfil' %}">Cancelar</a></p>
+            </form>
+       </div>
+    </div>
+    <div id="button-img" class="modal2" style="display:none;">
+       <div class="form" id="img" >
+            <form id="image-upload-form" class="login-form acrylic11" enctype="multipart/form-data" method="POST" action="{% url 'main:perfil' %}">
+              {% csrf_token %}
+              <input type="file" name="image_perfil">
+              <button type="submit">Enviar</button>
+                <p class="message" style="color:white;"><a href="{% url 'main:perfil' %}">Cancelar</a></p>
+            </form>
+       </div>
+    </div>
+
 
     <section class="recent-activity">
         <div>
         <h2>Recent Thread</h2>
             <ul>
-                <li><a href="#">[tag-name]</a></li>
-                <li><a href="#">[tag-name]</a></li>
+                {% for lala in threads %}
+                    <li><a href="{{ lala.url }}">{{ lala }}</a></li>
+                {% empty %}
+                    <p>No results found.</p>
+                {% endfor %}
             </ul>
         </div>
         <div>
             <h2>Recent Post</h2>
             <ul>
-                <li><a href="#">[tag-name]</a></li>
-                <li><a href="#">[tag-name]</a></li>
+                {% for lala in posts %}
+                    <li><a href="{{ lala.url }}">{{ lala }}</a></li>
+                {% empty %}
+                    <p>No results found.</p>
+                {% endfor %}
 
             </ul>
         </div>
