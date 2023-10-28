@@ -279,20 +279,15 @@ def handle_report(request, ignore: int | bool):
     }, status=200)
   action = request.POST["action"]
   reason = request.POST["reason"]
-  is_thread = report.post_reported.is_first_post()
   try:
     match action:
       case "delete":
-        if is_thread:
-          Thread.delete_thread(report.post_reported.thread)
         Post.delete_post(report.post_reported)
         message = "Deleted successfully."
       case "ban":
         report.post_reported.user.ban(request.user, reason)
         message = "User banned successfully."
       case "delete_ban":
-        if is_thread:
-          Thread.delete_thread(report.post_reported.thread)
         Post.delete_post(report.post_reported)
         report.post_reported.user.ban(request.user, reason)
         message = "Deleted and user banned successfully."
@@ -300,8 +295,6 @@ def handle_report(request, ignore: int | bool):
         report.post_reported.user.timeout(request.user, reason)
         message = "User timed out successfully."
       case "delete_timeout":
-        if is_thread:
-          Thread.delete_thread(report.post_reported.thread)
         Post.delete_post(report.post_reported)
         report.post_reported.user.timeout(request.user, reason)
         message = "Deleted and user timed out successfully."

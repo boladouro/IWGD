@@ -2,6 +2,8 @@
 {% block content %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/style_thread.css' %}">
+<script src="{% static 'js/marked.min.js' %}"></script>
+<script src="{% static 'js/purify.min.js' %}"></script>
 <div class="listagem">
   <div id="thread-title-div">
     <h2 id="thread-title">
@@ -33,14 +35,19 @@
             {% else %}
               <span id="report-{{ post.id }}" class="post-button report-button material-symbols-outlined">flag</span>
             {% endif %}
-
-          </div> <!-- TODO aqui caixas de cada post seria melhor imo -->
-          <div class="message">
-            {{ post.text }}
+          </div>
+          <div id="post-{{ post.id }}-text" class="message">
+            <script>
+              document.getElementById("post-{{ post.id }}-text").innerHTML =
+                  DOMPurify.sanitize(marked.parse("{{ post.text|escapejs }}"));
+            </script>
           </div>
           {% if post.user.signature|length > 0 %}
-            <div class="signature">
-              {{ post.user.signature }}
+            <div id="post-{{ post.id }}-signature" class="signature">
+              <script>
+                document.getElementById("post-{{ post.id }}-signature").innerHTML =
+                    DOMPurify.sanitize(marked.parse("{{ post.user.signature|escapejs }}"));
+              </script>
             </div>
           {% endif %}
           <div class="emotes-section">
@@ -402,7 +409,6 @@
           },
           success: (data) => {
             $("#line-"+e.target.id.split("-")[1]).remove()
-            alert(data.message);
           },
           error: (response) => {
             if (response.status == 302 || response.status == 401) {
@@ -422,9 +428,49 @@
     <div id="postagem">
         <form action="{% url 'main:thread' topico_name thread.id %}" method="POST">
             {% csrf_token %}
-            <textarea cols="90" rows="3" type="text" placeholder="TEXTO" name="textt"></textarea><br>
+            {# place to style post #}
+            <div id="postagem-format">
+              <span id="format-italic" class="material-symbols-outlined">format_italic</span>
+              <span id="format-bold" class="material-symbols-outlined">format_bold</span>
+              <span id="format-link" class="material-symbols-outlined">link</span>
+              <span id="format-strikethrough" class="material-symbols-outlined">format_strikethrough</span>
+              <span id="format-superscript" class="material-symbols-outlined">superscript</span>
+              <span id="format-code" class="material-symbols-outlined">code</span>
+              <span id="format-quote" class="material-symbols-outlined">format_quote</span>
+              <span id="format-list" class="material-symbols-outlined">format_list_bulleted</span>
+              <span id="format-spoiler" class="material-symbols-outlined">rainy_heavy</span>
+              <span id="format-image" class="material-symbols-outlined">image</span>
+            </div>
+            <textarea id="post-text" cols="90" rows="3" placeholder="TEXTO" name="textt"></textarea><br>
             <button type="submit">Postar</button>
         </form>
+        <script src="{% static 'js/jquery.selection.js' %}"></script>
+        <script>
+          function insertAtCursor(idClicked, before, after) {
+            $(idClicked).on("click", (e) => {
+              let post = $("#post-text")
+              if (post.selection().length > 0) {
+                post.selection("replace", {text: before + post.selection() + after})
+              } else {
+                post.selection("insert", {text: before + after})
+              }
+              // let pos = post.selection("getPos")
+              // if (pos.start == pos.finish)
+            });
+          }
+          $(document).ready(() => {
+            insertAtCursor("#format-italic", "*", "*");
+            insertAtCursor("#format-bold", "**", "**");
+            insertAtCursor("#format-link", "[", "](url)");
+            insertAtCursor("#format-strikethrough", "~~", "~~");
+            insertAtCursor("#format-superscript", "^", "^");
+            insertAtCursor("#format-code", "`", "`");
+            insertAtCursor("#format-quote", "\n> ", "");
+            insertAtCursor("#format-list", "\n* ", "");
+            insertAtCursor("#format-spoiler", "||", "||");
+            insertAtCursor("#format-image", "\n![", "](url)");
+          });
+        </script>
     </div>
   {% else %}
   {% endif %}

@@ -2,38 +2,37 @@
 {% load static %}
 {% block content %}
 
-<div class="form" >
-    {% if topico_name == "Música" %}
-        <form action="{% url 'main:create_thread' topico_name %}" class="login-form acrylic1" method="POST">
-    {% elif topico_name == "Filmes" %}
-        <form action="{% url 'main:create_thread' topico_name %}" class="login-form acrylic2" method="POST">
-    {% elif topico_name == "Jogos" %}
-        <form action="{% url 'main:create_thread' topico_name %}" class="login-form acrylic3" method="POST">
-    {% elif topico_name == "Livros" %}
-        <form action="{% url 'main:create_thread' topico_name %}" class="login-form acrylic4" method="POST">
-    {% elif topico_name == "Teatro" %}
-        <form action="{% url 'main:create_thread' topico_name %}" class="login-form acrylic5" method="POST">
-    {% elif topico_name == "Dança" %}
-        <form action="{% url 'main:create_thread' topico_name %}" class="login-form acrylic6" method="POST">
-    {% elif topico_name == "Escultura" %}
-        <form action="{% url 'main:create_thread' topico_name %}" class="login-form acrylic7" method="POST">
-    {% elif topico_name == "Pintura" %}
-        <form action="{% url 'main:create_thread' topico_name %}" class="login-form acrylic8" method="POST">
-    {% elif topico_name == "Fotografia" %}
-        <form action="{% url 'main:create_thread' topico_name %}" class="login-form acrylic9" method="POST">
-    {% elif topico_name == "Meta" %}
-        <form action="{% url 'main:create_thread' topico_name %}" class="login-form acrylic10" method="POST">
-    {% else %}
-        <form action="{% url 'main:create_thread' topico_name %}" class="login-form acrylic" method="POST">
-    {% endif %}
-            {% csrf_token %}
-            <span>Titulo para a nova thread <bold>{{topico_name}}</bold></span>
-            <input type="text" placeholder="Titulo" name="title"/>
-            <span>Post para a thread</span>
-            <input type="text" placeholder="TEXTO" name="texxt"/>
-            <button type="submit">Criar</button>
-            <p class="message"><a href="{% url 'main:index' %}">Voltar</a></p>
-        </form>
+<div class="form big-form" >
+  {% if topico_name == "Música" %}
+    <form action="{% url 'main:create_thread' topico_name %}" class="login-form acrylic1" method="POST">
+  {% elif topico_name == "Filmes" %}
+    <form action="{% url 'main:create_thread' topico_name %}" class="login-form acrylic2" method="POST">
+  {% elif topico_name == "Jogos" %}
+    <form action="{% url 'main:create_thread' topico_name %}" class="login-form acrylic3" method="POST">
+  {% elif topico_name == "Livros" %}
+    <form action="{% url 'main:create_thread' topico_name %}" class="login-form acrylic4" method="POST">
+  {% elif topico_name == "Teatro" %}
+    <form action="{% url 'main:create_thread' topico_name %}" class="login-form acrylic5" method="POST">
+  {% elif topico_name == "Dança" %}
+    <form action="{% url 'main:create_thread' topico_name %}" class="login-form acrylic6" method="POST">
+  {% elif topico_name == "Escultura" %}
+    <form action="{% url 'main:create_thread' topico_name %}" class="login-form acrylic7" method="POST">
+  {% elif topico_name == "Pintura" %}
+    <form action="{% url 'main:create_thread' topico_name %}" class="login-form acrylic8" method="POST">
+  {% elif topico_name == "Fotografia" %}
+    <form action="{% url 'main:create_thread' topico_name %}" class="login-form acrylic9" method="POST">
+  {% elif topico_name == "Meta" %}
+    <form action="{% url 'main:create_thread' topico_name %}" class="login-form acrylic10" method="POST">
+  {% else %}
+    <form action="{% url 'main:create_thread' topico_name %}" class="login-form acrylic" method="POST">
+  {% endif %}
+      {% csrf_token %}
+      <span>Nova Thread de <b>{{topico_name}}</b></span>
+      <input type="text" placeholder="Titulo" name="title"/>
+      <textarea type="text" placeholder="TEXTO" name="texxt" cols="109" rows="3" style="margin-bottom: 15px"></textarea>
+      <button type="submit">Criar</button>
+      <p class="message"><a href="{% url 'main:index' %}">Voltar</a></p>
+    </form>
 </div>
 
 

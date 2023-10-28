@@ -498,6 +498,12 @@ section {
     margin-bottom: 5px;
 }
 
+b {
+  font-weight: bolder;
+}
+strong {
+  font-weight: bolder; /* for some reason this is lighter than bold */
+}
 /* ==============Form-register===================== */
 
 .login-page {
@@ -514,6 +520,12 @@ section {
       padding: 50px;
       text-align: center;
       box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+    }
+    .big-form {
+      max-width: 1000px !important;
+    }
+    .big-form > form {
+      width: 100% !important;
     }
     .form input {
       font-family: "Roboto", sans-serif;

@@ -26,6 +26,8 @@ class User(AbstractUser):
     # or self.avatar.url
     return self.avatar.path
 
+
+
   @staticmethod
   def create_user(username: str, password: str, email: str | None = None) -> User:
     return User.objects.create_user(username, email, password)
@@ -189,7 +191,7 @@ class Post(Model):
   date_created = models.DateTimeField(auto_now_add=True)
   text = models.TextField()
   thread = models.ForeignKey(Thread, on_delete=models.DO_NOTHING, related_name="thread")
-  user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name="user")  # SAME THING HERE
+  user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name="user")
   is_removed = models.BooleanField(default=False)
 
   def __str__(self):
@@ -232,9 +234,10 @@ class Post(Model):
   @staticmethod
   def delete_post(post: Post) -> "Post":
     post.is_removed = True
+    if post.is_first_post():
+      post.thread.delete_thread()
     post.save()
     return post
-
 
 class PostEmotes(Model):
   class Emotes(models.TextChoices):

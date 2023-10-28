@@ -158,3 +158,28 @@
 .is-locked-dark {
   color: darkgoldenrod;
 }
+
+img{
+  width:100%;
+  max-width:300px;
+}
+
+#postagem-format > span{
+  cursor: pointer;
+}
+#postagem-format > span:hover{
+  color:blue;
+}
+
+blockquote > p {
+  border-left: 3px solid #9DAD7F;
+  margin-left: 0;
+  margin-top: 5px;
+  padding-left: 5px;
+  margin-left: 10px;
+}
+
+blockquote > span {
+  font-size: 0.8em;
+  color: #999999;
+}
