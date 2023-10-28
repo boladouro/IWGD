@@ -343,6 +343,11 @@ class Topico(Model):
     return ret
 
   @staticmethod
+  def get_topico_principal(user: User | None) -> "Topico":
+    # return do topico mais usado pelo user (aka com mais posts)
+    return Post.objects.filter(user=user).values('thread__topico').annotate(count=models.Count('thread__topico')).order_by('-count').first()['thread__topico']
+
+  @staticmethod
   def get_topico_by_name(topico_name: str) -> "Topico":
     return Topico.objects.get(name=topico_name)
 

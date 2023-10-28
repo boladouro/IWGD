@@ -3,10 +3,10 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect, JsonResponse
 from django.views.decorators.http import require_POST
 from .models import Topico, Thread, User, Post, Mod, Reports, PostEmotes
-from django.contrib.auth.decorators import login_required as kard_required
+from django.contrib.auth.decorators import login_required
 
 
-def login_required(function):
+def login_required_json(function):
   def wrapper(request, *args, **kwargs):
     if not request.user.is_authenticated:
       return JsonResponse({
@@ -40,7 +40,7 @@ def handler404(request, exception):
 def search_authors(request):
   return render(request, "search_authors.html")
 
-@kard_required(login_url="/login/")
+@login_required(login_url="/login/")
 def perfil(request):
   if request.user.is_authenticated:
     if request.method == "POST":
@@ -74,6 +74,7 @@ def perfil(request):
     "n_p": len(Thread.get_posts_user(user=getUser(request))),
     "n_tre": len(Topico.get_threads_user(user=getUser(request))),
     "n_top": len(Thread.get_posts_user(user=getUser(request))),
+    # "topico_principal": Topico.get_topico_principal(user=getUser(request)),
   })
 
 
@@ -189,7 +190,7 @@ def favorite(request, topico_str: str):
   }, status=200)
 
 
-@login_required
+@login_required_json
 def create_thread(request, topico_name):
   if request.method == 'POST':
     user_t = request.user
@@ -206,7 +207,7 @@ def create_thread(request, topico_name):
   return render(request, 'new_thread.html', {'topico_name': topico_name})
 
 
-@login_required
+@login_required_json
 @require_POST
 def delete_post(request):
   post_id = request.POST["post_id"]
@@ -222,12 +223,12 @@ def delete_post(request):
   } ,status=401)
 
 
-@login_required
+@login_required_json
 def delete_thread(request):
   return render(request, 'del_thread.html')
 
 
-@login_required
+@login_required_json
 def admin(request):
   if Mod.is_mod(getUser(request)):
     r = Reports.get_reports()
@@ -239,7 +240,7 @@ def admin(request):
     return render(request, "401.html", status=401)
 
 
-@login_required
+@login_required_json
 @require_POST
 def report(request):
   post_id = request.POST["post_id"]
@@ -264,7 +265,7 @@ def report(request):
     }, status=200)
 
 
-@login_required
+@login_required_json
 @require_POST
 def emote(request):
   post = Post.get_post_by_id(int(request.POST["post_id"]))
@@ -296,7 +297,7 @@ def searchs(request):
   return render(request, "search.html")
 
 
-@login_required
+@login_required_json
 def handle_report(request, ignore: int | bool):
   report = Reports.get_report_by_id(request.POST["report_id"])
   if ignore:
@@ -359,7 +360,7 @@ def is_banned(request):
   }, status=200)
 
 
-@login_required
+@login_required_json
 @require_POST
 def sticky(request):
   thread = Thread.get_thread_by_id(request.POST["thread_id"])
@@ -386,7 +387,7 @@ def sticky(request):
   }, status=200)
 
 
-@login_required
+@login_required_json
 @require_POST
 def lock(request):
   thread = Thread.get_thread_by_id(request.POST["thread_id"])
@@ -412,7 +413,7 @@ def lock(request):
       "message": "Thread locked successfully."
     }, status=200)
 
-@login_required
+@login_required_json
 @require_POST
 def ban(request):
   user = User.get_user_by_id(request.POST["user_id"])
@@ -436,7 +437,7 @@ def ban(request):
       "message": "User already banned."
     }, status=200)
 
-@login_required
+@login_required_json
 @require_POST
 def timeout(request):
   user = User.get_user_by_id(request.POST["user_id"])
@@ -460,7 +461,7 @@ def timeout(request):
       "message": "User already timed out or banned."
     }, status=200)
 
-@login_required
+@login_required_json
 def charge_img_avatar(request):
   if request.user.is_authenticated:
     imaeee = request.FILES.get("image_perfil")
