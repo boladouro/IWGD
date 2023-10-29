@@ -6,8 +6,9 @@
     <ul>
       {% if n_reports != 0 %}
         {% for report in reports %}
+          {% with user_reported=report.post_reported.user.username %}
           <li>
-            <p>Report por <a href="#">{{ report.created_by }}</a> em {{ report.post_reported.thread.topico.name }}</p><!-- TODO dps linkar perfil -->
+            <p>Report de <a href="#">{{ user_reported }}</a> em {{ report.post_reported.thread.topico.name }}</p><!-- TODO dps linkar perfil -->
             <p>Thread: "<a href="{% url 'main:thread' report.post_reported.thread.topico report.post_reported.thread.id %}">{{ report.post_reported.thread.title }}</a>"</p>
             <p>Post: "{{ report.post_reported.text }}"</p>
             <p>Reason: {{ report.reason }}</p>
@@ -18,10 +19,10 @@
               {% with is_thread=report.post_reported.is_first_post|yesno:"Thread,Post" %}
                 <label>Action:</label> <select id="action-{{ report.id }}">
                   <option value="delete">Delete {{ is_thread }}</option>
-                  <option value="ban">Ban {{ report.created_by.username }}</option>
-                  <option value="delete_ban">Delete {{ is_thread }} and ban {{ report.created_by.username }}</option>
-                  <option value="timeout">Timeout {{ report.created_by.username }}</option>
-                  <option value="delete_timeout">Delete {{ is_thread }} and timeout {{ report.created_by.username }}</option>
+                  <option value="ban">Ban {{ user_reported.username }}</option>
+                  <option value="delete_ban">Delete {{ is_thread }} and ban {{ user_reported.username }}</option>
+                  <option value="timeout">Timeout {{ user_reported.username }}</option>
+                  <option value="delete_timeout">Delete {{ is_thread }} and timeout {{ user_reported.username }}</option>
                   {% if report.post_reported.is_first_post %}
                     <option value="lock">Lock thread</option>
                   {% endif %}
@@ -31,6 +32,7 @@
               <button type="button" class="button-submit" data-id="{{ report.id }}">Submit</button>
             </div>
           </li>
+          {% endwith %}
         {% endfor %}
       {% else %}
         <li>Nothing reported.</li>

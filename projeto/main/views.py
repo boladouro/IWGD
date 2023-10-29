@@ -320,18 +320,18 @@ def handle_report(request, ignore: int | bool):
         Post.delete_post(report.post_reported)
         message = "Apagado com sucesso."
       case "ban":
-        report.post_reported.user.ban(request.user, reason)
+        report.post_reported.user.ban(auth=request.user, reason=reason)
         message = "Usuario banido com sucesso."
       case "delete_ban":
         Post.delete_post(report.post_reported)
-        report.post_reported.user.ban(request.user, reason)
+        report.post_reported.user.ban(auth=request.user, reason=reason)
         message = "Apagado é usuario banido com sucesso."
       case "timeout":
-        report.post_reported.user.timeout(request.user, reason)
+        report.post_reported.user.timeout(auth=request.user, reason=reason)
         message = "User timed out successfully."
       case "delete_timeout":
         Post.delete_post(report.post_reported)
-        report.post_reported.user.timeout(request.user, reason)
+        report.post_reported.user.timeout(auth=request.user, reason=reason)
         message = "Deleted and user timed out successfully."
       case "lock":
         report.post_reported.thread.lock()
