@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
 <div class="listagem">
   <h2>Resultado da Pesquisa</h2>
@@ -11,8 +11,8 @@
         <div>
         <h2>Thread</h2>
             <ul>
-                {% for result1 in page.object_list.title %}
-                    <li class="elementosss"><a href="{{ result.object.url }}" style="color:black;">{{ result1 }}</a></li>
+                {% for result1 in page.object_list %}
+                    <li class="elementosss"><a href="{{ result1.url }}" style="color:black;">{{ result1 }}</a></li>
                 {% empty %}
                     <p>No results found.</p>
                 {% endfor %}
@@ -21,8 +21,8 @@
         <div>
             <h2>Post</h2>
             <ul>
-                {% for result2 in page.object_list.topico_name %}
-                    <li class="elementosss"><a href="{{ result.object.url }}" style="color:black;">{{ result2 }}</a></li>
+                {% for result2 in page.object_list %}
+                    <li class="elementosss"><a href="{{ result.object.url }}" style="color:black;">{{ result2.topico_name }}</a></li>
                 {% empty %}
                     <p>No results found.</p>
                 {% endfor %}
@@ -32,8 +32,8 @@
         <div>
             <h2>Author</h2>
             <ul>
-                {% for result3 in page.object_list.username %}
-                    <li class="elementosss"><a href="{{ result.object.url }}" style="color:black;">{{ result3 }}</a></li>
+                {% for result3 in page.object_list %}
+                    <li class="elementosss"><a href="{{ result.object.url }}" style="color:black;">{{ result3.username }}</a></li>
                 {% empty %}
                     <p>No results found.</p>
                 {% endfor %}
