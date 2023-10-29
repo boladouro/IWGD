@@ -37,7 +37,7 @@
         <span id="format-code" class="material-symbols-outlined">code</span>
         <span id="format-quote" class="material-symbols-outlined">format_quote</span>
         <span id="format-list" class="material-symbols-outlined">format_list_bulleted</span>
-        <span id="format-spoiler" class="material-symbols-outlined">rainy_heavy</span>
+        {# <span id="format-spoiler" class="material-symbols-outlined">rainy_heavy</span> #}
         <span id="format-image" class="material-symbols-outlined">image</span>
       </div>
       <textarea id="post-content" type="text" placeholder="TEXTO" name="texxt" cols="109" rows="3" style="margin-bottom: 15px" required></textarea>
@@ -68,7 +68,7 @@
           insertAtCursor("#format-quote", "\n> ", "");
           insertAtCursor("#format-list", "\n* ", "");
           insertAtCursor("#format-spoiler", "||", "||");
-          insertAtCursor("#format-image", "\n![alt]"(",")");
+          insertAtCursor("#format-image", "\n![alt](", ")");
         });
       </script>
     </form>
