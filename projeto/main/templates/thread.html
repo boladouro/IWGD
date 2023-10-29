@@ -437,7 +437,7 @@
               <span id="format-code" class="material-symbols-outlined">code</span>
               <span id="format-quote" class="material-symbols-outlined">format_quote</span>
               <span id="format-list" class="material-symbols-outlined">format_list_bulleted</span>
-              <span id="format-spoiler" class="material-symbols-outlined">rainy_heavy</span>
+              {# <span id="format-spoiler" class="material-symbols-outlined">rainy_heavy</span> #}
               <span id="format-image" class="material-symbols-outlined">image</span>
             </div>
             <textarea id="post-text" cols="90" rows="3" placeholder="TEXTO" name="textt"></textarea><br>
@@ -468,7 +468,7 @@
             insertAtCursor("#format-quote", "\n> ", "");
             insertAtCursor("#format-list", "\n* ", "");
             insertAtCursor("#format-spoiler", "||", "||");
-            insertAtCursor("#format-image", "\n![", "](url)");
+            insertAtCursor("#format-image", "\n![alt](", ")");
           });
         </script>
     </div>
