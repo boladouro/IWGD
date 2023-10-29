@@ -183,3 +183,8 @@ blockquote > span {
   font-size: 0.8em;
   color: #999999;
 }
+
+.post-text{
+    width:100%;
+
+}
