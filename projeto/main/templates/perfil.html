@@ -86,8 +86,8 @@
                 <span>Alterar a bio</span>
               <input type="text" placeholder="escreva sua bio aqui" name="bio" required>
               <button type="submit">Enviar</button>
-                <a href="{% url 'main:perfil' %}"><button>Cancelar</button></a>
             </form>
+            <p class="message"><a href="{% url 'main:perfil' %}"><button>Cancelar</button></a></p>
         </div>
     </div>
     <div id="button-name" class="modal2" style="display:none;">
@@ -97,8 +97,8 @@
                 <span>Alterar o nome</span>
               <input type="text" name="username" required>
               <button type="submit">Enviar</button>
-                <p class="message"><a href="{% url 'main:perfil' %}">Cancelar</a></p>
             </form>
+           <p class="message"><a href="{% url 'main:perfil' %}">Cancelar</a></p>
        </div>
     </div>
     <div id="button-img" class="modal2" style="display:none;">
@@ -108,8 +108,8 @@
                 <span>Selecione uma imagem para perfil</span>
               <input type="file" name="image_perfil" required>
               <button type="submit">Enviar</button>
-                <p class="message" style="color:white;"><a href="{% url 'main:perfil' %}">Cancelar</a></p>
             </form>
+           <p class="message" style="color:white;"><a href="{% url 'main:perfil' %}">Cancelar</a></p>
        </div>
     </div>
      <div id="button-signa" class="modal2" style="display:none;">
@@ -119,8 +119,8 @@
                 <span>Coloque sua assinatura</span>
               <input type="text" name="signatu" required>
               <button type="submit">Enviar</button>
-                <p class="message" style="color:white;"><a href="{% url 'main:perfil' %}">Cancelar</a></p>
             </form>
+           <p class="message" style="color:white;"><a href="{% url 'main:perfil' %}">Cancelar</a></p>
        </div>
     </div>
 
