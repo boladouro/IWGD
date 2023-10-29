@@ -1,5 +1,5 @@
 /*!
- * jQuery.selection - jQuery Plugin (evan-dickinson's fork)
+ * jQuery.selection - jQuery Plugin (fork by franck-eyraud)
  *
  * Copyright (c) 2010-2014 IWASAKI Koji (@madapaja).
  * http://blog.madapaja.net/
@@ -121,8 +121,8 @@
                     var range = element.createTextRange();
 
                     if (win.navigator.userAgent.toLowerCase().indexOf("msie") >= 0) {
-                        toRange.start = element.value.substring(0, toRange.start).replace(/\r/g, '').length;
-                        toRange.end = element.value.substring(0, toRange.end).replace(/\r/g, '').length;
+                        toRange.start = element.value.substr(0, toRange.start).replace(/\r/g, '').length;
+                        toRange.end = element.value.substr(0, toRange.end).replace(/\r/g, '').length;
                     }
 
                     range.collapse(true);
@@ -186,18 +186,10 @@
                 pos = $(element).scrollTop(),
                 range = {start: tmp.start, end: tmp.start + text.length};
 
-            element.value = orig.substring(0, tmp.start) + text + orig.substring(tmp.end);
+            element.value = orig.substr(0, tmp.start) + text + orig.substr(tmp.end);
+
             $(element).scrollTop(pos);
             this.setPos(element, range, caret);
-        },
-
-
-        replaceRegexp: function(element, find, replace, caret) {            
-            var tmp = _getCaretInfo(element);
-            var originalText = tmp.text;
-            var newText = originalText.replace(find, replace);
-
-            this.replace(element, newText, caret);
         },
 
         /**
@@ -213,7 +205,7 @@
                 pos = $(element).scrollTop(),
                 range = {start: tmp.start + text.length, end: tmp.end + text.length};
 
-            element.value = orig.substring(0, tmp.start) + text + orig.substring(tmp.start);
+            element.value = orig.substr(0, tmp.start) + text + orig.substr(tmp.start);
 
             $(element).scrollTop(pos);
             this.setPos(element, range, caret);
@@ -232,35 +224,10 @@
                 pos = $(element).scrollTop(),
                 range = {start: tmp.start, end: tmp.end};
 
-            element.value = orig.substring(0, tmp.end) + text + orig.substring(tmp.end);
+            element.value = orig.substr(0, tmp.end) + text + orig.substr(tmp.end);
 
             $(element).scrollTop(pos);
             this.setPos(element, range, caret);
-        },
-
-        /**
-         * remove leading and trailing whitespace from the selected text
-         *
-         * @param   {Element}   element         target element
-         */
-        trim: function(element) {
-            var pos;
-            var startingWhitespaceLength, endingWhitespaceLength;
-            var regexResult;
-
-            // Trim whitespace from the head of the string
-            pos = _getCaretInfo(element);
-            regexResult = /^\s+/.exec(pos.text);
-            startingWhitespaceLength = (regexResult && regexResult[0]) ? regexResult[0].length : 0;
-            pos.start += startingWhitespaceLength;
-            _CaretOperation.setPos(element, pos, 'keep');
-
-            // Trim whitespace from the tail
-            pos = _getCaretInfo(element);
-            regexResult = /\s+$/.exec(pos.text);
-            endingWhitespaceLength = (regexResult && regexResult[0]) ? regexResult[0].length : 0;
-            pos.end -= endingWhitespaceLength;
-            _CaretOperation.setPos(element, pos, 'keep');
         }
     };
 
@@ -352,12 +319,6 @@
                         _CaretOperation.replace(this, opts.text, opts.caret);
                     });
 
-
-                case 'replaceRegexp':
-                    return this.each(function() {
-                        _CaretOperation.replaceRegexp(this, opts.find, opts.replace, opts.caret);
-                    });
-
                 /**
                  * selection('insert', opts)
                  * insert before/after the selected text
@@ -373,11 +334,6 @@
                         } else {
                             _CaretOperation.insertAfter(this, opts.text, opts.caret);
                         }
-                    });
-
-                case 'trim':
-                    return this.each(function() {
-                        _CaretOperation.trim(this);
                     });
 
                 /**
