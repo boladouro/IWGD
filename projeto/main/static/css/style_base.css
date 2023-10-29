@@ -1345,6 +1345,7 @@ div#format {
 div#format > span {
   cursor: pointer;
   color: black;
+  font-family:"Material Symbols Outlined"!important;
 }
 div#format > span:hover {
   color: blue;
