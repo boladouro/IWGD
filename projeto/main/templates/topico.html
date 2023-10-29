@@ -19,13 +19,9 @@
   {% for thread in threads %}
   <div>
     <li class="itens">
-      <div class="icon">{{ thread.is_sticky }}</div>
+      <div class="icon" style="width: 20px">{% if thread.is_sticky %}<span class="material-symbols-outlined">push_pin</span>{% endif %}</div>
       <div class="content">
-        <h3> <a class="" style="text-decoration: none" href="{% url 'main:thread' topico thread.id %}">{{ thread.title }}</a> {% if thread.user == user %}
-              <span class="post-button delete-button material-symbols-outlined" id="delete-{{ post.id }}">delete</span>
-            {% else %}
-              <span id="report-{{ post.id }}" class="post-button report-button material-symbols-outlined">flag</span>
-            {% endif %}</h3>
+        <h3> <a class="" style="text-decoration: none" href="{% url 'main:thread' topico thread.id %}">{{ thread.title }}</a></h3>
 
       </div>
       <div class="stats">{{ thread.user.username }}</div>
@@ -33,9 +29,6 @@
 
     </li>
    </div>
-
-
-
   {% endfor %}
   <script>
    $(document).ready(() => {
