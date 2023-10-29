@@ -20,9 +20,9 @@
                 <label>Action:</label> <select id="action-{{ report.id }}">
                   <option value="delete">Delete {{ is_thread }}</option>
                   <option value="ban">Ban {{ user_reported.username }}</option>
-                  <option value="delete_ban">Delete {{ is_thread }} and ban {{ user_reported.username }}</option>
-                  <option value="timeout">Timeout {{ user_reported.username }}</option>
-                  <option value="delete_timeout">Delete {{ is_thread }} and timeout {{ user_reported.username }}</option>
+                  <option value="delete_ban">Delete {{ is_thread }} and ban {{ user_reported }}</option>
+                  <option value="timeout">Timeout {{ user_reported }}</option>
+                  <option value="delete_timeout">Delete {{ is_thread }} and timeout {{ user_reported }}</option>
                   {% if report.post_reported.is_first_post %}
                     <option value="lock">Lock thread</option>
                   {% endif %}
