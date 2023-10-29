@@ -51,7 +51,7 @@
             </div>
           {% endif %}
           <div class="emotes-section">
-            <span class="button-emotes material-symbols-outlined">add_reaction</span>
+            <span class="button-emotes material-symbols-outlined" ">add_reaction</span>
             <div class="emote-box emote-box-hidden">
               {% for emote, emote_count in post.emotes.items %}
                 <span id="{{ emote }}-{{ post.id }}" class="emote" data-post-id="{{ post.id }}" data-emote-count="{{ emote_count }}" data-emote="{{ emote }}">{{ emote }} {{ emote_count }}</span >
@@ -433,7 +433,6 @@
               <span id="format-bold" class="material-symbols-outlined">format_bold</span>
               <span id="format-link" class="material-symbols-outlined">link</span>
               <span id="format-strikethrough" class="material-symbols-outlined">format_strikethrough</span>
-              <span id="format-superscript" class="material-symbols-outlined">superscript</span>
               <span id="format-code" class="material-symbols-outlined">code</span>
               <span id="format-quote" class="material-symbols-outlined">format_quote</span>
               <span id="format-list" class="material-symbols-outlined">format_list_bulleted</span>

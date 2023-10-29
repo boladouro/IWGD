@@ -188,3 +188,14 @@ blockquote > span {
     width:100%;
 
 }
+
+.button-emotes{
+    padding-top:15px;
+}
+
+code {
+  background-color: #eee;
+  border-radius: 3px;
+  font-family: courier, monospace;
+  padding: 0 3px;
+}
