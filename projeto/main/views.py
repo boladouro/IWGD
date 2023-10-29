@@ -72,8 +72,8 @@ def perfil(request):
         useer.signature = signatu
         useer.save()
   return render(request, "perfil.html", {
-    "threads": Topico.get_threads_user(user=getUser(request)),
-    "posts": Thread.get_posts_user(user=getUser(request)),
+    "threads": Topico.get_threads_user(user=getUser(request))[:10],
+    "posts": Thread.get_posts_user(user=getUser(request))[:10],
     "image": ("" if request.user.avatar == "" else request.user.get_avatar_url),
     "bios": (request.user.bio if request.user.bio != "Null" else "Clique no lapis para escrever uma bio"),
     "n_p": len(Thread.get_posts_user(user=getUser(request))),
@@ -495,8 +495,8 @@ def author(request,author_id):
   if(request.user == autoor):
     return HttpResponseRedirect("/perfil/")
   return render(request, "author.html",{
-    "threads": Topico.get_threads_user(user=autoor),
-    "posts": Thread.get_posts_user(user=autoor),
+    "threads": Topico.get_threads_user(user=autoor)[:10],
+    "posts": Thread.get_posts_user(user=autoor)[:10],
     "image": ("" if autoor.avatar == "" else autoor.get_avatar_url),
     "bios": autoor.bio,
     "n_p": len(Thread.get_posts_user(user=autoor)),
