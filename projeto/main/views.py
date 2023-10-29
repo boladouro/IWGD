@@ -75,12 +75,12 @@ def perfil(request):
     "threads": Topico.get_threads_user(user=getUser(request)),
     "posts": Thread.get_posts_user(user=getUser(request)),
     "image": ("" if request.user.avatar == "" else request.user.get_avatar_url),
-    "bios": request.user.bio,
+    "bios": (request.user.bio if request.user.bio != "Null" else "Clique no lapis para escrever uma bio"),
     "n_p": len(Thread.get_posts_user(user=getUser(request))),
     "n_tre": len(Topico.get_threads_user(user=getUser(request))),
     "n_top": len(Thread.get_posts_user(user=getUser(request))),
-    "signature": request.user.get_signature()
-    # "topico_principal": Topico.get_topico_principal(user=getUser(request)),
+    "signature": (request.user.get_signature() if request.user.get_signature() != None else "Clique no lapis para Colocar uma assinatura"),
+    "topico_principal": Topico.get_topico_principal(user=getUser(request))
   })
 
 
@@ -503,8 +503,9 @@ def author(request,author_id):
     "n_tre": len(Topico.get_threads_user(user=autoor)),
     "n_top": len(Thread.get_posts_user(user=autoor)),
     "name": autoor.username,
-    "author_id": author_id
-    #"topico_principal": Topico.get_topico_principal(user=getUser(request))
+    "signature": autoor.signature,
+    "author_id": author_id,
+    "topico_principal": Topico.get_topico_principal(user=getUser(request))
 
   })
 

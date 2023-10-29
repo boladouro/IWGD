@@ -21,7 +21,7 @@ class User(AbstractUser):
   timeout_expires = models.DateTimeField(null=True)
   ban_or_timeout_reason = models.TextField(null=True)
   favorites = models.ManyToManyField('Topico', related_name="favorites")
-  bio = models.TextField(null=True, default="Clique no lapis para escrever uma bio")
+  bio = models.TextField(null=True, default="Null")
 
   def get_avatar_url(self) -> str:
     if self.avatar == "":
@@ -343,10 +343,10 @@ class Topico(Model):
     return ret
 
   @staticmethod
-  def get_topico_principal(user: User | None) -> "Topico":
-    # return do topico mais usado pelo user (aka com mais posts)
+  def get_topico_principal(user: User | None):
+    # return do topico mais usado pelo user (aka com mais posts) -> "Topico"
     return Post.objects.filter(user=user).values('thread__topico').annotate(count=models.Count('thread__topico')).order_by('-count').first()['thread__topico']
-
+    #return Post.objects.filter(user=user).values('thread__topico')
   @staticmethod
   def get_topico_by_name(topico_name: str) -> "Topico":
     return Topico.objects.get(name=topico_name)

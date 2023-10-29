@@ -27,7 +27,7 @@
   {% endif %}
       {% csrf_token %}
       <span>Nova Thread de <b>{{topico_name}}</b></span>
-      <input type="text" placeholder="Titulo" name="title"/>
+      <input type="text" placeholder="Titulo" name="title" required/>
       <div id="format">
         <span id="format-italic" class="material-symbols-outlined">format_italic</span>
         <span id="format-bold" class="material-symbols-outlined">format_bold</span>
@@ -40,7 +40,7 @@
         <span id="format-spoiler" class="material-symbols-outlined">rainy_heavy</span>
         <span id="format-image" class="material-symbols-outlined">image</span>
       </div>
-      <textarea id="post-content" type="text" placeholder="TEXTO" name="texxt" cols="109" rows="3" style="margin-bottom: 15px"></textarea>
+      <textarea id="post-content" type="text" placeholder="TEXTO" name="texxt" cols="109" rows="3" style="margin-bottom: 15px" required></textarea>
       <button type="submit">Criar</button>
       <p class="message"><a href="{% url 'main:topico' topico_name %}">Voltar</a></p>
       <script src="{% static 'js/jquery.selection.js' %}"></script>
@@ -68,7 +68,7 @@
           insertAtCursor("#format-quote", "\n> ", "");
           insertAtCursor("#format-list", "\n* ", "");
           insertAtCursor("#format-spoiler", "||", "||");
-          insertAtCursor("#format-image", "\n![", "](url)");
+          insertAtCursor("#format-image", "\n![alt]"(",")");
         });
       </script>
     </form>

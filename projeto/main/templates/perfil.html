@@ -10,7 +10,7 @@
             <h2 id="avar-name">{{ request.user}} <span class="post-button alter-button-name material-symbols-outlined">edit</span></h2>
             <p id="avar_bio">{{ bios }}
               <span class="post-button alter-button-bio material-symbols-outlined">edit</span></p>
-            <p id="avar_signature">{{ signature }}
+            <p id="avar_signature" aria-placeholder="Coloque sua assunatura"> {{ signature }}
               <span class="post-button alter-button-signa material-symbols-outlined">edit</span></p>
             <button class="alter-button-pass">Mudar senha</button>
         </div>
@@ -20,40 +20,30 @@
    $(document).ready(() => {
   $(".alter-button-img").on("click", (e) => {
     e.preventDefault();
-    conf = confirm("Você tem certeza que deseja mudar seu avatar?");
-    if (!conf) return;
     $('#button-img').modal({modalClass: "modal2",showClose: false});
   });
 });
    $(document).ready(() => {
   $(".alter-button-name").on("click", (e) => {
     e.preventDefault();
-    conf = confirm("Você tem certeza que deseja mudar seu username?");
-    if (!conf) return;
         $('#button-name').modal({modalClass: "modal2",showClose: false});
   });
 });
   $(document).ready(() => {
   $(".alter-button-bio").on("click", (e) => {
     e.preventDefault();
-    conf = confirm("Você tem certeza que deseja mudar sua Bio?");
-    if (!conf) return;
     $('#button-bio').modal({modalClass: "modal2",showClose: false});
   });
 });
  $(document).ready(() => {
   $(".alter-button-pass").on("click", (e) => {
     e.preventDefault();
-    conf = confirm("Você tem certeza que deseja mudar sua senha?");
-    if (!conf) return;
     $('#button-pass').modal({modalClass: "modal2",showClose: false});
   });
 });
  $(document).ready(() => {
   $(".alter-button-signa").on("click", (e) => {
     e.preventDefault();
-    conf = confirm("Você tem certeza que deseja mudar sua Assinatura?");
-    if (!conf) return;
     $('#button-signa').modal({modalClass: "modal2",showClose: false});
   });
 });
@@ -82,8 +72,8 @@
              <form class="login-form acrylic11" id="alter-button-pass" enctype="multipart/form-data" method="POST" action="{% url 'main:perfil' %}">
               {% csrf_token %}
                  <span>Alterar senha</span>
-              <input type="password" placeholder="Nova senha 1" name="password1">
-                 <input type="password" placeholder="mesma senha 1" name="password2">
+              <input type="password" placeholder="Nova senha 1" name="password1" required>
+                 <input type="password" placeholder="mesma senha 1" name="password2" required>
               <button type="submit">Enviar</button>
                 <a href="{% url 'main:perfil' %}"><button>Cancelar</button></a>
             </form>
@@ -94,7 +84,7 @@
             <form id="alter-button-bio" class="login-form acrylic11" enctype="multipart/form-data" method="POST" action="{% url 'main:perfil' %}">
               {% csrf_token %}
                 <span>Alterar a bio</span>
-              <input type="text" placeholder="escreva sua bio aqui" name="bio">
+              <input type="text" placeholder="escreva sua bio aqui" name="bio" required>
               <button type="submit">Enviar</button>
                 <a href="{% url 'main:perfil' %}"><button>Cancelar</button></a>
             </form>
@@ -105,7 +95,7 @@
             <form id="alter-button-name" class="login-form acrylic11" enctype="multipart/form-data" method="POST" action="{% url 'main:perfil' %}">
               {% csrf_token %}
                 <span>Alterar o nome</span>
-              <input type="text" name="username">
+              <input type="text" name="username" required>
               <button type="submit">Enviar</button>
                 <p class="message"><a href="{% url 'main:perfil' %}">Cancelar</a></p>
             </form>
@@ -116,7 +106,7 @@
             <form id="image-upload-form" class="login-form acrylic11" enctype="multipart/form-data" method="POST" action="{% url 'main:perfil' %}">
               {% csrf_token %}
                 <span>Selecione uma imagem para perfil</span>
-              <input type="file" name="image_perfil">
+              <input type="file" name="image_perfil" required>
               <button type="submit">Enviar</button>
                 <p class="message" style="color:white;"><a href="{% url 'main:perfil' %}">Cancelar</a></p>
             </form>
@@ -127,7 +117,7 @@
             <form id="signatu-form" class="login-form acrylic11" enctype="multipart/form-data" method="POST" action="{% url 'main:perfil' %}">
               {% csrf_token %}
                 <span>Coloque sua assinatura</span>
-              <input type="text" name="signatu">
+              <input type="text" name="signatu" required>
               <button type="submit">Enviar</button>
                 <p class="message" style="color:white;"><a href="{% url 'main:perfil' %}">Cancelar</a></p>
             </form>
