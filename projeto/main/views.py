@@ -492,6 +492,8 @@ def getAuthor(author_name) -> User | None:
 
 def author(request,author_id):
   autoor = User.get_user_by_id(author_id)
+  if(request.user == autoor):
+    return HttpResponseRedirect("/perfil/")
   return render(request, "author.html",{
     "threads": Topico.get_threads_user(user=autoor),
     "posts": Thread.get_posts_user(user=autoor),
