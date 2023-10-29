@@ -505,7 +505,7 @@ def author(request,author_id):
     "name": autoor.username,
     "signature": autoor.signature,
     "author_id": author_id,
-    "topico_principal": Topico.get_topico_principal(user=getUser(request))
+    "topico_principal": Topico.get_topico_principal(user=autoor)
 
   })
 
