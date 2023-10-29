@@ -130,7 +130,7 @@
         <h2>Recent Thread</h2>
             <ul>
                 {% for lala in threads %}
-                    <li class="elementosss"><a href="{{ lala.url }}">{{ lala }}</a></li>
+                    <li class="elementosss"><a href="{{ lala.url }}" style="color:black;">{{ lala }}</a></li>
                 {% empty %}
                     <p>No results found.</p>
                 {% endfor %}
