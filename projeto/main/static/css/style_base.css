@@ -1078,3 +1078,22 @@ div#format > span:hover {
     padding: 15px;
     border: 1px solid #ccc;
 }
+
+.adaw{
+    animation: pulse 1s infinite;
+}
+
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+

@@ -51,7 +51,7 @@
             </div>
           {% endif %}
           <div class="emotes-section">
-            <span class="button-emotes material-symbols-outlined" ">add_reaction</span>
+            <span class="button-emotes material-symbols-outlined">add_reaction</span>
             <div class="emote-box emote-box-hidden">
               {% for emote, emote_count in post.emotes.items %}
                 <span id="{{ emote }}-{{ post.id }}" class="emote" data-post-id="{{ post.id }}" data-emote-count="{{ emote_count }}" data-emote="{{ emote }}">{{ emote }} {{ emote_count }}</span >
@@ -344,7 +344,7 @@
       <h2 id="report-form-title">Report Post</h2>
       <div id="report-form-content">
         <label for="report-reason">Reason</label>
-        <textarea required name="report_description" id="report-description" cols="80" rows="9"></textarea>
+        <textarea required name="report_description" id="report-description"></textarea>
         <button id="submit-report" type="submit">Submit</button>
         <button id="cancel-report">Cancel</button>
       </div>

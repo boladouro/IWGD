@@ -86,7 +86,7 @@
   <nav class="base-nav">
     <ul>
       {% if user.is_authenticated %}
-        <li style="text-align: end; padding: 14px 16px;">Bem Vindo(a), <a href="/perfil/" class="adaw" style="text-decoration: none;">{{ user.username }} </a></li>
+        <li style="text-align: end; padding: 14px 16px;">Bem Vindo(a), <a href="/perfil/" class="adaw" style="text-decoration: underline;">{{ user.username }} </a></li>
         <li style="float:right"><a href="{% url 'main:logout' %}">Logout</a></li>
         {% if user.is_admin or user.is_mod %}
           <li style="float:right"><a href="{% url 'main:admin' %}">Admin Panel</a></li>

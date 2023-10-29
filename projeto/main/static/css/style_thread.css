@@ -75,6 +75,11 @@
   height: 100%;
 }
 
+#report-form-content textarea {
+    width: 103px;
+    height: 80%;
+
+}
 .emotes-section {
   display:flex
 }
