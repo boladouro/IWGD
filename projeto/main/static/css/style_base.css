@@ -1071,3 +1071,10 @@ div#format > span:hover {
 
 
 }
+
+.elementosss {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 15px;
+    border: 1px solid #ccc;
+}
