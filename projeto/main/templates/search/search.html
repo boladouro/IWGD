@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
 <div class="listagem">
   <h2>Resultado da Pesquisa</h2>
@@ -7,19 +7,40 @@
   <form method="get" action=".">
     {% if query %}
 
-      {% for result in page.object_list %}
+    <section class="recent-activity">
+        <div>
+        <h2>Thread</h2>
+            <ul>
+                {% for result1 in page.object_list %}
+                    <li class="elementosss"><a href="{{ result1.url }}" style="color:black;">{{ result1 }}</a></li>
+                {% empty %}
+                    <p>No results found.</p>
+                {% endfor %}
+            </ul>
+        </div>
+        <div>
+            <h2>Post</h2>
+            <ul>
+                {% for result2 in page.object_list %}
+                    <li class="elementosss"><a href="{{ result.object.url }}" style="color:black;">{{ result2.topico_name }}</a></li>
+                {% empty %}
+                    <p>No results found.</p>
+                {% endfor %}
 
-          <li class="itens">
-            <a href="{{ result.object.url }}">
-              {{ result.object.title }}
-              {{ result.object.topico_name }}
-            </a>
-          </li>
+            </ul>
+        </div>
+        <div>
+            <h2>Author</h2>
+            <ul>
+                {% for result3 in page.object_list %}
+                    <li class="elementosss"><a href="{{ result.object.url }}" style="color:black;">{{ result3.username }}</a></li>
+                {% empty %}
+                    <p>No results found.</p>
+                {% endfor %}
 
-      {% empty %}
-        <p>No results found.</p>
-      {% endfor %}
-
+            </ul>
+        </div>
+    </section>
       {% if page.has_previous or page.has_next %}
         <div>
           {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
