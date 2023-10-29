@@ -6,11 +6,11 @@
   <div class="form">
     <form action="{% url 'main:login' %}" class="login-form acrylic" method="POST">
       {% csrf_token %}
-      <span>Login to your account</span>
+      <span>Faça login na sua conta</span>
       <input id="username" type="text" placeholder="Username" name="username" value="{{ username_inserted }}"/>
-      <input id="password" type="password" placeholder="Password" name="password"/>
-      <button type="submit">Login</button>
-      <p class="message"><a href="{% url 'main:register' %}">Create Account</a></p>
+      <input id="password" type="password" placeholder="Senha" name="password"/>
+      <button type="submit">Logar</button>
+      <p class="message"><a href="{% url 'main:register' %}">Criar Conta</a></p>
     </form>
     {% if error %}
       <div class="error">

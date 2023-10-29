@@ -32,6 +32,7 @@ urlpatterns = [
   path("lock/", views.lock, name="lock"),
   path("ban/", views.ban, name="ban"),
   path("timeout/", views.timeout, name="timeout"),
+  path("author/<int:author_id>", views.author, name="author"),
 ]
 
 handler404 = 'main.views.handler404'

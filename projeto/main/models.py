@@ -29,8 +29,6 @@ class User(AbstractUser):
     return self.avatar
 
 
-
-
   @staticmethod
   def create_user(username: str, password: str, email: str | None = None) -> User:
     return User.objects.create_user(username, email, password)
@@ -77,13 +75,15 @@ class User(AbstractUser):
     return True
 
 
-
-
   @property
   def is_timed_out(self) -> tuple[bool, datetime]:
     if self.timeout_expires is None:
       return False, datetime.now()
     return self.timeout_expires > datetime.now(), self.timeout_expires
+
+
+  def get_signature(self):
+    return self.signature
 
 class Mod(Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name="mod")

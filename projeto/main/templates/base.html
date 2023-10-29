@@ -55,7 +55,7 @@
 {% elif request.path == "/t/Meta/" or request.path == "/new_thread/Meta" or topico_name == "Meta" %}
     <body class="fooorm10">
         <header class="base fooorm10">
-{% elif request.path == "/perfil/" %}
+{% elif request.path == "/perfil/" or request.path == "/author" %}
     <body class="fooorm11">
         <header class="base fooorm11">
 {% else %}
@@ -69,7 +69,7 @@
       <div style="align-self: center; padding-top:20px">
         <form method="get" action="">
             <input type="search" id="search-input">
-            <button type="submit" id="search-button">Search</button>
+            <button type="submit" id="search-button">Pesquisar</button>
         </form>
 
         <script>
@@ -86,7 +86,7 @@
   <nav class="base-nav">
     <ul>
       {% if user.is_authenticated %}
-        <li style="text-align: end; padding: 14px 16px;">Welcome, <a href="/perfil/" class="adaw" style="text-decoration: none;">{{ user.username }} </a></li>
+        <li style="text-align: end; padding: 14px 16px;">Bem Vindo , <a href="/perfil/" class="adaw" style="text-decoration: none;">{{ user.username }} </a></li>
         <li style="float:right"><a href="{% url 'main:logout' %}">Logout</a></li>
         {% if user.is_admin or user.is_mod %}
           <li style="float:right"><a href="{% url 'main:admin' %}">Admin Panel</a></li>

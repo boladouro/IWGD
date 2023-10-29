@@ -24,8 +24,8 @@
         <h3> <a class="" style="text-decoration: none" href="{% url 'main:thread' topico thread.id %}">{{ thread.title }}</a></h3>
 
       </div>
-      <div class="stats">{{ thread.user.username }}</div>
-      <div class="last">{{ thread.date_created }}</div>
+      <div class="stats"><a style="text-decoration: none" href="{% url 'main:author' thread.user.id %}"> {{ thread.user.username }}</a></div>
+      <div class="last">{{ thread.date_created|date:"d/m/Y" }}</div>
 
     </li>
    </div>

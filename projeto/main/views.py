@@ -49,6 +49,7 @@ def perfil(request):
       bio = request.POST.get("bio")
       senha1 = request.POST.get("password1")
       senha2 = request.POST.get("password2")
+      signatu = request.POST.get("signatu")
       if imaeee is not None and imaeee != "":
         useer = request.user
         useer.avatar = imaeee
@@ -66,6 +67,10 @@ def perfil(request):
         useer.set_password(f"{senha1}")
         useer.save()
         return redirect('/')
+      if signatu is not None and signatu != "":
+        useer = request.user
+        useer.signature = signatu
+        useer.save()
   return render(request, "perfil.html", {
     "threads": Topico.get_threads_user(user=getUser(request)),
     "posts": Thread.get_posts_user(user=getUser(request)),
@@ -74,6 +79,7 @@ def perfil(request):
     "n_p": len(Thread.get_posts_user(user=getUser(request))),
     "n_tre": len(Topico.get_threads_user(user=getUser(request))),
     "n_top": len(Thread.get_posts_user(user=getUser(request))),
+    "signature": request.user.get_signature()
     # "topico_principal": Topico.get_topico_principal(user=getUser(request)),
   })
 
@@ -150,13 +156,13 @@ def register_view(request):
     email = request.POST.get('email')
     if User.objects.filter(username=username).exists():
       return render(request, "register.html", {
-        "error": "Username already exists.",
+        "error": "Username ja está sendo usando.",
         "username_inserted": username,
         "email_inserted": email,
       })
     if User.objects.filter(email=email).exists():
       return render(request, "register.html", {
-        "error": "Email already exists.",
+        "error": "Email ja está sendo usando.",
         "username_inserted": username,
         "email_inserted": email,
       })
@@ -173,7 +179,7 @@ def register_view(request):
 def favorite(request, topico_str: str):
   if not request.user.is_authenticated:
     return JsonResponse({
-      "error": "User is not authenticated."
+      "error": "Usuario não logando."
     }, status=401)
   if topico_str not in [t.name for t in Topico.get_topicos(user=getUser(request))]:
     return render(request, "404.html", status=404)
@@ -216,7 +222,7 @@ def delete_post(request):
     Post.delete_post(Post.get_post_by_id(post_id))
     return JsonResponse({
       "success": True,
-      "message": "Deleted successfully."
+      "message": "Apagado com sucesso."
     }, status=200)
   return JsonResponse({
     "error": "No auth"
@@ -256,12 +262,12 @@ def report(request):
   if created:
     return JsonResponse({
       "success": True,
-      "message": "Report created successfully."
+      "message": "Report criado com sucesso."
     }, status=200)
   else:
     return JsonResponse({
       "success": True,
-      "message": "Report altered successfully."
+      "message": "Report alterado com sucesso."
     }, status=200)
 
 
@@ -274,11 +280,11 @@ def emote(request):
 
   if emote not in PostEmotes.get_emotes_possible():
     return JsonResponse({
-      "error": "Emote not available."
+      "error": "Emote indisponivel."
     }, status=400)
   if post is None:
     return JsonResponse({
-      "error": "Post not found."
+      "error": "Post não encontrado."
     }, status=404)
   try:
     added = PostEmotes.toggle_emote(post, getUser(request), emote, adding_or_removing="remove" if removing else "add")
@@ -289,7 +295,7 @@ def emote(request):
     }, status=500)
   return JsonResponse({
     "success": True,
-    "message": "Emote added successfully." if added else "Emote removed successfully."
+    "message": "Emote adicionado com sucesso." if added else "Emote removido com sucesso."
   }, status=200)
 
 
@@ -304,7 +310,7 @@ def handle_report(request, ignore: int | bool):
     report.ignore()
     return JsonResponse({
       "success": True,
-      "message": "Report ignored successfully."
+      "message": "Report ignorado com sucesso."
     }, status=200)
   action = request.POST["action"]
   reason = request.POST["reason"]
@@ -312,14 +318,14 @@ def handle_report(request, ignore: int | bool):
     match action:
       case "delete":
         Post.delete_post(report.post_reported)
-        message = "Deleted successfully."
+        message = "Apagado com sucesso."
       case "ban":
         report.post_reported.user.ban(request.user, reason)
-        message = "User banned successfully."
+        message = "Usuario banido com sucesso."
       case "delete_ban":
         Post.delete_post(report.post_reported)
         report.post_reported.user.ban(request.user, reason)
-        message = "Deleted and user banned successfully."
+        message = "Apagado é usuario banido com sucesso."
       case "timeout":
         report.post_reported.user.timeout(request.user, reason)
         message = "User timed out successfully."
@@ -367,11 +373,11 @@ def sticky(request):
   removing = bool(int(request.POST["removing"]))  # idiotic but it works
   if thread is None:
     return JsonResponse({
-      "error": "Thread not found."
+      "error": "Thread não encontrado."
     }, status=404)
   if not Mod.is_mod(getUser(request)):
     return JsonResponse({
-      "error": "User is not a mod."
+      "error": "Usuario não tem permissão de administrador."
     }, status=401)
   if removing:
     thread.unsticky()
@@ -478,7 +484,25 @@ def charge_img_avatar(request):
   }, status=401)
 
 
+def getAuthor(author_name) -> User | None:
+    autor = User.get_user_by_id(author_name)
+    return autor
 
 
 
+def author(request,author_id):
+  autoor = User.get_user_by_id(author_id)
+  return render(request, "author.html",{
+    "threads": Topico.get_threads_user(user=autoor),
+    "posts": Thread.get_posts_user(user=autoor),
+    "image": ("" if autoor.avatar == "" else autoor.get_avatar_url),
+    "bios": autoor.bio,
+    "n_p": len(Thread.get_posts_user(user=autoor)),
+    "n_tre": len(Topico.get_threads_user(user=autoor)),
+    "n_top": len(Thread.get_posts_user(user=autoor)),
+    "name": autoor.username,
+    "author_id": author_id
+    #"topico_principal": Topico.get_topico_principal(user=getUser(request))
+
+  })
 

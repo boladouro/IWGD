@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="fooorm">
+    <div class="user-info">
+        <img src="/media/{{ image }}" alt="Profile Picture" id="avar">
+        <div class="user-details">
+            <h2 id="avar-name" style="color:black;">{{ name }}</h2>
+            <p id="avar_bio" style="color:black;">{{ bios }}</p>
+        </div>
+
+    </div>
+    <section class="user-stats">
+        <div class="stat">
+            <h2>Thread</h2>
+            <p>{{ n_tre }}</p>
+        </div>
+        <div class="stat">
+            <h2>Post</h2>
+            <p>{{ n_p }}</p>
+        </div>
+        <div class="stat">
+            <h2>Tópico principal</h2>
+            <p>{{ topico_principal }}
+        </div>
+    </section>
+    <section class="recent-activity">
+        <div>
+        <h2>Recent Thread</h2>
+            <ul>
+                {% for thread in threads %}
+                    <li><a href="{{ thread.url }}">{{ thread }}</a></li>
+                {% empty %}
+                    <p>No results found.</p>
+                {% endfor %}
+            </ul>
+        </div>
+        <div>
+            <h2>Recent Post</h2>
+            <ul>
+                {% for post in posts %}
+                    <li><a href="{{ post.url }}">{{ post }}</a></li>
+                {% empty %}
+                    <p>No results found.</p>
+                {% endfor %}
+
+            </ul>
+        </div>
+    </section>
+</div>
+{% endblock %}
+

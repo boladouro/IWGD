@@ -21,12 +21,12 @@
   </div>
   {% for post in posts %}
     <li class="itens" id="line-{{ post.id }}" style="{% if post.is_removed %} background-color: #C15757;{% endif %}">
-      <div id="post-{{ post.id }}" class="post" >
-        <div class="post-perfil" style="border-right: #cccccc 2px solid"><p>{{ post.user.username }}{% if user_is_mod %} <span class="material-symbols-outlined mod-button mod-button-on-user" data-button-on="user" data-post-id="{{ post.id }}" data-user-id="{{ post.user.id }}" data-button-on="post">shield</span>{% endif %}</p> TODO avatar
+      <div id="post-{{ post.id }}" class="post" style="display:flex;" >
+        <div class="post-perfil" style="border-right: #cccccc 2px solid"><p> <a style="text-decoration: none" href="{% url 'main:author' post.user.id %}"> {{ post.user.username }}</a> {% if user_is_mod %} <span class="material-symbols-outlined mod-button mod-button-on-user" data-button-on="user" data-post-id="{{ post.id }}" data-user-id="{{ post.user.id }}" data-button-on="post">shield</span>{% endif %}</p> <img class="imga_coments" src="/media/{{ post.user.avatar }}" alt="Profile Picture">
         </div>
         <div class="post-text">
           <div class="meta">
-            <span style="color:dimgray">{{ post.date_created }}</span>
+            <span style="color:dimgray">{{ post.date_created|date:"d/m/Y" }}</span>
             {% if user.is_mod or user.id_admin %}
               <span class="material-symbols-outlined post-button mod-button mod-button" data-post-id="{{ post.id }}" data-button-on="post">shield</span>
             {% endif %}
@@ -52,7 +52,6 @@
           {% endif %}
           <div class="emotes-section">
             <span class="button-emotes material-symbols-outlined">add_reaction</span>
-            <!-- open box on hover -->
             <div class="emote-box emote-box-hidden">
               {% for emote, emote_count in post.emotes.items %}
                 <span id="{{ emote }}-{{ post.id }}" class="emote" data-post-id="{{ post.id }}" data-emote-count="{{ emote_count }}" data-emote="{{ emote }}">{{ emote }} {{ emote_count }}</span >

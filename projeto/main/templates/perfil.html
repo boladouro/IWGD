@@ -10,6 +10,8 @@
             <h2 id="avar-name">{{ request.user}} <span class="post-button alter-button-name material-symbols-outlined">edit</span></h2>
             <p id="avar_bio">{{ bios }}
               <span class="post-button alter-button-bio material-symbols-outlined">edit</span></p>
+            <p id="avar_signature">{{ signature }}
+              <span class="post-button alter-button-signa material-symbols-outlined">edit</span></p>
             <button class="alter-button-pass">Mudar senha</button>
         </div>
 
@@ -47,6 +49,14 @@
     $('#button-pass').modal({modalClass: "modal2",showClose: false});
   });
 });
+ $(document).ready(() => {
+  $(".alter-button-signa").on("click", (e) => {
+    e.preventDefault();
+    conf = confirm("Você tem certeza que deseja mudar sua Assinatura?");
+    if (!conf) return;
+    $('#button-signa').modal({modalClass: "modal2",showClose: false});
+  });
+});
 
   </script>
 
@@ -80,7 +90,7 @@
         </div>
     </div>
     <div id="button-bio" class="modal2" style="display:none;">
-        <div class="form" id="bioss" >
+        <div class="form" >
             <form id="alter-button-bio" class="login-form acrylic11" enctype="multipart/form-data" method="POST" action="{% url 'main:perfil' %}">
               {% csrf_token %}
                 <span>Alterar a bio</span>
@@ -105,7 +115,19 @@
        <div class="form" id="img" >
             <form id="image-upload-form" class="login-form acrylic11" enctype="multipart/form-data" method="POST" action="{% url 'main:perfil' %}">
               {% csrf_token %}
+                <span>Selecione uma imagem para perfil</span>
               <input type="file" name="image_perfil">
+              <button type="submit">Enviar</button>
+                <p class="message" style="color:white;"><a href="{% url 'main:perfil' %}">Cancelar</a></p>
+            </form>
+       </div>
+    </div>
+     <div id="button-signa" class="modal2" style="display:none;">
+       <div class="form">
+            <form id="signatu-form" class="login-form acrylic11" enctype="multipart/form-data" method="POST" action="{% url 'main:perfil' %}">
+              {% csrf_token %}
+                <span>Coloque sua assinatura</span>
+              <input type="text" name="signatu">
               <button type="submit">Enviar</button>
                 <p class="message" style="color:white;"><a href="{% url 'main:perfil' %}">Cancelar</a></p>
             </form>
