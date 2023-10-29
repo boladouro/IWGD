@@ -17,7 +17,13 @@
 .button-emotes{
   color:#999999;
   font-size: 1em;
-  padding-top: 5px
+  padding-top: 10px;
+  cursor: pointer;
+  padding-bottom: 1px;
+}
+
+.button-emotes:hover {
+  color: blue;
 }
 
 .emote.selected{
@@ -73,14 +79,8 @@
   display:flex
 }
 
-.button-emotes {
-  cursor: pointer;
-  padding-bottom: 1px;
-}
 
-.button-emotes:hover {
-  color: blue;
-}
+
 
 .post {
   width: 100%;
@@ -173,7 +173,6 @@ img{
 
 blockquote > p {
   border-left: 3px solid #9DAD7F;
-  margin-left: 0;
   margin-top: 5px;
   padding-left: 5px;
   margin-left: 10px;
@@ -185,13 +184,14 @@ blockquote > span {
 }
 
 .post-text{
-    width:100%;
-
+  width:100%;
+  display: flex;
+  flex-direction: column;
+}
+.emotes-section {
+  margin-top:auto;
 }
 
-.button-emotes{
-    padding-top:15px;
-}
 
 code {
   background-color: #eee;
