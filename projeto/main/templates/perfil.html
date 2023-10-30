@@ -4,7 +4,7 @@
 {% block content %}
 <div class="fooorm11">
     <div class="user-info">
-        <img src="/media/{{ image }}" alt="Profile Picture" id="avar">
+      <img src="/media/{{ image }}" onerror="this.onerror=null; this.src='{% static 'img/default_avatar.webp' %}'" alt="Profile Picture" id="avar">
         <span class="post-button alter-button-img material-symbols-outlined" style="color:white;">edit</span>
         <div class="user-details">
             <h2 id="avar-name">{{ request.user}} <span class="post-button alter-button-name material-symbols-outlined">edit</span></h2>

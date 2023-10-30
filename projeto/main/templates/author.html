@@ -3,7 +3,7 @@
 {% block content %}
 <div class="fooorm">
     <div class="user-info">
-        <img src="/media/{{ image }}" alt="Profile Picture" id="avar">
+        <img src="/media/{{ image }}" onerror="this.onerror=null; this.src='{% static 'img/default_avatar.webp' %}'" alt="Profile Picture" id="avar">
         <div class="user-details">
             <h2 id="avar-name" style="color:black;">{{ name }}</h2>
             <p id="avar_bio" style="color:black;">{{ bios }}</p>
