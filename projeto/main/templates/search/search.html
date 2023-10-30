@@ -23,7 +23,7 @@
             <ul>
 
                 {% for result2 in page.object_list %}
-                    <li class="elementosss"><a href="{{ result2.object.url }}" style="color:black;">{{ result2.object.text }}</a></li>
+                <li class="elementosss"><a href="{{ result2.object.url }}" style="color:black;">{{ result2.object.text }}</a></li>
                 {% empty %}
                     <p>No results found.</p>
                 {% endfor %}
@@ -34,7 +34,7 @@
             <h2>Author</h2>
             <ul>
                 {% for result3 in page.object_list %}
-                    <li class="elementosss"><a href="{{ result3.object.user.id }}" style="color:black;">{{ result3.object.user.id }}</a></li>
+                    <li class="elementosss"><a href="/author/{{ result3.object.user.id }}" style="color:black;">{{ result3.object.username }}</a></li>
                 {% empty %}
                     <p>No results found.</p>
                 {% endfor %}

@@ -85,6 +85,10 @@ class User(AbstractUser):
   def get_signature(self):
     return self.signature
 
+  @staticmethod
+  def get_user_by_name(user_name: str) -> "User":
+    return User.objects.get(username=user_name)
+
 class Mod(Model):
   user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name="mod")
   date_turned_mod = models.DateTimeField(auto_now_add=True)
