@@ -22,7 +22,7 @@
   {% for post in posts %}
     <li class="itens" id="line-{{ post.id }}" style="{% if post.is_removed %} background-color: #C15757;{% endif %}">
       <div id="post-{{ post.id }}" class="post" style="display:flex;" >
-        <div class="post-perfil" style="border-right: #cccccc 2px solid"><p> <a style="text-decoration: none" href="{% url 'main:author' post.user.id %}"> {{ post.user.username }}</a> {% if user_is_mod %} <span class="material-symbols-outlined mod-button mod-button-on-user" data-button-on="user" data-post-id="{{ post.id }}" data-user-id="{{ post.user.id }}" data-button-on="post">shield</span>{% endif %}</p> <img class="imga_coments" src="/media/{{ post.user.avatar }}" alt="Profile Picture">
+        <div class="post-perfil" style="border-right: #cccccc 2px solid"><p> <a style="text-decoration: none" href="{% url 'main:author' post.user.id %}"> {{ post.user.username }}</a> {% if user_is_mod %} <span class="material-symbols-outlined mod-button mod-button-on-user" data-button-on="user" data-post-id="{{ post.id }}" data-user-id="{{ post.user.id }}" data-button-on="post">shield</span>{% endif %}</p> <img class="imga_coments" src="/media/{{ post.user.avatar }}" onerror="this.onerror=null; this.src='/media/avatars/default.webp'"  alt="Profile Picture">
         </div>
         <div class="post-text">
           <div class="meta">
