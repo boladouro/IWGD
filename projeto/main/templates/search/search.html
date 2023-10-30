@@ -3,55 +3,57 @@
 {% block content %}
 <div class="listagem">
   <h2>Resultado da Pesquisa</h2>
-
   <form method="get" action=".">
     {% if query %}
-
-    <section class="recent-activity">
+      {# The div above but without regroup #}
+      <section class="recent-activity">
         <div>
-        <h2>Thread</h2>
-            <ul>
-                {% for result1 in page.object_list %}
-                    <li class="elementosss"><a href="{{ result1.object.url }}" style="color:black;">{{ result1.object.title }}</a></li>
-                {% empty %}
-                    <p>No results found.</p>
-                {% endfor %}
-            </ul>
+          <h2>Threads</h2>
+          <ul class="results-ul">
+            {% for result in page.object_list %}
+              {% if result.model_name == 'thread' %}
+                <li class="elementosss"><a href="{{ result.object.url }}" style="color:black;">{{ result.object.title }}</a></li>
+              {% endif %}
+            {% endfor %}
+          </ul>
         </div>
         <div>
-            <h2>Post</h2>
-            <ul>
-
-                {% for result2 in page.object_list %}
-                <li class="elementosss"><a href="{{ result2.object.url }}" style="color:black;">{{ result2.object.text }}</a></li>
-                {% empty %}
-                    <p>No results found.</p>
-                {% endfor %}
-
-            </ul>
+          <h2>Posts</h2>
+          <ul class="results-ul">
+            {% for result in page.object_list %}
+              {% if result.model_name == 'post' %}
+                <li class="elementosss"><a href="{{ result.object.url }}" style="color:black;">{{ result.object.text }}</a></li>
+              {% endif %}
+            {% endfor %}
+          </ul>
         </div>
         <div>
-            <h2>Author</h2>
-            <ul>
-                {% for result3 in page.object_list %}
-                    <li class="elementosss"><a href="/author/{{ result3.object.user.id }}" style="color:black;">{{ result3.object.username }}</a></li>
-                {% empty %}
-                    <p>No results found.</p>
-                {% endfor %}
-
-            </ul>
+          <h2>Users</h2>
+          <ul class="results-ul">
+            {% for result in page.object_list %}
+              {% if result.model_name == 'user' %}
+                <li class="elementosss"><a href="{% url 'main:author' result.object.id %}" style="color:black;">{{ result.object.username }}</a></li>
+              {% endif %}
+            {% endfor %}
+          </ul>
         </div>
-    </section>
-      {% if page.has_previous or page.has_next %}
-        <div>
-          {% if page.has_previous %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number }}">{% endif %}&laquo; Previous{% if page.has_previous %}</a>{% endif %}
-          |
-          {% if page.has_next %}<a href="?q={{ query }}&amp;page={{ page.next_page_number }}">{% endif %}Next &raquo;{% if page.has_next %}</a>{% endif %}
-        </div>
-      {% endif %}
+      </section>
     {% else %}
-      {# Show some example queries to run, maybe query syntax, something else? #}
     {% endif %}
+    <script>
+      $(document).ready(() => {
+        $('.results-ul').each(function() {
+          if ($(this).children().length == 0) {
+            // delete ul and substitute with a message
+            $(this).parent().remove()
+          }
+        })
+        if ($('.recent-activity').children().length == 0) {
+          $('.recent-activity').append('<p class="no-results">No results found.</p>')
+        }
+
+      })
+    </script>
   </form>
 </div>
 {% endblock %}

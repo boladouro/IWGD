@@ -176,7 +176,7 @@ class Thread(Model):
 
   @staticmethod
   def get_posts_user(user: User | None) -> Iterable["Post"]:
-    return Post.objects.filter(is_removed=False, user=user).order_by('date_created')
+    return Post.objects.filter(is_removed=False, user=user).order_by('-date_created')
 
   def delete_thread(self):
     self.is_removed = True
@@ -370,7 +370,7 @@ class Topico(Model):
 
   @staticmethod
   def get_threads_user(user: User | None) -> Iterable[Thread]:
-    return Thread.objects.filter(is_removed=False, user=user).order_by('-is_sticky', '-date_created')
+    return Thread.objects.filter(is_removed=False, user=user).order_by('-date_created')
 
 
 class Reports(Model):
