@@ -11,8 +11,8 @@
         <div>
         <h2>Thread</h2>
             <ul>
-                {% for result1 in page.object_list.user %}
-                    <li class="elementosss"><a href="{{ result1.url }}" style="color:black;">{{ result1 }}</a></li>
+                {% for result1 in page.object_list %}
+                    <li class="elementosss"><a href="{{ result1.object.url }}" style="color:black;">{{ result1.object.title }}</a></li>
                 {% empty %}
                     <p>No results found.</p>
                 {% endfor %}
@@ -23,7 +23,7 @@
             <ul>
 
                 {% for result2 in page.object_list %}
-                    <li class="elementosss"><a href="{{ result.object.url }}" style="color:black;">{{ result2 }}</a></li>
+                    <li class="elementosss"><a href="{{ result2.object.url }}" style="color:black;">{{ result2.object.text }}</a></li>
                 {% empty %}
                     <p>No results found.</p>
                 {% endfor %}
@@ -33,8 +33,8 @@
         <div>
             <h2>Author</h2>
             <ul>
-                {% for result2 in page.object_list %}
-                    <li class="elementosss"><a href="{{ result.object.url }}" style="color:black;">{{ result3.username }}</a></li>
+                {% for result3 in page.object_list %}
+                    <li class="elementosss"><a href="{{ result3.object.user.id }}" style="color:black;">{{ result3.object.user.id }}</a></li>
                 {% empty %}
                     <p>No results found.</p>
                 {% endfor %}
